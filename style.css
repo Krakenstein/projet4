@@ -1,0 +1,878 @@
+@font-face {
+    font-family: 'secret_typewriterregular';
+    src: url('fonts/veteran_typewriter-webfont.eot');
+    src: url('fonts/veteran_typewriter-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/veteran_typewriter-webfont.woff') format('woff'),
+         url('fonts/veteran_typewriter-webfont.ttf') format('truetype'),
+         url('fonts/veteran_typewriter-webfont.svg#secret_typewriterregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'yellowtailregular';
+    src: url('fonts/Yellowtail-Regular-webfont.eot');
+    src: url('fonts/Yellowtail-Regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/Yellowtail-Regular-webfont.woff2') format('woff2'),
+         url('fonts/Yellowtail-Regular-webfont.woff') format('woff'),
+         url('fonts/Yellowtail-Regular-webfont.ttf') format('truetype'),
+         url('fonts/Yellowtail-Regular-webfont.svg#yellowtailregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'niconneregular';
+    src: url('fonts/Niconne-Regular-webfont.eot');
+    src: url('fonts/Niconne-Regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/Niconne-Regular-webfont.woff') format('woff'),
+         url('fonts/Niconne-Regular-webfont.ttf') format('truetype'),
+         url('fonts/Niconne-Regular-webfont.svg#niconneregular') format('svg');
+    font-weight: 900;
+    font-style: normal;
+
+}
+
+html
+{
+  width: 100%;
+  margin: auto;
+  background-color: #000807;
+}
+
+body
+{
+  width: 80%;
+  margin: auto;
+  font-family: Geneva, Kalimati, sans-serif;
+}
+/* header */
+header
+{
+    text-align: center;
+    color: #e6e6e6;
+    background-color: #364156;
+    margin-bottom: -5px;
+}
+
+#titre
+{
+    font-size: 3.2em;
+    margin-bottom: -20px;
+    margin-top: -5px;
+    font-family: niconneregular, Geneva, Kalimati, sans-serif;
+}
+
+#slogan
+{
+    font-size: 1.1em;
+    padding-bottom: 10px;
+    font-family: Geneva, Kalimati, sans-serif;
+}
+
+#imgHeader
+{
+  width:100%;
+}
+/* barre de navigation */
+.navigation-bar 
+{
+    display: flex;
+	justify-content: space-around;
+	width: 100%;  
+    height: 80px; 
+    background-color: #364156;
+    margin-top: 5px;
+}
+
+#signature 
+{
+    display: inline-block;
+    vertical-align: center;     
+    font-family: niconneregular;
+    line-height: 0px;
+    font-size: 2em;
+    color: #F9FBF2;
+    text-decoration: none;
+    position: relative;
+    bottom: 8px;  
+}
+
+.btn
+{
+    display: inline-block;    
+	vertical-align: center;
+    margin-right: 20px;       
+    line-height: 55px;
+    padding: 10px;
+    color: #F9FBF2;
+    text-decoration: none; 
+    font-family: secret_typewriterregular, Geneva, Kalimati, sans-serif;
+    font-size: 1.5em;   
+}
+
+.active, .btn:hover
+{
+    color: #364156;
+    background-color: #F9FBF2;
+    border-radius: 5%;
+}
+/* sections */
+section
+{
+    background-color: #F9FBF2;
+    color: #364156;
+    width: 100%;  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 15px;
+}
+
+section h2
+{
+    padding: 20px;
+    text-align: center;
+    font-family: Geneva, Kalimati, sans-serif;
+    font-size: 1.8em;
+    margin-bottom: -15px;
+}
+
+section h3 a
+{
+    color: #364156;
+}
+
+section a
+{
+    text-decoration: none;
+}
+
+.episodeTitle
+{
+    font-size: 1.3em;
+}
+
+.episodeListe
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    list-style-type: none;
+    text-align: center;
+    font-size: 1.2em;
+    margin-bottom: 30px;
+    background-color: #364156;
+    color: #F9FBF2;
+}
+
+.episodeListe:hover
+{
+    background-color: #F9FBF2;
+    color: #364156;
+    transition: 0.5s;
+    border: 2px solid #364156;
+    box-shadow: 0px 2px 5px 1px #000807;
+}
+
+.episodeListe:hover .extrait
+{
+    border-left: 2px solid #364156;
+    border-bottom: 2px solid #364156;
+}
+
+.extrait
+{
+    padding: 15px;
+    padding-top: 0px;
+    margin: 15px;
+    width: 50%;
+    text-align: left;
+    text-justify: auto;
+    font-size: 1em;
+    border-left: 2px solid #F9FBF2;
+    border-bottom: 2px solid #F9FBF2;
+}
+
+.onPage
+{
+    background-color: #364156;
+    color: #F9FBF2;
+    padding: 3px;
+    border-radius: 50%;
+}
+
+#chapitre
+{
+    padding: 25px;
+    padding-top: 0px;
+    width: 50%;
+    text-align: left;
+    text-justify: auto;
+    font-size:1.2em;
+    border-left: 2px solid #364156;
+    border-bottom: 2px solid #364156;
+}
+
+#backNext
+{
+    display: flex;
+    justify-content: space-between;
+    width: 50%;
+}
+
+#backNext a
+{
+    display: flex;
+    background-color: #364156;
+    padding: 15px;
+    color: #F9FBF2;
+    
+}
+
+#backNext a:hover
+{
+    display: flex;
+    background-color: #F9FBF2;
+    padding: 15px;
+    color: #364156;
+    box-shadow: 0px 2px 8px 3px #000807;
+}
+
+#backNext a:hover .right
+{
+    border-left: 10px solid #364156;
+}
+
+#backNext a:hover .left
+{
+    border-right: 10px solid #364156;
+}
+
+.right {
+    width: 0; 
+    height: 0; 
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    position: relative;
+    left: 5px;
+    bottom: 2px;
+    border-left: 10px solid #F9FBF2;
+  }
+
+.left {
+    width: 0; 
+    height: 0; 
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    position: relative;
+    right: 5px;
+    bottom: 2px;
+    border-right: 10px solid #F9FBF2;
+  }
+/* commentaires */
+#comments
+{
+    margin-top: 15px;
+}
+
+.comment
+{
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    border-left: 2px solid #364156;
+    border-bottom: 2px solid #364156;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.comment .bouton
+{
+    background-color: #364156;
+    border: 2px solid #c5d0e4;
+    color: #F9FBF2;
+    border-radius: 15px; 
+    box-shadow: 0px 0px 0px 0px transparent;
+    align-self: flex-start;
+    padding: 10px;
+}
+
+.comment .bouton:hover
+{
+    color: #364156;
+    border: 2px solid #364156;
+    background-color: #F9FBF2;
+    border-radius: 15px; 
+    transition: 0.5s;
+    box-shadow: 0px 1px 2px 2px #07204e;
+    transform: scale(1.005);
+}
+
+#makeComment
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 45%;
+    margin: 15px;
+    margin-bottom: 50px;
+    background-color: #364156;
+    padding: 15px;
+    font-size: 2em;
+    border-radius: 15px;
+}
+
+#makeComment h2
+{
+    color: #F9FBF2;
+    font-size: .9em;
+    font-family: Geneva, Kalimati, sans-serif;
+    padding: 5px;
+    margin-bottom: 15px;
+    margin-top: 0px;
+}
+
+#makeComment #author
+{
+    color: #364156;
+    font-size: .75em;
+    font-family: Geneva, Kalimati, sans-serif;
+    padding: 10px;
+    box-shadow: 0px 2px 5px 3px #000807;
+    text-align: center;
+}
+
+#makeComment p
+{
+    color: #F9FBF2;
+    font-size: .95em;
+    font-family: Geneva, Kalimati, sans-serif;
+    padding: 5px;
+    margin-bottom: 15px;
+}
+
+#makeComment textarea
+{
+    margin: 5px;
+    margin-bottom: 15px;
+    padding: 15px;
+    width: 75%;
+    text-align: left;
+    font-size:.6em;
+    font-family: Geneva, Kalimati, sans-serif;
+    box-shadow: 0px 2px 5px 3px #000807;
+}
+
+#makeComment .bouton
+{
+    margin: 5px;
+    padding: 25px;
+    width: 30%;
+    text-align: center;
+    font-size:.75em;
+    font-family: Geneva, Kalimati, sans-serif;
+    box-shadow: 0px 2px 5px 3px #000807;
+}
+/* connection admin */
+#formConnect
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50%;
+    margin: 25px;
+    margin-bottom: 50px;
+    background-color: #364156;
+    padding: 25px;
+    font-size: 2em;
+    border-radius: 15px;
+}
+
+#formConnect input
+{
+    margin: 25px;
+    padding: 25px;
+    width: 50%;
+    text-align: center;
+    font-size:.6em;
+    font-family: Geneva, Kalimati, sans-serif;
+    box-shadow: 0px 5px 5px 3px #000807;
+}
+/* boutons */
+.bouton
+{
+    background-color: #364156;
+    color: #F9FBF2;
+    border-radius: 15px; 
+    box-shadow: 0px 5px 5px 3px #000807;
+}
+
+.bouton:hover
+{
+    color: #364156;
+    background-color: #F9FBF2;
+    border-radius: 15px; 
+    transition: 0.5s;
+    box-shadow: 0px 10px 8px 5px #000807;
+    transform: scale(1.02);
+}
+/* footer */
+footer
+{
+    background-color: #364156;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+footer a
+{
+    margin: 5px;
+    display: inline-block;    
+	vertical-align: center;      
+    line-height: 55px;
+    padding: 10px;
+    color: #F9FBF2;
+    text-decoration: none; 
+    font-family: secret_typewriterregular, Geneva, Kalimati, sans-serif;
+    font-size: 1.5em;
+}
+/* Responsive design */
+/* Tablettes */
+@media screen and (max-width: 1200px) 
+{	
+
+    body
+    {
+    width: 95%;
+    margin: auto;
+    font-family: Geneva, Kalimati, sans-serif;
+    }
+
+    #titre
+    {
+        font-size: 1.8em;
+        padding: 10px;
+        margin-bottom: -20px;
+        font-family: niconneregular, Geneva, Kalimati, sans-serif;
+    }
+
+    #slogan
+    {
+        font-size: .8em;
+        padding-bottom: 10px;
+        font-family: Geneva, Kalimati, sans-serif;
+    }
+    
+    .navigation-bar 
+    {
+        display: flex;
+        justify-content: space-around;
+        align-content: center;
+        flex-wrap: wrap;
+        width: 100%;  
+        height: 100px; 
+        background-color: #364156;
+        margin-top: 5px;
+    }
+
+    #signature 
+    {
+        display: inline-block;
+        vertical-align: center;     
+        font-family: niconneregular;
+        font-size: 1.5em;
+        color: #F9FBF2;
+        text-decoration: none;
+        padding-top: 5px;
+    }
+
+    .btn
+    {
+        display: inline-block;    
+        vertical-align: center;      
+        margin: 0px;
+        padding: 5px;
+        color: #F9FBF2;
+        text-decoration: none; 
+        font-family:Geneva, Kalimati, sans-serif;
+        font-size: .8em;   
+    }
+
+    .active, .btn:hover
+    {
+        color: #364156;
+        background-color: #F9FBF2;
+        border-radius: 5%;
+    }
+
+    section h2
+    {
+        padding: 20px;
+        text-align: center;
+        font-family: Geneva, Kalimati, sans-serif;
+        font-size: 1.4em;
+        margin-bottom: -15px;
+    }
+
+    #chapitre
+    {
+        padding: 25px;
+        padding-top: 0px;
+        width: 75%;
+        text-align: left;
+        text-justify: auto;
+        font-size:1.2em;
+        border-left: 2px solid #364156;
+        border-bottom: 2px solid #364156;
+    }
+
+    .comment
+    {
+        display: flex;
+        flex-direction: column;
+        border-left: 2px solid #364156;
+        border-bottom: 2px solid #364156;
+        padding: 15px;
+        margin: 10px;
+        margin-bottom: 15px;
+    }
+
+    #makeComment
+    {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 85%;
+        margin: 15px;
+        margin-bottom: 25px;
+        background-color: #364156;
+        padding: 5px;
+        font-size: 2em;
+        border-radius: 15px;
+    }
+
+    #makeComment h2
+    {
+        color: #F9FBF2;
+        font-size: .75em;
+        font-family: Geneva, Kalimati, sans-serif;
+        padding: 5px;
+        padding-bottom: 15px;;
+    }
+
+    #makeComment #nom
+    {
+        font-size: .6em;
+        font-family: Geneva, Kalimati, sans-serif;
+        padding: 5px;
+    }
+
+    #makeComment p
+    {
+        color: #F9FBF2;
+        font-size: .75em;
+        font-family: Geneva, Kalimati, sans-serif;
+        padding: 5px;
+        padding-bottom: 15px;;
+    }
+
+    #makeComment textarea
+    {
+        margin: 5px;
+        padding: 15px;
+        width: 75%;
+        text-align: left;
+        font-size:.6em;
+        font-family: Geneva, Kalimati, sans-serif;
+        box-shadow: 0px 5px 5px 3px #000807;
+    }
+
+    #makeComment .bouton
+    {
+        margin: 5px;
+        padding: 25px;
+        width: 30%;
+        text-align: center;
+        font-size:.5em;
+        font-family: Geneva, Kalimati, sans-serif;
+        box-shadow: 0px 5px 5px 3px #000807;
+    }
+
+    #formConnect
+    {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 75%;
+        margin: 25px;
+        margin-bottom: 50px;
+        background-color: #364156;
+        padding: 25px;
+        font-size: 2em;
+        border-radius: 15px;
+    }
+
+    #formConnect input
+    {
+        margin: 25px;
+        padding: 25px;
+        width: 50%;
+        text-align: center;
+        font-size:.4em;
+        font-family: secret_typewriterregular, Geneva, Kalimati, sans-serif;
+        box-shadow: 0px 5px 5px 3px #000807;
+    }
+
+}
+/* mobiles */
+@media screen and (max-width: 700px) 
+{	
+
+    body
+    {
+    width: 95%;
+    margin: auto;
+    font-family: Geneva, Kalimati, sans-serif;
+    }
+
+    #titre
+    {
+        font-size: 1.8em;
+        padding: 10px;
+        margin-bottom: -20px;
+        font-family: niconneregular, Geneva, Kalimati, sans-serif;
+    }
+
+    #slogan
+    {
+        font-size: .8em;
+        padding-bottom: 10px;
+        font-family: Geneva, Kalimati, sans-serif;
+    }
+    
+    .navigation-bar 
+    {
+        display: flex;
+        justify-content: space-around;
+        align-content: center;
+        flex-wrap: wrap;
+        width: 100%;  
+        height: 100px; 
+        background-color: #364156;
+        margin-top: 5px;
+    }
+
+    #signature 
+    {
+        display: inline-block;
+        vertical-align: center;     
+        font-family: niconneregular;
+        font-size: 1.5em;
+        color: #F9FBF2;
+        text-decoration: none;
+        padding-top: 5px;
+    }
+
+    .btn
+    {
+        display: inline-block;    
+        vertical-align: center;      
+        margin: 0px;
+        padding: 5px;
+        color: #F9FBF2;
+        text-decoration: none; 
+        font-family:Geneva, Kalimati, sans-serif;
+        font-size: .8em;   
+    }
+
+    .active, .btn:hover
+    {
+        color: #364156;
+        background-color: #F9FBF2;
+        border-radius: 5%;
+    }
+
+    section h2
+    {
+        padding: 20px;
+        text-align: center;
+        font-family: Geneva, Kalimati, sans-serif;
+        font-size: 1.4em;
+        margin-bottom: -15px;
+    }
+
+    #chapitre
+    {
+        padding: 25px;
+        padding-top: 0px;
+        width: 75%;
+        text-align: left;
+        text-justify: auto;
+        font-size:1.2em;
+        border-left: 2px solid #364156;
+        border-bottom: 2px solid #364156;
+    }
+
+    .comment
+    {
+        display: flex;
+        flex-direction: column;
+        border-left: 2px solid #364156;
+        border-bottom: 2px solid #364156;
+        padding: 15px;
+        margin: 10px;
+        margin-bottom: 15px;
+    }
+
+    #makeComment
+    {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 85%;
+        margin: 15px;
+        margin-bottom: 25px;
+        background-color: #364156;
+        padding: 5px;
+        font-size: 2em;
+        border-radius: 15px;
+    }
+
+    #makeComment h2
+    {
+        color: #F9FBF2;
+        font-size: .75em;
+        font-family: Geneva, Kalimati, sans-serif;
+        padding: 5px;
+        padding-bottom: 15px;;
+    }
+
+    #makeComment #nom
+    {
+        font-size: .6em;
+        font-family: Geneva, Kalimati, sans-serif;
+        padding: 5px;
+    }
+
+    #makeComment p
+    {
+        color: #F9FBF2;
+        font-size: .75em;
+        font-family: Geneva, Kalimati, sans-serif;
+        padding: 5px;
+        padding-bottom: 15px;;
+    }
+
+    #makeComment textarea
+    {
+        margin: 5px;
+        padding: 15px;
+        width: 75%;
+        text-align: left;
+        font-size:.6em;
+        font-family: Geneva, Kalimati, sans-serif;
+        box-shadow: 0px 5px 5px 3px #000807;
+    }
+
+    #makeComment .bouton
+    {
+        margin: 5px;
+        padding: 15px;
+        width: 30%;
+        text-align: center;
+        font-size:.4em;
+        font-family: Geneva, Kalimati, sans-serif;
+        box-shadow: 0px 5px 5px 3px #000807;
+    }
+
+    #formConnect
+    {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 75%;
+        margin: 25px;
+        margin-bottom: 50px;
+        background-color: #364156;
+        padding: 25px;
+        font-size: 2em;
+        border-radius: 15px;
+    }
+
+    #formConnect input
+    {
+        margin: 25px;
+        padding: 25px;
+        width: 50%;
+        text-align: center;
+        font-size:.4em;
+        font-family: secret_typewriterregular, Geneva, Kalimati, sans-serif;
+        box-shadow: 0px 5px 5px 3px #000807;
+    }
+
+    #backNext
+    {
+        display: flex;
+        justify-content: space-between;
+        width: 95%;
+        font-size: .75em;
+    }
+
+    #backNext a
+    {
+        display: flex;
+        background-color: #364156;
+        padding: 15px;
+        color: #F9FBF2;
+        
+    }
+
+    #backNext a:hover
+    {
+        display: flex;
+        background-color: #F9FBF2;
+        padding: 15px;
+        color: #364156;
+        box-shadow: 0px 2px 8px 3px #000807;
+    }
+
+    #backNext a:hover .right
+    {
+        border-left: 10px solid #364156;
+    }
+
+    #backNext a:hover .left
+    {
+        border-right: 10px solid #364156;
+    }
+
+    .right 
+    {
+        width: 0; 
+        height: 0; 
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        position: relative;
+        left: 5px;
+        bottom: 3px;
+        border-left: 10px solid #F9FBF2;
+    }
+
+    .left 
+    {
+        width: 0; 
+        height: 0; 
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        position: relative;
+        right: 5px;
+        bottom: 3px;
+        border-right: 10px solid #F9FBF2;
+    }
+}
