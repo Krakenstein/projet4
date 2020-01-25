@@ -1,0 +1,569 @@
+html
+{
+  width: 100%;
+  margin: auto;
+  background-color: #000807;
+}
+
+body
+{
+  width: 80%;
+  margin: auto;
+  font-family: Geneva, Kalimati, sans-serif;
+  background-color: #F9FBF2;
+}
+
+header
+{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+	width: 100%;  
+    height: 80px; 
+    background-color: rgb(45, 134, 161);
+}
+
+header h2
+{
+    margin:20px;
+}
+
+nav
+{
+    display: flex;
+    justify-content: flex-start;
+    text-align: center;
+    flex-direction: column;
+	width: 200px;  
+    height: auto;
+    background-color: rgb(45, 134, 161);
+}
+
+.btn
+{
+    display: inline-block;    
+    vertical-align: center;  
+    text-align: center;    
+    padding: 10px;
+    margin: 5px;
+    color: #F9FBF2;
+    background-color: #364156;
+    text-decoration: none; 
+    border-radius: 20px;
+    font-family: Geneva, Kalimati, sans-serif;
+    font-size: 1.25em;
+    border: 2px solid #F9FBF2;;   
+}
+
+.btn:hover
+{
+    color: #364156;
+    background-color: #F9FBF2;
+    border-radius: 20px;
+    border: 2px solid #000807;
+    transition: ease-in 0.25s;
+    box-shadow: 0 8px 6px -6px black;
+}
+
+.active
+{
+    color: #364156;
+    background-color: #F9FBF2;
+    border-radius: 20px;
+    border: 2px solid #000807;
+    box-shadow: 0 8px 6px -6px black;
+}
+
+#main
+{
+    display: flex;
+    min-height: 1000px;
+}
+
+#content
+{
+    display: flex;
+    align-content: flex-start;
+    flex-direction: column;
+    width: 100%;
+}
+#content h1
+{
+    text-align: center;
+}
+
+#content h3
+{
+    text-align: center;
+}
+
+.page
+{
+    text-decoration: none;
+    color: #364156;
+    margin-right: 5px;
+}
+.onPage
+{
+    background-color: #364156;
+    color: #F9FBF2;
+    padding: 3px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.table
+{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.rowsTitle
+{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.rows
+{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    text-decoration: none; 
+}
+
+.cell-title
+{
+    width: 15%;
+    background-color: #084C61;
+    text-align: center;
+    padding: 2%;
+    margin: 2px;
+    color: #F9FBF2;
+}
+
+.cell
+{
+    width: 15%;
+    background-color: rgb(45, 134, 161);
+    text-align: center;
+    padding: 2%;
+    margin: 2px;
+    color: #F9FBF2;
+}
+
+.rows:hover .cell
+{
+    filter: hue-rotate(45deg);
+}
+
+.bouton
+{
+    width: 25%;
+    margin: 15px;
+    padding: 15px;
+    align-self: center;
+    background-color: #084C61;
+    color: #F9FBF2;
+    text-decoration: none;
+    text-align: center;
+    border: 5px solid rgb(45, 134, 161);
+    border-radius: 15px;
+}
+
+.bouton:hover
+{
+    width: 25%;
+    margin: 15px;
+    padding: 15px;
+    align-self: center;
+    background-color: rgb(55, 165, 199);
+    color: #F9FBF2;
+    text-decoration: none;
+    text-align: center;
+    border: 5px solid #084C61;
+    border-radius: 15px;
+    box-shadow: 0 8px 6px -6px black;
+    transition: ease-in 0.25s;
+}
+
+.boutonRouge
+{
+    width: 25%;
+    margin: 15px;
+    padding: 15px;
+    align-self: center;
+    background-color: rgb(168, 11, 11);
+    color: #F9FBF2;
+    text-decoration: none;
+    text-align: center;
+    border: 5px solid rgb(100, 26, 26);
+    border-radius: 15px;
+}
+
+.boutonRouge:hover
+{
+    width: 25%;
+    margin: 15px;
+    padding: 15px;
+    align-self: center;
+    background-color: rgb(231, 50, 50);
+    color: #F9FBF2;
+    text-decoration: none;
+    text-align: center;
+    border: 5px solid rgb(73, 4, 4);
+    border-radius: 15px;
+    box-shadow: 0 8px 6px -6px black;
+    transition: ease-in 0.25s;
+}
+
+.boutonVert
+{
+    width: 25%;
+    margin: 15px;
+    padding: 15px;
+    align-self: center;
+    background-color: rgb(24, 168, 11);
+    color: #F9FBF2;
+    text-decoration: none;
+    text-align: center;
+    border: 5px solid rgb(35, 100, 26);
+    border-radius: 15px;
+}
+
+.boutonVert:hover
+{
+    width: 25%;
+    margin: 15px;
+    padding: 15px;
+    align-self: center;
+    background-color: rgb(107, 231, 50);
+    color: #F9FBF2;
+    text-decoration: none;
+    text-align: center;
+    border: 5px solid rgb(6, 73, 4);
+    border-radius: 15px;
+    box-shadow: 0 8px 6px -6px black;
+    transition: ease-in 0.25s;
+}
+
+#modification
+{
+    display: flex;
+    width: 75%;
+    flex-direction: column;
+    justify-content: center;
+    align-self: center;
+}
+
+#modification h3
+{
+    font-size: 1.5em;
+    margin-bottom: 5px;
+}
+
+#btnAction 
+{
+    align-self: center;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+#btnAction .bouton .boutonRouge .boutonVert
+{
+    display: inline;
+    padding: 10px;
+}
+
+#titre
+{
+    text-align: center;
+    width: 75%;
+    margin:15px;
+    align-self: center;
+    font-size: 1.5em;
+}
+
+#number
+{
+    text-align: center;
+    width: 15%;
+    margin:5px;
+    align-self: center;
+    font-size: 1.5em;
+}
+
+.tox
+{
+    width: 95% !important;
+    align-self: center;
+ }
+
+ #contentComments  
+ {
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    width:100%;
+ }
+
+ .comment
+{
+    display: flex;
+    flex-direction: column;
+    border: 2px solid #364156;
+    padding: 15px;
+    margin-bottom: 15px;
+    width: 75%;
+    align-self: center;
+}
+
+#formProfil
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+#pseudo
+{
+    width: 30%;
+    align-self: center;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.password
+{
+    width: 30%;
+    align-self: center;
+    margin-bottom: 25px;
+}
+/* Responsive design */
+/* Tablettes */
+@media screen and (max-width: 1200px) 
+{
+    body
+    {
+    width: 100%;
+    margin: auto;
+    font-family: Geneva, Kalimati, sans-serif;
+    background-color: #F9FBF2;
+    }
+    
+    header
+    {
+        display: flex;
+        justify-content: space-around;
+        font-size: .85em;
+        width: 100%;  
+        height: 65px; 
+        background-color: rgb(45, 134, 161);
+    }
+
+    header h2
+    {
+        vertical-align: sub;
+    }
+
+    nav
+    {
+        display: flex;
+        justify-content: flex-start;
+        text-align: center;
+        flex-direction: column;
+        width: 100px;  
+        height: auto;
+        font-size: .6em;
+        background-color: rgb(45, 134, 161);
+    }
+
+    .btn
+    {
+        display: inline-block;    
+        vertical-align: center;  
+        text-align: center;    
+        padding: 10px;
+        margin: 5px;
+        color: #F9FBF2;
+        background-color: #364156;
+        text-decoration: none; 
+        border-radius: 20px;
+        font-family: Geneva, Kalimati, sans-serif;
+        font-size: 1.15em;
+        border: 2px solid #F9FBF2;  
+    }
+
+    .btn:hover
+    {
+        color: #364156;
+        background-color: #F9FBF2;
+        border-radius: 20px;
+        border: 2px solid #000807;
+        transition: ease-in 0.25s;
+        box-shadow: 0 8px 6px -6px black;
+    }
+
+    .active
+    {
+        color: #364156;
+        background-color: #F9FBF2;
+        border-radius: 20px;
+        border: 2px solid #000807;
+        box-shadow: 0 8px 6px -6px black;
+    }
+    
+    #titre
+    {
+        text-align: center;
+        width: 75%;
+        margin:15px;
+        align-self: center;
+        font-size: 1em;
+    }
+
+    #number
+    {
+        text-align: center;
+        width: 15%;
+        margin:5px;
+        align-self: center;
+        font-size: 1em;
+    }
+}
+/* mobiles */
+@media screen and (max-width: 700px) 
+{	
+    .tox
+    {
+        width: 100% !important;
+        align-self: center;
+    }
+
+    .cell-title 
+    {
+        width: 14%;
+        height: 50px;
+        font-size: .5em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .cell
+    {
+        width: 14%;
+        height: 50px;
+        font-size: .5em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    header
+    {
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        width: 100%;  
+        height: 50px; 
+        background-color: rgb(45, 134, 161);
+        font-size: 0.5em;
+        margin-bottom: 2px;
+    }
+
+    #main
+    {
+        display: flex;
+        flex-direction: column;
+    }
+
+    nav
+    {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        flex-direction: row;
+        width: 100%;  
+        height: 50px;
+        background-color: rgb(45, 134, 161);
+    }
+
+    .btn
+    {
+        display: inline-block;    
+        vertical-align: center;  
+        text-align: center;    
+        padding: 10px;
+        margin: 5px;
+        color: #F9FBF2;
+        background-color: #364156;
+        text-decoration: none; 
+        border-radius: 20px;
+        font-family: Geneva, Kalimati, sans-serif;
+        font-size: 1.25em;
+        border: 2px solid #F9FBF2;;   
+    }
+
+    .btn:hover
+    {
+        color: #364156;
+        background-color: #F9FBF2;
+        border-radius: 20px;
+        border: 2px solid #000807;
+        transition: ease-in 0.25s;
+        box-shadow: 0 8px 6px -6px black;
+    }
+
+    .active
+    {
+        color: #364156;
+        background-color: #F9FBF2;
+        border-radius: 20px;
+        border: 2px solid #000807;
+        box-shadow: 0 8px 6px -6px black;
+    }
+
+    .bouton
+    {
+        font-size: .5em;
+    }
+
+    .boutonRouge
+    {
+        font-size: .5em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .boutonVert
+    {
+        font-size: .5em;
+    }
+
+    #titre
+    {
+        text-align: center;
+        width: 75%;
+        margin:15px;
+        align-self: center;
+        font-size: .75em;
+    }
+
+    #number
+    {
+        text-align: center;
+        width: 15%;
+        margin:5px;
+        align-self: center;
+        font-size: .75em;
+    }
+}
