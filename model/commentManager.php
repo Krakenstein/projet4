@@ -52,7 +52,7 @@ class commentManager extends manager
         $req->closeCursor();
     }
 
-    public function countReports($chapterNumber)//requête pour compter les commentaires signalés relatifs à un épisode en fonction de son numéro de chapitre
+    public function countReports($chapterNumber)//requête pour "compter" les commentaires signalés relatifs à un épisode en fonction de son numéro de chapitre
     {
         $bdd = $this->dbConnect();
         $req = $bdd->prepare('UPDATE posts SET reports = reports + 1 WHERE chapterNumber = ? ');
@@ -94,4 +94,5 @@ class commentManager extends manager
         $req->execute(array($id));
         $req->closeCursor();
     }
+
 }

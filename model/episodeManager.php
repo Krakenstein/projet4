@@ -34,7 +34,7 @@ class episodeManager extends manager
         return $data;
     }
 
-    public function getLastEpisode()//requête pour récupérer un épisode en fonction de son numéro de chapitre
+    public function getLastEpisode()//requête pour récupérer le dernier épisode publié par numéro de chapitre
     {
         $bdd = $this->dbConnect();
         $req = $bdd->prepare('SELECT * FROM posts ORDER BY chapterNumber DESC ');
@@ -104,5 +104,19 @@ class episodeManager extends manager
         $req = $bdd->prepare('DELETE FROM posts WHERE chapterNumber = ? ');
         $req->execute(array($chapterNumber));
         $req->closeCursor();
+    }
+    
+    public function joinTables()//requête pour supprimer un épisode en fonction de son numéro de chapitre
+    {
+        $bdd = $this->dbConnect();
+        $req = $bdd->prepare('SELECT * 
+        FROM comments
+        RIGHT JOIN posts ON posts.chapterNumber = comments.episodeNumber
+        GROUP BY(posts.chapterNumber)
+        ORDER BY chapterNumber DESC;');
+        $req->execute(array());
+        $tablesJoin = $req->fetchALL(PDO::FETCH_OBJ);
+ 
+        return $tablesJoin; 
     }
 }

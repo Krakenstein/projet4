@@ -33,7 +33,7 @@
                 if (strlen($episode->content) > 500)
                 {
                     $espace = strpos($episode->content,' ', 500); 
-                    $extr = substr($episode->content,0,$espace).'...';
+                    $extr = substr($episode->content,0,$espace).'...(lire la suite)';
                     echo $extr;
                 }else{echo $episode->content;}
                 ?>

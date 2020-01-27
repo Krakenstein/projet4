@@ -29,16 +29,16 @@
                     <div class="cell-title"><h4>Date</h4></div>
                     <div class="cell-title"><h4>Statut</h4></div>
                     <div class="cell-title"><h4>Commentaires</h4></div>
-                     <div class="cell-title"><h4>Signalements</h4></div>
+                    <div class="cell-title"><h4>Signalements</h4></div>
                 </div>
 
-            <?php foreach($allEpisodes as $episode): ?>
+            <?php foreach($tablesJoin as $episode): ?>
                 <a class="rows" href="index.php?action=modifyEpisode&amp;nb=<?= $episode->chapterNumber ?>">
                     <div class="cell"><?= $episode->chapterNumber ?></div>
                     <div class="cell"><?= $episode->creationDate ?></div>
                     <div class="cell"><?php if(($episode->stat) == 1) echo 'publié'?><?php if(($episode->stat) == 0) echo 'archivé'?></div>
                     <div class="cell"><?= $episode->commentsNb ?></div>
-                    <div class="cell"><?= $episode->reports ?></div>
+                    <div class="cell"><?php if(($episode->reported) == 1) echo 'Oui'?><?php if(($episode->reported) == NULL) echo 'Non'?></div>
             <?php endforeach; ?>
                 </a>
             </div>

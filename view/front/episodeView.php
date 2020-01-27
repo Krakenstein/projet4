@@ -24,8 +24,8 @@
         <div id="chapitre"><?= $episode->content ?></div>
         
         <div id="backNext">
-            <a href="#"><div class="left"></div>Episode précédent</a>
-            <a href="#">Episode suivant<div class="right"></div></a>
+            <a href="index.php?action=episode&amp;nb=<?= $episode->chapterNumber - 1 ?>"><div class="left"></div>Episode précédent</a>
+            <a href="index.php?action=episode&amp;nb=<?= $episode->chapterNumber + 1 ?>">Episode suivant<div class="right"></div></a>
         </div>
     </section>
     <section class="comments">

@@ -8,10 +8,8 @@ function admConnect()//fonction pour se connecter au back
     $_SESSION['admConnected'] = true;
 
     $episodeManager = new episodeManager();
-    $commentManager = new commentManager();
 
-    $allComs = $commentManager->getAllComments();
-    $allEpisodes = $episodeManager->getAllEpisodes();
+    $tablesJoin = $episodeManager->joinTables();
     
     require('view/back/homePageBackView.php');
 }
