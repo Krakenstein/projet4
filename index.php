@@ -1,6 +1,6 @@
 <?php
-require('controller/frontend.php');
-require('controller/backend.php');
+require('src/controller/frontend.php');
+require('src/controller/backend.php');
 
 
 try {
