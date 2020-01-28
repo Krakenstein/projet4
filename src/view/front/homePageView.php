@@ -1,15 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php $title = 'Billet simple pour l\'Alaska'; ?>
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <link rel="stylesheet" href="public/css/style.css" />
-        <title>Billet simple pour l'Alaska</title>
-    </head>
-
-    <body>
+<?php ob_start(); ?>
         <nav class="navigation-bar">
             <a href="#foot" id="signature"><h2>Jean Forteroche</h2></a>
             <div id="navbar_accueil">
@@ -30,8 +21,7 @@
         
         <div id="chapitre"><?= $lastEpisode->content ?></div>
         </section>
-        <footer id="foot">
-            <a class="btn" href="index.php?action=connection">Administrateur</a>
-        </footer>
-    </body>
-</html>
+<?php$posts->closeCursor();?>
+<?php $content = ob_get_clean(); ?>
+
+<?php require('templates/frontend/templatefront.php'); ?>
