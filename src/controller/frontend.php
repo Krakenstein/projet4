@@ -29,7 +29,28 @@ function episode()//fonction pour récupérer un épisode publié en fonction de
         require('src/view/front/episodeBlankView.php');
     }
     else {
-    require('src/view/front/episodeView.php');
+        if (isset($_GET['nb']) && $_GET['nb'] > 0) {
+            require('src/view/front/episodeView.php');
+        }
+        else {
+            throw new Exception('Aucun numéro dépisode envoyé');
+        }
+    }
+}
+
+function newCom()
+{
+    if (isset($_GET['nb']) && $_GET['nb'] > 0) {
+        if (!empty($_POST['author']) && !empty($_POST['comment'])) {
+            addComment($_GET['nb'], $_POST['author'], $_POST['comment']);
+            countCom($_GET['nb']);
+        }
+        else {
+            throw new Exception('tous les champs ne sont pas remplis !');
+        }
+    }
+    else {
+        throw new Exception('Erreur : aucun identifiant de billet envoyé');
     }
 }
 
@@ -53,6 +74,16 @@ function countCom($chapterNumber)//fonction pour compter le nbre de commentaires
     $numberComments = $commentManager->countComments($chapterNumber);
 }
 
+function report()
+{
+    if (isset($_GET['id']) && $_GET['id'] > 0) {
+        reportComment($_GET['id']);
+    }
+    else {
+        throw new Exception('Erreur : aucun identifiant de commentaire envoyé');
+    }
+}
+
 function reportComment($id)//fonction pour signalé un commentaire
 {
     $commentManager = new commentManager();
@@ -63,7 +94,7 @@ function reportComment($id)//fonction pour signalé un commentaire
     $numberComments = $commentManager->reports($id);
     $nbReports = $commentManager->countReports($_GET['chpt']);
 
-    require('view/front/episodeView.php');
+    require('src/view/front/episodeView.php');
 }
 
 function homePage()//fonction pour démarrer une session lorsque on affiche la page d'accueil et récupérer le dernier épisode posté

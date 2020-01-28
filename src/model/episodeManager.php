@@ -37,7 +37,7 @@ class episodeManager extends manager
     public function getLastEpisode()//requête pour récupérer le dernier épisode publié par numéro de chapitre
     {
         $bdd = $this->dbConnect();
-        $req = $bdd->prepare('SELECT chapterNumber, title, content, stat, DATE_FORMAT(creationDate, \'%d/%m/%Y\') AS creationDate FROM posts ORDER BY chapterNumber DESC ');
+        $req = $bdd->prepare('SELECT chapterNumber, title, content, stat, DATE_FORMAT(creationDate, \'%d/%m/%Y\') AS creationDate FROM posts WHERE stat = 1 ORDER BY chapterNumber DESC ');
         $req->execute();
         $lastEpisode = $req->fetch(PDO::FETCH_OBJ);
 
