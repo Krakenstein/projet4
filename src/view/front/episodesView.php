@@ -1,6 +1,5 @@
 <?php $title = 'Episodes'; ?>
 
-<?php ob_start(); ?>
     <nav class="navigation-bar">
         <a href="#foot" id="signature"><h2>Jean Forteroche</h2></a>
         <div id="navbar_accueil">
@@ -37,7 +36,3 @@
         <?php endforeach; ?>
         <h3>(page: <a href="episode.html" class="onPage">1</a><a href="episode.html">2</a><a href="episode.html">3</a>)</h3>
     </section>
-<?php$posts->closeCursor();?>
-<?php $content = ob_get_clean(); ?>
-
-<?php require('templates/frontend/templatefront.php'); ?>
