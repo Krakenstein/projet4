@@ -106,7 +106,7 @@ class episodeManager extends manager
         $req->closeCursor();
     }
     
-    public function joinTables()//requête pour supprimer un épisode en fonction de son numéro de chapitre
+    public function joinTables()//requête pour faire une jointure entre la table posts et la table comments
     {
         $bdd = $this->dbConnect();
         $req = $bdd->prepare('SELECT chapterNumber, title, content, stat, DATE_FORMAT(creationDate, \'%d/%m/%Y\') AS creationDate, commentsNb, reported 

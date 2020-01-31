@@ -1,6 +1,5 @@
 <?php $title = 'Liste des épisodes'; ?>
 
-<?php ob_start(); ?>
     <header>
         <h2>Billet simple pour l'Alaska</h2>
         <h2>Interface administrateur</h2>
@@ -38,7 +37,3 @@
             <a href="index.php?action=createEpisode" class="bouton">Créer un nouvel épisode</a>
         </section>
     </div>
-<?php$posts->closeCursor();?>
-<?php $content = ob_get_clean(); ?>
-
-<?php require('templates/backend/templateBack.php'); ?>

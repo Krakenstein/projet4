@@ -4,7 +4,7 @@ class Controller{
 
     protected $viewPath = 'src/view/';
 
-    public function render($view, $template, $variables = []){
+    public function render($view, $template, $variables = []){ // méthode pour afficher le rendu des views
         ob_start();
         extract($variables);
         require($this->viewPath . $view . '.php');

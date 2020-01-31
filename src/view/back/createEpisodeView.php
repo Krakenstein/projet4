@@ -1,6 +1,5 @@
 <?php $title = 'Nouvel épisode'; ?>
 
-<?php ob_start(); ?>
     <header>
         <h2>Billet simple pour l'Alaska</h2>
         <h2>Interface administrateur</h2>
@@ -29,7 +28,3 @@
             </form>
         </section>
     </div>
-<?php$posts->closeCursor();?>
-<?php $content = ob_get_clean(); ?>
-
-<?php require('templates/backend/templateBack.php'); ?>
