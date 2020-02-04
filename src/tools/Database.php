@@ -1,6 +1,6 @@
 <?php
 
-class MysqlDatabase {
+class Database {
 
     private $db_name;
     private $db_user;

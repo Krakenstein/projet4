@@ -1,8 +1,8 @@
 <?php
 
-class Controller{
+class View{
 
-    protected $viewPath = 'src/view/';
+    protected $viewPath = 'templates/';
 
     public function render($view, $template, $variables = []){ // méthode pour afficher le rendu des views
         ob_start();

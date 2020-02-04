@@ -1,10 +1,11 @@
 <?php
+declare(strict_types=1);
 
 require_once('src/model/episodeManager.php');
 require_once('src/model/commentManager.php');
-require_once('src/controller/controller.php');
+require_once('src/view/View.php');
 
-class FrontController extends Controller{
+class FrontController{
         
     public function listEpisodes()//méthode pour récupérer la liste des épisodes publiés
     {
@@ -66,7 +67,8 @@ class FrontController extends Controller{
             throw new Exception('Impossible d\'ajouter le commentaire !');
         }
         else {
-            header('Location: index.php?action=episode&nb=' . $episodeNumber);
+            header('Location: index.php?action=episode&nb=' . $episodeNumber . '#headCom');
+            exit();
         }
     }
 
@@ -96,7 +98,7 @@ class FrontController extends Controller{
         $numberComments = $commentManager->reports($id);
         $nbReports = $commentManager->countReports($_GET['chpt']);
 
-        $this->render('front/episodeView', 'frontend/templateFront', compact('episode', 'comments', 'numberComments', 'nbReports'));
+        header('Location: index.php?action=episode&nb=' . ($_GET['nb']) . '#headCom');
     }
 
     public function homePage()//méthode pour démarrer une session lorsque on affiche la page d'accueil et récupérer le dernier épisode posté
@@ -110,8 +112,8 @@ class FrontController extends Controller{
             $this->render('front/homePageBlankView', 'frontend/templateFront');
         }
         else {
-
-        $this->render('front/homePageView', 'frontend/templateFront', compact('lastEpisode'));
+            $view = new view();    
+            $view->render('front/homePageView', 'frontend/templateFront', compact('lastEpisode'));
         }
     }
 

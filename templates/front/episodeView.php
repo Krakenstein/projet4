@@ -21,13 +21,13 @@
         </div>
     </section>
     <section class="comments">
-        <h2>Commentaires</h2>
+        <h2 id="headCom">Commentaires</h2>
 
         <?php foreach($comments as $com): ?>
         <div class="comment">
             <span><?= $com->commentDate ?></span><span>par <b><?= $com->author ?></b></span>
             <p class="content"><?= $com->comment ?></p>
-            <a href="index.php?action=report&amp;id=<?= $com->id ?>&amp;nb=<?= $com->episodeNumber ?>&amp;chpt=<?= $com->episodeNumber ?>" type="submit" class="reporting">signaler</a>
+            <a href="index.php?action=report&amp;id=<?= $com->id ?>&amp;nb=<?= $com->episodeNumber ?>&amp;chpt=<?= $com->episodeNumber ?>" type="submit" class="<?php if(($com->report) > 0) {echo 'reported';} else {echo 'reporting';}?>"><?php if(($com->report) > 0) {echo 'Signalé';} else {echo 'Signaler';}?></a>
         </div>
         <?php endforeach; ?>
 

@@ -17,7 +17,7 @@ class commentManager extends manager
     public function getComments($episodeNumber)//requête pour récupérer les commentaires associés à un épisode en fonction de son numéro de chapitre
     {
         $bdd = $this->dbConnect();
-        $req = $bdd->prepare('SELECT id, episodeNumber, author, comment, DATE_FORMAT(commentDate, \'Le %d/%m/%Y à %Hh %imin %ss\') AS commentDate FROM comments WHERE episodeNumber = ?');
+        $req = $bdd->prepare('SELECT id, episodeNumber, author, comment, DATE_FORMAT(commentDate, \'Le %d/%m/%Y à %Hh %imin %ss\') AS commentDate, report FROM comments WHERE episodeNumber = ?');
         $req->execute(array($episodeNumber));
         $data = $req->fetchALL(PDO::FETCH_OBJ);
         return $data;

@@ -1,10 +1,12 @@
 <?php
+declare(strict_types=1);
 
 require_once('src/model/episodeManager.php');
 require_once('src/model/commentManager.php');
-require_once('src/controller/controller.php');
 
-class BackController extends Controller{
+$view = new view();
+
+class BackController{
 
     function admConnect()//méthode pour se connecter au back
     {
