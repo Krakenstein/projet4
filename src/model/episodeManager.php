@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 require_once("src/model/manager.php");
 
@@ -27,7 +28,7 @@ class episodeManager extends manager
     public function getEpisode($episodeNumber)//requête pour récupérer un épisode en fonction de son numéro de chapitre
     {
         $bdd = $this->dbConnect();
-        $req = $bdd->prepare('SELECT chapterNumber, title, content, stat, DATE_FORMAT(creationDate, \'%d/%m/%Y\') AS creationDate FROM posts WHERE chapterNumber = ? ');
+        $req = $bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(creationDate, \'%d/%m/%Y\') AS creationDate FROM posts WHERE chapterNumber = ? ');
         $req->execute(array($episodeNumber));
         $data = $req->fetch(PDO::FETCH_OBJ);
 
@@ -47,7 +48,7 @@ class episodeManager extends manager
     public function getPostedEpisode($episodeNumber)//requête pour récupérer un épisode publié en fonction de son numéro de chapitre
     {
         $bdd = $this->dbConnect();
-        $req = $bdd->prepare('SELECT chapterNumber, title, content, stat, DATE_FORMAT(creationDate, \'%d/%m/%Y\') AS creationDate FROM posts WHERE chapterNumber = ? AND stat = 1');
+        $req = $bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(creationDate, \'%d/%m/%Y\') AS creationDate FROM posts WHERE chapterNumber = ? AND stat = 1');
         $req->execute(array($episodeNumber));
         $data = $req->fetch(PDO::FETCH_OBJ);
 
@@ -109,7 +110,7 @@ class episodeManager extends manager
     public function joinTables()//requête pour faire une jointure entre la table posts et la table comments
     {
         $bdd = $this->dbConnect();
-        $req = $bdd->prepare('SELECT chapterNumber, title, content, stat, DATE_FORMAT(creationDate, \'%d/%m/%Y\') AS creationDate, commentsNb, reported 
+        $req = $bdd->prepare('SELECT chapterNumber, title, content, stat, DATE_FORMAT(creationDate, \'%d/%m/%Y\') AS creationDate 
         FROM comments
         RIGHT JOIN posts ON posts.chapterNumber = comments.episodeNumber
         GROUP BY(posts.chapterNumber)

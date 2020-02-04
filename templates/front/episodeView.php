@@ -27,11 +27,11 @@
         <div class="comment">
             <span><?= $com->commentDate ?></span><span>par <b><?= $com->author ?></b></span>
             <p class="content"><?= $com->comment ?></p>
-            <a href="index.php?action=report&amp;id=<?= $com->id ?>&amp;nb=<?= $com->episodeNumber ?>&amp;chpt=<?= $com->episodeNumber ?>" type="submit" class="<?php if(($com->report) > 0) {echo 'reported';} else {echo 'reporting';}?>"><?php if(($com->report) > 0) {echo 'Signalé';} else {echo 'Signaler';}?></a>
+            <a href="index.php?action=report&amp;id=<?= $com->id ?>&amp;nb=<?= $com->episodeNumber ?>&amp;chpt=<?= $com->episodeNumber ?>" type="submit" class="<?php if(($com->report) > 0) {echo 'reported';} else {echo 'reporting';}?>"><?php if(($com->report) > 0) {echo 'Signalé ',  $com->report, ' fois';} else {echo 'Signaler';}?></a>
         </div>
         <?php endforeach; ?>
 
-        <form id="makeComment" action="index.php?action=addComment&amp;nb=<?= $episode->chapterNumber ?>" method="post">
+        <form id="makeComment" action="index.php?action=addComment&amp;nb=<?= $episode->chapterNumber ?>&amp;id=<?= $episode->post_id ?>" method="post">
             <h2>Laissez moi un commentaire</h2>
             <input title="author" class="champ" type="text" name="author" id="author" placeholder=" Votre pseudo" size="15"/>
             <label id="labelAuthor" for="author"></label>

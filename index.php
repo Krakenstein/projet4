@@ -47,9 +47,7 @@ try {
         }
         elseif ($_GET['action'] == 'disconnection') {//on se déconnecte du back et on revient à l'accueil du front
             $controller = new backController();
-            $controller2 = new frontController();
             $controller->disconnection();
-            $controller2->homePage();
         }
         elseif ($_GET['action'] == 'addComment') {//rajoute un commentaire, l'associe à un épisode et l'affiche sur la page du dit épisode
             $controller = new frontController();

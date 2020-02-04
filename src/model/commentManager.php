@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 require_once("src/model/Manager.php");
 
@@ -34,11 +35,11 @@ class commentManager extends manager
         $req->closeCursor();
     }
 
-    public function postComment($episodeNumber, $author, $comment)//requête pour ajouter un commentaire à un épisode en fonction de son numéro de chapitre
+    public function postComment($post_id, $episodeNumber, $author, $comment)//requête pour ajouter un commentaire à un épisode en fonction de son numéro de chapitre
     {
         $bdd = $this->dbConnect();
-        $req = $bdd->prepare('INSERT INTO comments (episodeNumber, author, comment, commentDate, report) VALUES (?, ?, ?, NOW(), 0)');
-        $affectedLines = $req->execute(array($episodeNumber, $author, $comment));
+        $req = $bdd->prepare('INSERT INTO comments (post_id, episodeNumber, author, comment, commentDate, report) VALUES (?, ?, ?, ?, NOW(), 0)');
+        $affectedLines = $req->execute(array($post_id, $episodeNumber, $author, $comment));
         return $affectedLines;
         $req->closeCursor();
     }
@@ -49,15 +50,6 @@ class commentManager extends manager
         $req = $bdd->prepare('UPDATE posts SET commentsNb = commentsNb + 1 WHERE chapterNumber = ? ');
         $nbComments = $req->execute(array($chapterNumber));
         return $nbComments;
-        $req->closeCursor();
-    }
-
-    public function countReports($chapterNumber)//requête pour "compter" les commentaires signalés relatifs à un épisode en fonction de son numéro de chapitre
-    {
-        $bdd = $this->dbConnect();
-        $req = $bdd->prepare('UPDATE posts SET reports = reports + 1 WHERE chapterNumber = ? ');
-        $nbReports = $req->execute(array($chapterNumber));
-        return $nbReports;
         $req->closeCursor();
     }
 
@@ -73,7 +65,7 @@ class commentManager extends manager
     public function reports($id)//requête pour ajouter 1 au signalement d'un commentaire et le marquer comme signalé
     {
         $bdd = $this->dbConnect();
-        $req = $bdd->prepare('UPDATE comments SET report = report + 1 , reported = true WHERE id = ? ');
+        $req = $bdd->prepare('UPDATE comments SET report = report + 1  WHERE id = ? ');
         $report = $req->execute(array($id));
         return $report;
         $req->closeCursor();

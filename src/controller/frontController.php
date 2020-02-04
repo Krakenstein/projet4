@@ -11,12 +11,13 @@ class FrontController{
     {
         $episodeManager = new episodeManager();
         $episodes = $episodeManager->getEpisodes();
+        $view = new view();
 
-        if ($episodes === false) {
-            require('src/view/front/episodesBlankView.php');
+        if (empty($episodes)) {
+            $view->render('front/episodesBlankView', 'frontend/templateFront');
         }
         else {
-            $this->render('front/episodesView', 'frontend/templateFront', compact('episodes'));
+            $view->render('front/episodesView', 'frontend/templateFront', compact('episodes'));
         }
     }
 
@@ -24,16 +25,17 @@ class FrontController{
     {
         $episodeManager = new episodeManager();
         $commentManager = new commentManager();
+        $view = new view();
 
         $episode = $episodeManager->getPostedEpisode($_GET['nb']);
         $comments = $commentManager->getComments($_GET['nb']);
 
         if ($episode === false) {
-            $this->render('front/episodeBlankView', 'frontend/templateFront');
+            $view->render('front/episodeBlankView', 'frontend/templateFront');
         }
         else {
             if (isset($_GET['nb']) && $_GET['nb'] > 0) {
-                $this->render('front/episodeView', 'frontend/templateFront', compact('episode', 'comments'));
+                $view->render('front/episodeView', 'frontend/templateFront', compact('episode', 'comments'));
             }
             else {
                 throw new Exception('Aucun numéro dépisode envoyé');
@@ -45,7 +47,7 @@ class FrontController{
     {
         if (isset($_GET['nb']) && $_GET['nb'] > 0) {
             if (!empty($_POST['author']) && !empty($_POST['comment'])) {
-                $this->addComment($_GET['nb'], $_POST['author'], $_POST['comment']);
+                $this->addComment($_GET['id'], $_GET['nb'], $_POST['author'], $_POST['comment']);
                 $this->countCom($_GET['nb']);
             }
             else {
@@ -57,11 +59,11 @@ class FrontController{
         }
     }
 
-    public function addComment($episodeNumber, $author, $comment)//méthode pour rajouter un commentaire à un épisode donné en fonction de son numéro de chapitre
+    public function addComment(string $post_id, string $episodeNumber, string $author, string $comment)//méthode pour rajouter un commentaire à un épisode donné en fonction de son numéro de chapitre
     {
         $commentManager = new commentManager();
         
-        $affectedLines = $commentManager->postComment($episodeNumber, $author, $comment);
+        $affectedLines = $commentManager->postComment($post_id, $episodeNumber, $author, $comment);
 
         if ($affectedLines === false) {
             throw new Exception('Impossible d\'ajouter le commentaire !');
@@ -72,7 +74,7 @@ class FrontController{
         }
     }
 
-    public function countCom($chapterNumber)//méthode pour compter le nbre de commentaires d'un épisode
+    public function countCom(string $chapterNumber)//méthode pour compter le nbre de commentaires d'un épisode
     {
         $commentManager = new commentManager();
         $numberComments = $commentManager->countComments($chapterNumber);
@@ -88,7 +90,7 @@ class FrontController{
         }
     }
 
-    public function reportComment($id)//méthode pour signalé un commentaire
+    public function reportComment(string $id)//méthode pour signalé un commentaire
     {
         $commentManager = new commentManager();
         $episodeManager = new episodeManager();
@@ -96,7 +98,6 @@ class FrontController{
         $episode = $episodeManager->getEpisode($_GET['nb']);
         $comments = $commentManager->getComments($_GET['nb']);
         $numberComments = $commentManager->reports($id);
-        $nbReports = $commentManager->countReports($_GET['chpt']);
 
         header('Location: index.php?action=episode&nb=' . ($_GET['nb']) . '#headCom');
     }
@@ -105,21 +106,22 @@ class FrontController{
     {
         session_start();
         $episodeManager = new episodeManager();
+        $view = new view();
 
         $lastEpisode = $episodeManager->getLastEpisode();
 
         if ($lastEpisode === false) {
-            $this->render('front/homePageBlankView', 'frontend/templateFront');
+            $view->render('front/homePageBlankView', 'frontend/templateFront');
         }
-        else {
-            $view = new view();    
+        else {   
             $view->render('front/homePageView', 'frontend/templateFront', compact('lastEpisode'));
         }
     }
 
     public function connectionPage()//méthode pour afficher la page de connection
     {
-        $this->render('front/connectionView', 'frontend/templateFrontAdmin');
+        $view = new view();
+        $view->render('front/connectionView', 'frontend/templateFrontAdmin');
     }
 }
 

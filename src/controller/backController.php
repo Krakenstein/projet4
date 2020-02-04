@@ -3,23 +3,23 @@ declare(strict_types=1);
 
 require_once('src/model/episodeManager.php');
 require_once('src/model/commentManager.php');
-
-$view = new view();
+require_once('src/view/View.php');
 
 class BackController{
 
     function admConnect()//méthode pour se connecter au back
     {
         $episodeManager = new episodeManager();
-
         $tablesJoin = $episodeManager->joinTables();
+
+        $view = new view();
         
         session_start();
 
         if ((isset($_POST['password']) && $_POST['password'] == "123") or ($_SESSION['admConnected'] == true)){
             if ((isset($_POST['nom']) && $_POST['nom'] == "jean") or ($_SESSION['admConnected'] == true)){
                 $_SESSION['admConnected'] = true;
-                $this->render('back/homePageBackView', 'backend/templateBack', compact('tablesJoin'));
+                $view->render('back/homePageBackView', 'backend/templateBack', compact('tablesJoin'));
             }
             else {
                 throw new Exception('Pseudo incorrect');
@@ -34,9 +34,10 @@ class BackController{
     function createEpisode()//méthode pour afficher la page de création d'épisode
     {
         session_start();
+        $view = new view();
                 
         if ($_SESSION['admConnected'] == true) {               
-            $this->render('back/createEpisodeView', 'backend/templateBack');
+            $view->render('back/createEpisodeView', 'backend/templateBack');
         }
         else {         
             throw new Exception('Connectez-vous');
@@ -46,6 +47,7 @@ class BackController{
     function addEpisode()//méthode pour ajouter un épisode dans la bdd archivé ou publié
     {
         session_start();
+        $view = new view();
                 
         if ($_SESSION['admConnected'] == true) { 
         
@@ -54,7 +56,7 @@ class BackController{
                     $this->addPostedEpisode($_POST['chapterNumber'], $_POST['title'], $_POST['content']);
                     $episodeManager = new episodeManager();
                     $tablesJoin = $episodeManager->joinTables();
-                    $this->render('back/homePageBackView', 'backend/templateBack', compact('tablesJoin'));
+                    $view->render('back/homePageBackView', 'backend/templateBack', compact('tablesJoin'));
                 }
                 else {
                     throw new Exception('tous les champs ne sont pas remplis !');
@@ -65,7 +67,7 @@ class BackController{
                     $this->addSavedEpisode($_POST['chapterNumber'], $_POST['title'], $_POST['content']);
                     $episodeManager = new episodeManager();
                     $tablesJoin = $episodeManager->joinTables();
-                    $this->render('back/homePageBackView', 'backend/templateBack', compact('tablesJoin'));
+                    $view->render('back/homePageBackView', 'backend/templateBack', compact('tablesJoin'));
                 }
                 else {
                     throw new Exception('tous les champs ne sont pas remplis !');
@@ -80,14 +82,14 @@ class BackController{
         }
     }
 
-    function addPostedEpisode($episodeNumber, $title, $content)//méthode pour ajouter un épisode publié à la bdd
+    function addPostedEpisode(string $episodeNumber, string $title, string $content)//méthode pour ajouter un épisode publié à la bdd
     {
         $episodeManager = new episodeManager();
         $postedEpisode = $episodeManager->postEpisode($episodeNumber, $title, $content);
 
     }
 
-    function addSavedEpisode($episodeNumber, $title, $content)//méthode pour ajouter un épisode archivé à la bdd
+    function addSavedEpisode(string $episodeNumber, string $title, string $content)//méthode pour ajouter un épisode archivé à la bdd
     {
         $episodeManager = new episodeManager();
         $postedEpisode = $episodeManager->saveEpisode($episodeNumber, $title, $content);
@@ -97,6 +99,7 @@ class BackController{
     function episodeModications()//méthode pour modifier un épisode
     {
         session_start();
+        $view = new view();
                 
         if ($_SESSION['admConnected'] == true) {
         
@@ -105,7 +108,7 @@ class BackController{
                     $this->modifyPostedEpisode($_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
                     $episodeManager = new episodeManager();
                     $tablesJoin = $episodeManager->joinTables();
-                    $this->render('back/homePageBackView', 'backend/templateBack', compact('tablesJoin'));
+                    $view->render('back/homePageBackView', 'backend/templateBack', compact('tablesJoin'));
                 }
                 else {
                     throw new Exception('tous les champs ne sont pas remplis !');
@@ -116,7 +119,7 @@ class BackController{
                     $this->modifySavedEpisode($_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
                     $episodeManager = new episodeManager();
                     $tablesJoin = $episodeManager->joinTables();
-                    $this->render('back/homePageBackView', 'backend/templateBack', compact('tablesJoin'));
+                    $view->render('back/homePageBackView', 'backend/templateBack', compact('tablesJoin'));
                 }
                 else {
                     throw new Exception('tous les champs ne sont pas remplis !');
@@ -127,7 +130,7 @@ class BackController{
                     $this->episodeDelete();
                     $episodeManager = new episodeManager();
                     $tablesJoin = $episodeManager->joinTables();
-                    $this->render('back/homePageBackView', 'backend/templateBack', compact('tablesJoin'));
+                    $view->render('back/homePageBackView', 'backend/templateBack', compact('tablesJoin'));
                 }
                 else {
                     throw new Exception(' aucun identifiant de billet envoyé !');
@@ -142,14 +145,14 @@ class BackController{
         }
     }
 
-    function modifyPostedEpisode($nvchapter, $nvtitle, $nvcontent)//méthode pour modifier un épisode en le publiant
+    function modifyPostedEpisode(string $nvchapter, string $nvtitle, string $nvcontent)//méthode pour modifier un épisode en le publiant
     {
         $episodeManager = new episodeManager();
         $postedModifiedEpisode = $episodeManager->postModifiedEpisode($nvchapter, $nvtitle, $nvcontent);
 
     }
 
-    function modifySavedEpisode($nvchapter, $nvtitle, $nvcontent)//méthode pour modifier un épisode en l'archivant
+    function modifySavedEpisode(string $nvchapter, string $nvtitle, string $nvcontent)//méthode pour modifier un épisode en l'archivant
     {
         $episodeManager = new episodeManager();
         $savedModifiedEpisode = $episodeManager->saveModifiedEpisode($nvchapter, $nvtitle, $nvcontent);
@@ -160,6 +163,7 @@ class BackController{
     {
         $episodeManager = new episodeManager();
         $commentManager = new commentManager();
+        $view = new view();
 
         $episode = $episodeManager->getEpisode($_GET['nb']);
         $comments = $commentManager->getReportedComments($_GET['nb']);
@@ -168,7 +172,7 @@ class BackController{
                 
         if ($_SESSION['admConnected'] == true) { 
             if (isset($_GET['nb']) && $_GET['nb'] > 0) {
-                $this->render('back/episodeBackView', 'backend/templateBack', compact('episode', 'comments'));
+                $view->render('back/episodeBackView', 'backend/templateBack', compact('episode', 'comments'));
             }
             else {
                 throw new Exception('Aucun numéro dépisode envoyé');
@@ -193,6 +197,7 @@ class BackController{
     {
         $episodeManager = new episodeManager();
         $commentManager = new commentManager();
+        $view = new view();
 
         $commentManager->deleteComment($_GET['id']);
         $episode = $episodeManager->getEpisode($_GET['nb']);
@@ -202,7 +207,7 @@ class BackController{
         session_start();
                 
         if ($_SESSION['admConnected'] == true) {               
-            $this->render('back/episodeBackView', 'backend/templateBack', compact('episode', 'comments', 'subComments'));
+            $view->render('back/episodeBackView', 'backend/templateBack', compact('episode', 'comments', 'subComments'));
         }
         else {         
             throw new Exception('Connectez-vous');
@@ -212,9 +217,10 @@ class BackController{
     function profil()//méthode pour aller à la page profil
     {
         session_start();
+        $view = new view();
                 
         if ($_SESSION['admConnected'] == true) {               
-            $this->render('back/profilView', 'backend/templateBack');
+            $view->render('back/profilView', 'backend/templateBack');
         }
         else {         
             throw new Exception('Connectez-vous');
@@ -228,6 +234,18 @@ class BackController{
         if ($_SESSION['admConnected'] == true) {
             $_SESSION['admConnected'] = false;
             session_destroy();
+            session_start();
+            $episodeManager = new episodeManager();
+            $view = new view();
+
+            $lastEpisode = $episodeManager->getLastEpisode();
+
+            if ($lastEpisode === false) {
+                $view->render('front/homePageBlankView', 'frontend/templateFront');
+            }
+            else {   
+                $view->render('front/homePageView', 'frontend/templateFront', compact('lastEpisode'));
+            }
         }
         else {
             throw new Exception('Connectez-vous');

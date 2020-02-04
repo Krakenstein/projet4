@@ -30,7 +30,7 @@
                     <div class="cell"><?= $episode->creationDate ?></div>
                     <div class="cell"><?php if(($episode->stat) == 1) echo 'publié'?><?php if(($episode->stat) == 0) echo 'archivé'?></div>
                     <div class="cell"><?= $episode->commentsNb ?></div>
-                    <div class="cell"><?php if(($episode->reported) == 1) echo 'Oui'?><?php if(($episode->reported) == NULL) echo 'Non'?></div>
+                    <div class="cell"><?php if(($episode->report) > 0) echo 'Oui'?><?php if(($episode->report) === 0) echo 'Non'?></div>
             <?php endforeach; ?>
                 </a>
             </div>
