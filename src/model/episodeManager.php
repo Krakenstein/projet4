@@ -18,7 +18,7 @@ class episodeManager extends manager
     public function getAllEpisodes()//requête pour récupérer la liste de tous les épisodes 
     {
         $bdd = $this->dbConnect();
-        $req = $bdd->prepare('SELECT chapterNumber, title, content, stat, DATE_FORMAT(creationDate, \'%d/%m/%Y\') AS creationDate FROM posts ORDER BY chapterNumber DESC');
+        $req = $bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(creationDate, \'%d/%m/%Y\') AS creationDate FROM posts ORDER BY chapterNumber DESC');
         $req->execute();
         $allEpisodes = $req->fetchALL(PDO::FETCH_OBJ);
         return $allEpisodes;
@@ -110,7 +110,9 @@ class episodeManager extends manager
     public function joinTables()//requête pour faire une jointure entre la table posts et la table comments
     {
         $bdd = $this->dbConnect();
-        $req = $bdd->prepare('SELECT chapterNumber, title, content, stat, DATE_FORMAT(creationDate, \'%d/%m/%Y\') AS creationDate 
+        $req = $bdd->prepare('SELECT posts.post_id, chapterNumber, title, content, stat, DATE_FORMAT(creationDate, \'%d/%m/%Y\') AS creationDate,
+        COUNT(comments.post_id) AS commentsNb,
+        SUM(comments.report) AS reportsNb
         FROM comments
         RIGHT JOIN posts ON posts.chapterNumber = comments.episodeNumber
         GROUP BY(posts.chapterNumber)
@@ -119,5 +121,6 @@ class episodeManager extends manager
         $tablesJoin = $req->fetchALL(PDO::FETCH_OBJ);
  
         return $tablesJoin; 
+        $req->closeCursor();
     }
 }

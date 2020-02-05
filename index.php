@@ -29,9 +29,17 @@ try {
             $controller = new backController();
             $controller->profil();
         }
-        elseif ($_GET['action'] == 'deleteCom') {//action pour supprimmer un commentaire depuis le back
+        elseif ($_GET['action'] == 'deleteComEpisode') {//action pour supprimmer un commentaire depuis la page épisode du back
             $controller = new backController();
             $controller->commentDelete();
+        }
+        elseif ($_GET['action'] == 'deleteCom') {//action pour supprimmer un commentaire depuis la page commentaires du back
+            $controller = new backController();
+            $controller->comDelete();
+        }
+        elseif ($_GET['action'] == 'commentsPage') {//action pour supprimmer un commentaire depuis le back
+            $controller = new backController();
+            $controller->comPage();
         }
         elseif ($_GET['action'] == 'modifyEpisode') {// action pour se rendre à la page de modification d'épisode dans le back
             $controller = new backController();

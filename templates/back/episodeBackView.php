@@ -8,7 +8,7 @@
     <div id="main">
         <nav>
             <a class="btn" href="index.php?action=admConnect">Episodes</a>
-            <a class="btn" href="index.php?action=createEpisode">Nouvel épisode</a>
+            <a class="<?php if(($sum->value_sum) === null) echo 'btn'?><?php if(($sum->value_sum) > 0) echo 'btnRed'?>" href="index.php?action=commentsPage">Commentaires</a>
             <a class="btn" href="index.php?action=profil">Profil</a>
             <a class="btn" href="index.php?action=disconnection">Déconnection</a>
         </nav>
@@ -38,7 +38,7 @@
                 <span><?= $com->commentDate ?></span><span>par <b><?= $com->author ?></b></span>
                 <p class="content"><?= $com->comment ?></p>
                 <h3>Nombre de signalements: <?= $com->report ?></h3>
-                <a href="index.php?action=deleteCom&amp;id=<?= $com->id ?>&amp;nb=<?= $com->episodeNumber ?>&amp;chpt=<?= $com->episodeNumber ?>" class="boutonRouge">supprimer</a>
+                <a href="index.php?action=deleteComEpisode&amp;id=<?= $com->id ?>&amp;nb=<?= $com->episodeNumber ?>&amp;chpt=<?= $com->episodeNumber ?>" class="boutonRouge">supprimer</a>
             </div>
         <?php endforeach; ?>
         </section>

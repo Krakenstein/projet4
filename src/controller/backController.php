@@ -10,7 +10,10 @@ class BackController{
     function admConnect()//méthode pour se connecter au back
     {
         $episodeManager = new episodeManager();
+        $commentManager = new commentManager();
+
         $tablesJoin = $episodeManager->joinTables();
+        $sum = $commentManager->countReports();
 
         $view = new view();
         
@@ -19,7 +22,7 @@ class BackController{
         if ((isset($_POST['password']) && $_POST['password'] == "123") or ($_SESSION['admConnected'] == true)){
             if ((isset($_POST['nom']) && $_POST['nom'] == "jean") or ($_SESSION['admConnected'] == true)){
                 $_SESSION['admConnected'] = true;
-                $view->render('back/homePageBackView', 'backend/templateBack', compact('tablesJoin'));
+                $view->render('back/homePageBackView', 'backend/templateBack', compact('tablesJoin', 'sum'));
             }
             else {
                 throw new Exception('Pseudo incorrect');
@@ -35,9 +38,12 @@ class BackController{
     {
         session_start();
         $view = new view();
+        $commentManager = new commentManager();
+
+        $sum = $commentManager->countReports();
                 
         if ($_SESSION['admConnected'] == true) {               
-            $view->render('back/createEpisodeView', 'backend/templateBack');
+            $view->render('back/createEpisodeView', 'backend/templateBack', compact('sum'));
         }
         else {         
             throw new Exception('Connectez-vous');
@@ -167,16 +173,34 @@ class BackController{
 
         $episode = $episodeManager->getEpisode($_GET['nb']);
         $comments = $commentManager->getReportedComments($_GET['nb']);
+        $sum = $commentManager->countReports();
         
         session_start();
                 
         if ($_SESSION['admConnected'] == true) { 
             if (isset($_GET['nb']) && $_GET['nb'] > 0) {
-                $view->render('back/episodeBackView', 'backend/templateBack', compact('episode', 'comments'));
+                $view->render('back/episodeBackView', 'backend/templateBack', compact('episode', 'comments', 'sum'));
             }
             else {
                 throw new Exception('Aucun numéro dépisode envoyé');
             }
+        }
+        else {         
+            throw new Exception('Connectez-vous');
+        }     
+    }
+
+    function comPage()//on affiche la page de modification d'un épisode dans le back avec ses commentaires
+    {
+        $commentManager = new commentManager();
+        $view = new view();
+
+        $comments = $commentManager->getAllComments();
+        
+        session_start();
+                
+        if ($_SESSION['admConnected'] == true) { 
+            $view->render('back/commentsBackView', 'backend/templateBack', compact('comments'));           
         }
         else {         
             throw new Exception('Connectez-vous');
@@ -193,7 +217,7 @@ class BackController{
 
     }
 
-    function commentDelete()//méthode pour supprimer un commentaire
+    function commentDelete()//méthode pour supprimer un commentaire depuis la page d'un épisode
     {
         $episodeManager = new episodeManager();
         $commentManager = new commentManager();
@@ -202,12 +226,30 @@ class BackController{
         $commentManager->deleteComment($_GET['id']);
         $episode = $episodeManager->getEpisode($_GET['nb']);
         $comments = $commentManager->getReportedComments($_GET['nb']);
-        $subComments = $commentManager->substractComments($_GET['chpt']);
+        $sum = $commentManager->countReports();
 
         session_start();
                 
         if ($_SESSION['admConnected'] == true) {               
-            $view->render('back/episodeBackView', 'backend/templateBack', compact('episode', 'comments', 'subComments'));
+            $view->render('back/episodeBackView', 'backend/templateBack', compact('episode', 'comments', 'sum'));
+        }
+        else {         
+            throw new Exception('Connectez-vous');
+        }
+    }
+
+    function comDelete()//méthode pour supprimer un commentaire depuis la page d'un épisode
+    {
+        $commentManager = new commentManager();
+        $commentManager->deleteComment($_GET['id']);
+        $comments = $commentManager->getAllComments();
+        $sum = $commentManager->countReports();
+        $view = new view();
+
+        session_start();
+
+        if ($_SESSION['admConnected'] == true) {               
+            $view->render('back/commentsBackView', 'backend/templateBack', compact('comments', 'sum'));
         }
         else {         
             throw new Exception('Connectez-vous');
@@ -218,9 +260,11 @@ class BackController{
     {
         session_start();
         $view = new view();
+        $commentManager = new commentManager();
+        $sum = $commentManager->countReports();
                 
         if ($_SESSION['admConnected'] == true) {               
-            $view->render('back/profilView', 'backend/templateBack');
+            $view->render('back/profilView', 'backend/templateBack', compact('sum'));
         }
         else {         
             throw new Exception('Connectez-vous');

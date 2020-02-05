@@ -27,7 +27,7 @@
         <div class="comment">
             <span><?= $com->commentDate ?></span><span>par <b><?= $com->author ?></b></span>
             <p class="content"><?= $com->comment ?></p>
-            <a href="index.php?action=report&amp;id=<?= $com->id ?>&amp;nb=<?= $com->episodeNumber ?>&amp;chpt=<?= $com->episodeNumber ?>" type="submit" class="<?php if(($com->report) > 0) {echo 'reported';} else {echo 'reporting';}?>"><?php if(($com->report) > 0) {echo 'Signalé ',  $com->report, ' fois';} else {echo 'Signaler';}?></a>
+            <a href="index.php?action=report&amp;id=<?= $com->id ?>&amp;nb=<?= $com->episodeNumber ?>&amp;chpt=<?= $com->episodeNumber ?>" type="submit" class="<?php if(($com->report) < 24) {echo 'reporting';} else {echo 'reported';}?>"><?php if(($com->report) > 0) {echo 'Signalé ',  $com->report, ' fois';} else {echo 'Signaler';}?></a>
         </div>
         <?php endforeach; ?>
 

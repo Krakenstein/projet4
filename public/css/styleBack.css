@@ -65,6 +65,32 @@ nav
     box-shadow: 0 8px 6px -6px black;
 }
 
+.btnRed
+{
+    display: inline-block;    
+    vertical-align: center;  
+    text-align: center;    
+    padding: 10px;
+    margin: 5px;
+    color: #F9FBF2;
+    background-color: #cc0000;
+    text-decoration: none; 
+    border-radius: 20px;
+    font-family: Geneva, Kalimati, sans-serif;
+    font-size: 1.25em;
+    border: 2px solid #F9FBF2;;   
+}
+
+.btnRed:hover
+{
+    color: #364156;
+    background-color: rgb(255, 70, 70);
+    border-radius: 20px;
+    border: 2px solid #000807;
+    transition: ease-in 0.25s;
+    box-shadow: 0 8px 6px -6px black;
+}
+
 .active
 {
     color: #364156;

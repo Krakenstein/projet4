@@ -5,10 +5,10 @@ require_once("src/model/Manager.php");
 
 class commentManager extends manager
 {
-    public function getAllComments()//requête pour récupérer tous les commentaires 
+    public function getAllComments()//requête pour récupérer tous les commentaires par ordre décroissant de signalement
     {
         $bdd = $this->dbConnect();
-        $req = $bdd->prepare('SELECT * FROM comments ORDER BY episodeNumber DESC');
+        $req = $bdd->prepare('SELECT id, episodeNumber, author, comment, report, DATE_FORMAT(commentDate, \'Le %d/%m/%Y à %Hh %imin %ss\') AS commentDate FROM comments ORDER BY report DESC');
         $req->execute();
         $allComs = $req->fetchALL(PDO::FETCH_OBJ);
         return $allComs;
@@ -44,25 +44,7 @@ class commentManager extends manager
         $req->closeCursor();
     }
 
-    public function countComments($chapterNumber)//requête pour "compter" les commentaires relatifs à un épisode en fonction de son numéro de chapitre
-    {
-        $bdd = $this->dbConnect();
-        $req = $bdd->prepare('UPDATE posts SET commentsNb = commentsNb + 1 WHERE chapterNumber = ? ');
-        $nbComments = $req->execute(array($chapterNumber));
-        return $nbComments;
-        $req->closeCursor();
-    }
-
-    public function substractComments($chapterNumber)//requête pour soustraire les commentaires supprimés relatifs à un épisode en fonction de son numéro de chapitre
-    {
-        $bdd = $this->dbConnect();
-        $req = $bdd->prepare('UPDATE posts SET commentsNb = commentsNb - 1 WHERE chapterNumber = ? ');
-        $subComments = $req->execute(array($chapterNumber));
-        return $subComments;
-        $req->closeCursor();
-    }
-
-    public function reports($id)//requête pour ajouter 1 au signalement d'un commentaire et le marquer comme signalé
+    public function reports($id)//requête pour ajouter 1 au signalement d'un commentaire 
     {
         $bdd = $this->dbConnect();
         $req = $bdd->prepare('UPDATE comments SET report = report + 1  WHERE id = ? ');
@@ -87,4 +69,13 @@ class commentManager extends manager
         $req->closeCursor();
     }
 
+    public function countReports()//requête pour compter les reports
+    {
+        $bdd = $this->dbConnect();
+        $req = $bdd->prepare('SELECT SUM(report) AS value_sum FROM comments ');
+        $req->execute();
+        $sum = $req->fetch(PDO::FETCH_OBJ);
+        return $sum;
+        $req->closeCursor();
+    }
 }

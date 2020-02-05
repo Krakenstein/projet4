@@ -8,7 +8,7 @@
     <div id="main">
         <nav>
             <a class="btn active" href="index.php?action=admConnect">Episodes</a>
-            <a class="btn" href="index.php?action=createEpisode">Nouvel épisode</a>
+            <a class="<?php if(($sum->value_sum) === null) echo 'btn'?><?php if(($sum->value_sum) > 0) echo 'btnRed'?>" href="index.php?action=commentsPage">Commentaires</a>
             <a class="btn" href="index.php?action=profil">Profil</a>
             <a class="btn" href="index.php?action=disconnection">Déconnection</a>
         </nav>
@@ -30,7 +30,7 @@
                     <div class="cell"><?= $episode->creationDate ?></div>
                     <div class="cell"><?php if(($episode->stat) == 1) echo 'publié'?><?php if(($episode->stat) == 0) echo 'archivé'?></div>
                     <div class="cell"><?= $episode->commentsNb ?></div>
-                    <div class="cell"><?php if(($episode->report) > 0) echo 'Oui'?><?php if(($episode->report) === 0) echo 'Non'?></div>
+                    <div class="cell"><?php if(($episode->reportsNb) == null) echo '0'?><?php if(($episode->reportsNb) !== 0) echo $episode->reportsNb ?></div>
             <?php endforeach; ?>
                 </a>
             </div>
