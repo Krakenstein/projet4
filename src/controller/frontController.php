@@ -29,13 +29,14 @@ class FrontController{
 
         $episode = $episodeManager->getPostedEpisode($_GET['nb']);
         $comments = $commentManager->getComments($_GET['nb']);
+        $error = null;
 
         if ($episode === false) {
             $view->render('front/episodeBlankView', 'frontend/templateFront');
         }
         else {
             if (isset($_GET['nb']) && $_GET['nb'] > 0) {
-                $view->render('front/episodeView', 'frontend/templateFront', compact('episode', 'comments'));
+                $view->render('front/episodeView', 'frontend/templateFront', compact('episode', 'comments', 'error'));
             }
             else {
                 throw new Exception('Aucun numéro dépisode envoyé');
@@ -45,13 +46,21 @@ class FrontController{
 
     public function newCom()
     {
+        $episodeManager = new episodeManager();
+        $commentManager = new commentManager();
+        $view = new view();
+
+        $episode = $episodeManager->getPostedEpisode($_GET['nb']);
+        $comments = $commentManager->getComments($_GET['nb']);
+        
         if (isset($_GET['nb']) && $_GET['nb'] > 0) {
             if (!empty($_POST['author']) && !empty($_POST['comment'])) {
                 $this->addComment($_GET['id'], $_GET['nb'], $_POST['author'], $_POST['comment']);
                 $this->countCom($_GET['nb']);
             }
             else {
-                throw new Exception('tous les champs ne sont pas remplis !');
+                $error = 'tous les champs ne sont pas remplis !';
+                $view->render('front/episodeView', 'frontend/templateFront', compact('episode', 'comments', 'error'));
             }
         }
         else {
@@ -121,7 +130,9 @@ class FrontController{
     public function connectionPage()//méthode pour afficher la page de connection
     {
         $view = new view();
-        $view->render('front/connectionView', 'frontend/templateFrontAdmin');
+        $error = null;
+
+        $view->render('front/connectionView', 'frontend/templateFrontAdmin', compact('error'));
     }
 }
 

@@ -151,6 +151,11 @@ section a
     width: 75%;
 }
 
+label
+{
+    color: red;
+}
+
 .episodeTitle
 {
     font-size: 1.3em;

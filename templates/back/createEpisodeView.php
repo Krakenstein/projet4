@@ -7,7 +7,7 @@
     </header>
     <div id="main">
         <nav>
-            <a class="btn" href="index.php?action=admConnect">Episodes</a>
+            <a class="btn" href="index.php?action=episodes">Episodes</a>
             <a class="<?php if(($sum->value_sum) === null) echo 'btn'?><?php if(($sum->value_sum) > 0) echo 'btnRed'?>" href="index.php?action=commentsPage">Commentaires</a>
             <a class="btn" href="index.php?action=profil">Profil</a>
             <a class="btn" href="accueil.html">Déconnection</a>
@@ -18,7 +18,7 @@
                 <input title="chapterNumber" class="champ" type="text" name="chapterNumber" id="number" placeholder="Numéro" size="5"/>
                 <label id="labelChapterNumber" for="chapterNumber"></label>
                 <h3>Titre de l'épisode</h3><input title="title" class="champ" type="text" name="title" id="titre" placeholder="Titre de l'épisode" size="45"/>
-                <label id="labelTitle" for="title"></label>
+                <label id="labelTitle" for="title"><?php echo $error ?></label>
                 <textarea title="episode" name="content" id="episode" cols="150" rows="50"></textarea>
                 <label id="labelEpisode" for="episode"></label>
                 <div id="btnAction">

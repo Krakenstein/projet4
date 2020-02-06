@@ -7,7 +7,7 @@
     </header>
     <div id="main">
         <nav>
-            <a class="btn active" href="index.php?action=admConnect">Episodes</a>
+            <a class="btn active" href="index.php?action=episodes">Episodes</a>
             <a class="<?php if(($sum->value_sum) === null) echo 'btn'?><?php if(($sum->value_sum) > 0) echo 'btnRed'?>" href="index.php?action=commentsPage">Commentaires</a>
             <a class="btn" href="index.php?action=profil">Profil</a>
             <a class="btn" href="index.php?action=disconnection">Déconnection</a>

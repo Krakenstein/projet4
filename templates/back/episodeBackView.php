@@ -7,7 +7,7 @@
     </header>
     <div id="main">
         <nav>
-            <a class="btn" href="index.php?action=admConnect">Episodes</a>
+            <a class="btn" href="index.php?action=episodes">Episodes</a>
             <a class="<?php if(($sum->value_sum) === null) echo 'btn'?><?php if(($sum->value_sum) > 0) echo 'btnRed'?>" href="index.php?action=commentsPage">Commentaires</a>
             <a class="btn" href="index.php?action=profil">Profil</a>
             <a class="btn" href="index.php?action=disconnection">Déconnection</a>
@@ -20,7 +20,7 @@
                 <h3>Statut: <?php if(($episode->stat) == 1) echo 'publié'?><?php if(($episode->stat) == 0) echo 'archivé'?></h3>
                 <h3>Le <?= $episode->creationDate ?></h3>
                 <h3>Titre de l'épisode</h3><input title="title" class="champ" type="text" name="nvtitle" id="titre" value="<?= $episode->title ?>" size="45"/>
-                <label id="labelTitle" for="title"></label>
+                <label id="labelTitle" for="title"><?php echo $error ?></label>
                 <textarea title="content" name="nvcontent" id="episode" cols="150" rows="50"><?= $episode->content ?></textarea>
                     <label id="labelEpisode" for="content"></label>
                 <div id="btnAction">

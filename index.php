@@ -21,9 +21,17 @@ try {
             $controller = new backController();
             $controller->admConnect();
         }
+        elseif ($_GET['action'] == 'episodes') {//on affiche la page d'accueil-liste des épisodes dans le back
+            $controller = new backController();
+            $controller->episodes();
+        }
         elseif ($_GET['action'] == 'createEpisode') {//on affiche la page de création d'un nouvel épisode dans le back
             $controller = new backController();
             $controller->createEpisode();
+        }
+        elseif ($_GET['action'] == 'resetAdmin') {//on affiche la page profil dans le back
+            $controller = new backController();
+            $controller->reset();
         }
         elseif ($_GET['action'] == 'profil') {//on affiche la page profil dans le back
             $controller = new backController();
