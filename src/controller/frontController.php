@@ -27,15 +27,15 @@ class FrontController{
         $commentManager = new commentManager();
         $view = new view();
 
-        $episode = $episodeManager->getPostedEpisode($_GET['nb']);
-        $comments = $commentManager->getComments($_GET['nb']);
+        $episode = $episodeManager->getPostedEpisode($_GET['id']);
+        $comments = $commentManager->getComments($_GET['id']);
         $error = null;
 
         if ($episode === false) {
             $view->render('front/episodeBlankView', 'frontend/templateFront');
         }
         else {
-            if (isset($_GET['nb']) && $_GET['nb'] > 0) {
+            if (isset($_GET['id']) && $_GET['id'] > 0) {
                 $view->render('front/episodeView', 'frontend/templateFront', compact('episode', 'comments', 'error'));
             }
             else {
@@ -50,13 +50,13 @@ class FrontController{
         $commentManager = new commentManager();
         $view = new view();
 
-        $episode = $episodeManager->getPostedEpisode($_GET['nb']);
-        $comments = $commentManager->getComments($_GET['nb']);
+        $episode = $episodeManager->getPostedEpisode($_GET['id']);
+        $comments = $commentManager->getComments($_GET['id']);
         
-        if (isset($_GET['nb']) && $_GET['nb'] > 0) {
+        if (isset($_GET['id']) && $_GET['id'] > 0) {
             if (!empty($_POST['author']) && !empty($_POST['comment'])) {
                 $this->addComment($_GET['id'], $_GET['nb'], $_POST['author'], $_POST['comment']);
-                $this->countCom($_GET['nb']);
+                $this->countCom($_GET['id']);
             }
             else {
                 $error = 'tous les champs ne sont pas remplis !';
@@ -78,15 +78,15 @@ class FrontController{
             throw new Exception('Impossible d\'ajouter le commentaire !');
         }
         else {
-            header('Location: index.php?action=episode&nb=' . $episodeNumber . '#headCom');
+            header('Location: index.php?action=episode&id=' . $post_id . '#headCom');
             exit();
         }
     }
 
-    public function countCom(string $chapterNumber)//méthode pour compter le nbre de commentaires d'un épisode
+    public function countCom(string $post_id)//méthode pour compter le nbre de commentaires d'un épisode
     {
         $commentManager = new commentManager();
-        $numberComments = $commentManager->countComments($chapterNumber);
+        $numberComments = $commentManager->countComments($post_id);
     }
 
     public function report()
@@ -104,11 +104,11 @@ class FrontController{
         $commentManager = new commentManager();
         $episodeManager = new episodeManager();
 
-        $episode = $episodeManager->getEpisode($_GET['nb']);
-        $comments = $commentManager->getComments($_GET['nb']);
+        $episode = $episodeManager->getEpisode($_GET['postid']);
+        $comments = $commentManager->getComments($_GET['id']);
         $numberComments = $commentManager->reports($id);
 
-        header('Location: index.php?action=episode&nb=' . ($_GET['nb']) . '#headCom');
+        header('Location: index.php?action=episode&id=' . ($_GET['postid']) . '#headCom');
     }
 
     public function homePage()//méthode pour démarrer une session lorsque on affiche la page d'accueil et récupérer le dernier épisode posté

@@ -8,14 +8,14 @@
     <div id="main">
         <nav>
             <a class="btn" href="index.php?action=episodes">Episodes</a>
-            <a class="<?php if(($sum->value_sum) === null) echo 'btn'?><?php if(($sum->value_sum) > 0) echo 'btnRed'?>" href="index.php?action=commentsPage">Commentaires</a>
+            <a class="btn<?php if(($sum->value_sum) > 0) echo 'Red'?>" href="index.php?action=commentsPage">Commentaires</a>
             <a class="btn" href="index.php?action=profil">Profil</a>
             <a class="btn" href="index.php?action=disconnection">Déconnection</a>
         </nav>
         <section id="content">
             <form id="modification" action="index.php?action=modifiedEpisode&amp;nb=<?= $episode->chapterNumber ?>" method="post">
                 <h3>Gestion de l'épisode</h3>
-                <input title="chapterNumber" class="champ" type="text" name="nvchapter" id="number" value="<?= $episode->chapterNumber ?>" size="5" readonly="readonly />
+                <input title="chapterNumber" class="champ" type="text" name="nvchapter" id="number" value="<?= $episode->chapterNumber ?>" size="5" />
                 <label id="labelChapterNumber" for="chapterNumber"></label>
                 <h3>Statut: <?php if(($episode->stat) == 1) echo 'publié'?><?php if(($episode->stat) == 0) echo 'archivé'?></h3>
                 <h3>Le <?= $episode->creationDate ?></h3>
@@ -38,7 +38,7 @@
                 <span><?= $com->commentDate ?></span><span>par <b><?= $com->author ?></b></span>
                 <p class="content"><?= $com->comment ?></p>
                 <h3>Nombre de signalements: <?= $com->report ?></h3>
-                <a href="index.php?action=deleteComEpisode&amp;id=<?= $com->id ?>&amp;nb=<?= $com->episodeNumber ?>&amp;chpt=<?= $com->episodeNumber ?>" class="boutonRouge">supprimer</a>
+                <a href="index.php?action=deleteComEpisode&amp;id=<?= $com->id ?>&amp;postid=<?= $com->post_id ?>&amp;chpt=<?= $com->episodeNumber ?>" class="boutonRouge">supprimer</a>
             </div>
         <?php endforeach; ?>
         </section>

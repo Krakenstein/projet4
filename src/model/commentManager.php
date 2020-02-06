@@ -15,27 +15,27 @@ class commentManager extends manager
         $req->closeCursor();
     }
     
-    public function getComments($episodeNumber)//requête pour récupérer les commentaires associés à un épisode en fonction de son numéro de chapitre
+    public function getComments($post_id)//requête pour récupérer les commentaires associés à un épisode en fonction de son id
     {
         $bdd = $this->dbConnect();
-        $req = $bdd->prepare('SELECT id, episodeNumber, author, comment, DATE_FORMAT(commentDate, \'Le %d/%m/%Y à %Hh %imin %ss\') AS commentDate, report FROM comments WHERE episodeNumber = ?');
-        $req->execute(array($episodeNumber));
+        $req = $bdd->prepare('SELECT id, post_id, episodeNumber, author, comment, DATE_FORMAT(commentDate, \'Le %d/%m/%Y à %Hh %imin %ss\') AS commentDate, report FROM comments WHERE post_id = ?');
+        $req->execute(array($post_id));
         $data = $req->fetchALL(PDO::FETCH_OBJ);
         return $data;
         $req->closeCursor();
     }
 
-    public function getReportedComments($episodeNumber)//requête pour récupérer les commentaires par ordre décroissant de signalement associés à un épisode en fonction de son numéro de chapitre
+    public function getReportedComments($post_id)//requête pour récupérer les commentaires par ordre décroissant de signalement associés à un épisode en fonction de id
     {
         $bdd = $this->dbConnect();
-        $req = $bdd->prepare('SELECT id, episodeNumber, author, comment, report, DATE_FORMAT(commentDate, \'Le %d/%m/%Y à %Hh %imin %ss\') AS commentDate FROM comments WHERE episodeNumber = ? ORDER BY report DESC');
-        $req->execute(array($episodeNumber));
+        $req = $bdd->prepare('SELECT id, post_id, episodeNumber, author, comment, report, DATE_FORMAT(commentDate, \'Le %d/%m/%Y à %Hh %imin %ss\') AS commentDate FROM comments WHERE post_id = ? ORDER BY report DESC');
+        $req->execute(array($post_id));
         $data = $req->fetchALL(PDO::FETCH_OBJ);
         return $data;
         $req->closeCursor();
     }
 
-    public function postComment($post_id, $episodeNumber, $author, $comment)//requête pour ajouter un commentaire à un épisode en fonction de son numéro de chapitre
+    public function postComment($post_id, $episodeNumber, $author, $comment)//requête pour ajouter un commentaire à la bdd
     {
         $bdd = $this->dbConnect();
         $req = $bdd->prepare('INSERT INTO comments (post_id, episodeNumber, author, comment, commentDate, report) VALUES (?, ?, ?, ?, NOW(), 0)');
@@ -53,10 +53,10 @@ class commentManager extends manager
         $req->closeCursor();
     }
 
-    public function deleteComments($episodeNumber)//requête pour supprimer les commentaires d'un épisode en fonction de son numéro de chapitre
+    public function deleteComments($post_id)//requête pour supprimer les commentaires d'un épisode en fonction de id
     {
         $bdd = $this->dbConnect();
-        $req = $bdd->prepare('DELETE FROM comments WHERE episodeNumber = ? ');
+        $req = $bdd->prepare('DELETE FROM comments WHERE post_id = ? ');
         $req->execute(array($episodeNumber));
         $req->closeCursor();
     }

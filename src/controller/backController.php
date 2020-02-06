@@ -256,15 +256,15 @@ class BackController{
         $commentManager = new commentManager();
         $view = new view();
 
-        $episode = $episodeManager->getEpisode($_GET['nb']);
-        $comments = $commentManager->getReportedComments($_GET['nb']);
+        $episode = $episodeManager->getEpisode($_GET['id']);
+        $comments = $commentManager->getReportedComments($_GET['id']);
         $sum = $commentManager->countReports();
         $error = null;
         
         session_start();
                 
         if (isset($_SESSION['admConnected'])) { 
-            if (isset($_GET['nb']) && $_GET['nb'] > 0) {
+            if (isset($_GET['id']) && $_GET['id'] > 0) {
                 $view->render('back/episodeBackView', 'backend/templateBack', compact('episode', 'comments', 'sum', 'error'));
             }
             else {
@@ -283,11 +283,12 @@ class BackController{
         $view = new view();
 
         $comments = $commentManager->getAllComments();
+        $sum = $commentManager->countReports();
         
         session_start();
                 
         if (isset($_SESSION['admConnected'])) { 
-            $view->render('back/commentsBackView', 'backend/templateBack', compact('comments'));           
+            $view->render('back/commentsBackView', 'backend/templateBack', compact('comments', 'sum'));           
         }
         else {         
             $error = 'Vous devez vous connecter';
@@ -312,14 +313,15 @@ class BackController{
         $view = new view();
 
         $commentManager->deleteComment($_GET['id']);
-        $episode = $episodeManager->getEpisode($_GET['nb']);
-        $comments = $commentManager->getReportedComments($_GET['nb']);
+        $episode = $episodeManager->getEpisode($_GET['postid']);
+        $comments = $commentManager->getReportedComments($_GET['postid']);
         $sum = $commentManager->countReports();
+        $error = null;
 
         session_start();
                 
         if (isset($_SESSION['admConnected'])) {               
-            $view->render('back/episodeBackView', 'backend/templateBack', compact('episode', 'comments', 'sum'));
+            $view->render('back/episodeBackView', 'backend/templateBack', compact('episode', 'comments', 'sum', 'error'));
         }
         else {         
             $error = 'Vous devez vous connecter';
@@ -327,9 +329,8 @@ class BackController{
         }
     }
 
-    function comDelete()//méthode pour supprimer un commentaire depuis la page d'un épisode
-    {
-        
+    function comDelete()//méthode pour supprimer un commentaire depuis la page des commentaires
+    {   
         $view = new view();
 
         session_start();

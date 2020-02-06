@@ -16,7 +16,7 @@
         <h3>(page: <a href="episode.html" class="onPage">1</a><a href="episode.html">2</a><a href="episode.html">3</a>)</h3>
     
         <?php foreach($episodes as $episode): ?>
-        <a href="index.php?action=episode&amp;nb=<?= $episode->chapterNumber ?>" class="episodeListe">
+        <a href="index.php?action=episode&amp;id=<?= $episode->post_id ?>" class="episodeListe">
             <p>Le <i><?= $episode->creationDate ?></i></p>
             <span>Episode n°<?= $episode->chapterNumber ?></span>
             <span class="episodeTitle"><?= $episode->title ?></span>

@@ -8,7 +8,7 @@ class episodeManager extends manager
     public function getEpisodes()//requête pour récupérer tous les épisodes publiés
     {
         $bdd = $this->dbConnect();
-        $req = $bdd->prepare('SELECT chapterNumber, title, content, stat, DATE_FORMAT(creationDate, \'%d/%m/%Y\') AS creationDate FROM posts WHERE stat = 1 ORDER BY chapterNumber DESC');
+        $req = $bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(creationDate, \'%d/%m/%Y\') AS creationDate FROM posts WHERE stat = 1 ORDER BY chapterNumber DESC');
         $req->execute();
         $episodes = $req->fetchALL(PDO::FETCH_OBJ);
         return $episodes;
@@ -25,11 +25,11 @@ class episodeManager extends manager
         $req->closeCursor();
     }
 
-    public function getEpisode($episodeNumber)//requête pour récupérer un épisode en fonction de son numéro de chapitre
+    public function getEpisode($post_id)//requête pour récupérer un épisode en fonction de son id
     {
         $bdd = $this->dbConnect();
-        $req = $bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(creationDate, \'%d/%m/%Y\') AS creationDate FROM posts WHERE chapterNumber = ? ');
-        $req->execute(array($episodeNumber));
+        $req = $bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(creationDate, \'%d/%m/%Y\') AS creationDate FROM posts WHERE post_id = ? ');
+        $req->execute(array($post_id));
         $data = $req->fetch(PDO::FETCH_OBJ);
 
         return $data;
@@ -45,11 +45,11 @@ class episodeManager extends manager
         return $lastEpisode;
     }
 
-    public function getPostedEpisode($episodeNumber)//requête pour récupérer un épisode publié en fonction de son numéro de chapitre
+    public function getPostedEpisode($post_id)//requête pour récupérer un épisode publié en fonction de son numéro de chapitre
     {
         $bdd = $this->dbConnect();
-        $req = $bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(creationDate, \'%d/%m/%Y\') AS creationDate FROM posts WHERE chapterNumber = ? AND stat = 1');
-        $req->execute(array($episodeNumber));
+        $req = $bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(creationDate, \'%d/%m/%Y\') AS creationDate FROM posts WHERE post_id = ? AND stat = 1');
+        $req->execute(array($post_id));
         $data = $req->fetch(PDO::FETCH_OBJ);
 
         return $data;
@@ -110,12 +110,12 @@ class episodeManager extends manager
     public function joinTables()//requête pour faire une jointure entre la table posts et la table comments
     {
         $bdd = $this->dbConnect();
-        $req = $bdd->prepare('SELECT posts.post_id, chapterNumber, title, content, stat, DATE_FORMAT(creationDate, \'%d/%m/%Y\') AS creationDate,
+        $req = $bdd->prepare('SELECT posts.post_id, report, chapterNumber, title, content, stat, DATE_FORMAT(creationDate, \'%d/%m/%Y\') AS creationDate,
         COUNT(comments.post_id) AS commentsNb,
         SUM(comments.report) AS reportsNb
         FROM comments
-        RIGHT JOIN posts ON posts.chapterNumber = comments.episodeNumber
-        GROUP BY(posts.chapterNumber)
+        RIGHT JOIN posts ON posts.post_id = comments.post_id
+        GROUP BY(posts.post_id)
         ORDER BY chapterNumber DESC;');
         $req->execute(array());
         $tablesJoin = $req->fetchALL(PDO::FETCH_OBJ);
