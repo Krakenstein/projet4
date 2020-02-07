@@ -188,6 +188,7 @@ label
 {
     border-left: 2px solid #364156;
     border-bottom: 2px solid #364156;
+    color: #364156;
 }
 
 .extrait
@@ -198,6 +199,7 @@ label
     width: 95%;
     text-align: left;
     text-justify: auto;
+    color: #F9FBF2;
     font-size: 1em;
     border-left: 2px solid #F9FBF2;
     border-bottom: 2px solid #F9FBF2;

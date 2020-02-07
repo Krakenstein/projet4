@@ -11,13 +11,18 @@ class FrontController{
     {
         $episodeManager = new episodeManager();
         $episodes = $episodeManager->getEpisodes();
+        $episodesTot = $episodeManager->countEpisodes();
+        $nbByPage = 5;
+        $offset = 0;
+        $nbOfPages = ceil($episodesTot[0]/$nbByPage);;
+        $pagina = $episodeManager->PagineEpisodes(0, 5);
         $view = new view();
 
         if (empty($episodes)) {
             $view->render('front/episodesBlankView', 'frontend/templateFront');
         }
         else {
-            $view->render('front/episodesView', 'frontend/templateFront', compact('episodes'));
+            $view->render('front/episodesView', 'frontend/templateFront', compact('episodes', 'episodesTot', 'pagina','nbByPage', 'offset'));
         }
     }
 

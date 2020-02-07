@@ -5,6 +5,26 @@ require_once("src/model/manager.php");
 
 class episodeManager extends manager
 {
+    public function countEpisodes()// requete pour compter le nombre d'épisodes publiés
+    {
+        $bdd = $this->dbConnect();
+        $req = $bdd->prepare('SELECT COUNT(*) FROM posts WHERE stat = 1');
+        $req->execute();
+        $episodesTot = $req->fetch();
+        return $episodesTot;
+        $req->closeCursor();
+    }
+
+    public function PagineEpisodes($offset, $nbByPage)//requête pour récupérer les épisodes publiés en fonction de la pagination
+    {
+        $bdd = $this->dbConnect();
+        $req = $bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'Le %d/%m/%Y\') AS date FROM posts WHERE stat = 1 ORDER BY publiDate DESC LIMIT $offset, $nbByPage ');
+        $req->execute();
+        $pagina = $req->fetchALL(PDO::FETCH_OBJ);
+        return $pagina;
+        $req->closeCursor();
+    }
+
     public function getEpisodes()//requête pour récupérer tous les épisodes publiés
     {
         $bdd = $this->dbConnect();

@@ -13,6 +13,9 @@
     <section>
         <h1 id="titre">Billet simple pour l'Alaska</h1>
         <h2>Liste des épisodes</h2>
+        <?php var_dump($episodesTot[0]) ?>
+        <?php var_dump($pagina) ?>
+        <?php var_dump($offset) ?>
         <h3>(page: <a href="episode.html" class="onPage">1</a><a href="episode.html">2</a><a href="episode.html">3</a>)</h3>
     
         <?php foreach($episodes as $episode): ?>
@@ -26,8 +29,8 @@
                 {
                     $espace = strpos($episode->content,' ', 500); 
                     $extr = substr($episode->content,0,$espace).'...';
-                    echo $extr;
-                }else{echo $episode->content;}
+                    echo strip_tags($extr);
+                }else{echo strip_tags($episode->content);}
                 ?>
             
             </div>
