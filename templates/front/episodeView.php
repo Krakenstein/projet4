@@ -10,14 +10,14 @@
     <section>
         <h1 id="titre">Billet simple pour l'Alaska</h1>
         <h3>Episode n°<?= $episode->chapterNumber ?></h3>
-        <h3>Publié le <?= $episode->creationDate ?></h3>
+        <h3>Publié <?= $episode->date ?></h3>
         <h2><?= $episode->title ?></h2>
         
         <div id="chapitre"><?= $episode->content ?></div>
         
         <div id="backNext">
-            <a href="index.php?action=episode&amp;nb=<?= $episode->chapterNumber - 1 ?>"><div class="left"></div>Episode précédent</a>
-            <a href="index.php?action=episode&amp;nb=<?= $episode->chapterNumber + 1 ?>">Episode suivant<div class="right"></div></a>
+            <a href="index.php?action=previous&amp;dt=<?= $episode->publiDate?>"><div class="left"></div>Episode précédent</a>
+            <a href="index.php?action=next&amp;dt=<?= $episode->publiDate?>">Episode suivant<div class="right"></div></a>
         </div>
     </section>
     <section class="comments">

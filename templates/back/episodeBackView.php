@@ -13,12 +13,12 @@
             <a class="btn" href="index.php?action=disconnection">Déconnection</a>
         </nav>
         <section id="content">
-            <form id="modification" action="index.php?action=modifiedEpisode&amp;nb=<?= $episode->chapterNumber ?>" method="post">
+            <form id="modification" action="index.php?action=modifiedEpisode&amp;id=<?= $episode->post_id ?>" method="post">
                 <h3>Gestion de l'épisode</h3>
                 <input title="chapterNumber" class="champ" type="text" name="nvchapter" id="number" value="<?= $episode->chapterNumber ?>" size="5" />
                 <label id="labelChapterNumber" for="chapterNumber"></label>
                 <h3>Statut: <?php if(($episode->stat) == 1) echo 'publié'?><?php if(($episode->stat) == 0) echo 'archivé'?></h3>
-                <h3>Le <?= $episode->creationDate ?></h3>
+                <h3><?= $episode->date ?></h3>
                 <h3>Titre de l'épisode</h3><input title="title" class="champ" type="text" name="nvtitle" id="titre" value="<?= $episode->title ?>" size="45"/>
                 <label id="labelTitle" for="title"><?php echo $error ?></label>
                 <textarea title="content" name="nvcontent" id="episode" cols="150" rows="50"><?= $episode->content ?></textarea>

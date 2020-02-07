@@ -187,36 +187,36 @@ class BackController{
         
             if (isset($_POST['publish'])) {
                 if (!empty($_POST['nvchapter']) && !empty($_POST['nvtitle'])) {
-                    $this->modifyPostedEpisode($_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
+                    $this->modifyPostedEpisode($_GET['id'], $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
                     $sum = $commentManager->countReports();
                     $tablesJoin = $episodeManager->joinTables();
                     $view->render('back/homePageBackView', 'backend/templateBack', compact('tablesJoin', 'sum'));
                 }
                 else {
                     $sum = $commentManager->countReports();
-                    $episode = $episodeManager->getEpisode($_GET['nb']);
-                    $comments = $commentManager->getReportedComments($_GET['nb']);
-                    $error = 'Vous devez spécifier le titre de l\'épisode';
+                    $episode = $episodeManager->getEpisode($_GET['id']);
+                    $comments = $commentManager->getReportedComments($_GET['id']);
+                    $error = 'Vous devez spécifier le titre et le numéro de l\'épisode';
                     $view->render('back/episodeBackView', 'backend/templateBack', compact('sum', 'error', 'episode', 'comments'));
                 }
             }
             elseif (isset($_POST['save'])) {
                 if (!empty($_POST['nvchapter']) && !empty($_POST['nvtitle'])) {
-                    $this->modifySavedEpisode($_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
+                    $this->modifySavedEpisode($_GET['id'], $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
                     $sum = $commentManager->countReports();
                     $tablesJoin = $episodeManager->joinTables();
                     $view->render('back/homePageBackView', 'backend/templateBack', compact('tablesJoin', 'sum'));
                 }
                 else {
                     $sum = $commentManager->countReports();
-                    $episode = $episodeManager->getEpisode($_GET['nb']);
-                    $comments = $commentManager->getReportedComments($_GET['nb']);
-                    $error = 'Vous devez spécifier le titre de l\'épisode';
+                    $episode = $episodeManager->getEpisode($_GET['id']);
+                    $comments = $commentManager->getReportedComments($_GET['id']);
+                    $error = 'Vous devez spécifier le titre et le numéro de l\'épisode';
                     $view->render('back/episodeBackView', 'backend/templateBack', compact('sum', 'error', 'episode', 'comments'));
                 }
             }
             elseif (isset($_POST['delete'])) {
-                if (isset($_GET['nb']) && $_GET['nb'] > 0) {
+                if (isset($_GET['id']) && $_GET['id'] > 0) {
                     $this->episodeDelete();
                     $sum = $commentManager->countReports();
                     $tablesJoin = $episodeManager->joinTables();
@@ -236,17 +236,17 @@ class BackController{
         }
     }
 
-    function modifyPostedEpisode(string $nvchapter, string $nvtitle, string $nvcontent)//méthode pour modifier un épisode en le publiant
+    function modifyPostedEpisode(string $post_id, string $nvchapter, string $nvtitle, string $nvcontent)//méthode pour modifier un épisode en le publiant
     {
         $episodeManager = new episodeManager();
-        $postedModifiedEpisode = $episodeManager->postModifiedEpisode($nvchapter, $nvtitle, $nvcontent);
+        $postedModifiedEpisode = $episodeManager->postModifiedEpisode($_GET['id'], $nvchapter, $nvtitle, $nvcontent);
 
     }
 
-    function modifySavedEpisode(string $nvchapter, string $nvtitle, string $nvcontent)//méthode pour modifier un épisode en l'archivant
+    function modifySavedEpisode(string $post_id, string $nvchapter, string $nvtitle, string $nvcontent)//méthode pour modifier un épisode en l'archivant
     {
         $episodeManager = new episodeManager();
-        $savedModifiedEpisode = $episodeManager->saveModifiedEpisode($nvchapter, $nvtitle, $nvcontent);
+        $savedModifiedEpisode = $episodeManager->saveModifiedEpisode($_GET['id'], $nvchapter, $nvtitle, $nvcontent);
 
     }
 
@@ -301,8 +301,8 @@ class BackController{
         $episodeManager = new episodeManager();
         $commentManager = new commentManager();
 
-        $episodeManager->deleteEpisode($_GET['nb']);
-        $commentManager->deleteComments($_GET['nb']);
+        $episodeManager->deleteEpisode($_GET['id']);
+        $commentManager->deleteComments($_GET['id']);
 
     }
 

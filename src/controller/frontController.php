@@ -44,6 +44,52 @@ class FrontController{
         }
     }
 
+    public function previous()
+    {
+        $episodeManager = new episodeManager();
+        $commentManager = new commentManager();
+        $view = new view();
+        $error = null;
+
+        $episode = $episodeManager->previousEpisode($_GET['dt']);
+
+        if ($episode === false) {
+            $view->render('front/episodeBlankView', 'frontend/templateFront');
+        }
+        else {
+            if (isset($_GET['dt']) && $_GET['dt'] > 0) {
+                $comments = $commentManager->getComments($episode->post_id);
+                $view->render('front/episodeView', 'frontend/templateFront', compact('episode', 'comments', 'error'));
+            }
+            else {
+                throw new Exception('Aucun numéro dépisode envoyé');
+            }
+        }
+    }
+
+    public function next()
+    {
+        $episodeManager = new episodeManager();
+        $commentManager = new commentManager();
+        $view = new view();
+        $error = null;
+
+        $episode = $episodeManager->nextEpisode($_GET['dt']);
+
+        if ($episode === false) {
+            $view->render('front/episodeBlankView', 'frontend/templateFront');
+        }
+        else {
+            if (isset($_GET['dt']) && $_GET['dt'] > 0) {
+                $comments = $commentManager->getComments($episode->post_id);
+                $view->render('front/episodeView', 'frontend/templateFront', compact('episode', 'comments', 'error'));
+            }
+            else {
+                throw new Exception('Aucun numéro dépisode envoyé');
+            }
+        }
+    }
+
     public function newCom()
     {
         $episodeManager = new episodeManager();

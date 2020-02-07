@@ -17,7 +17,7 @@
     
         <?php foreach($episodes as $episode): ?>
         <a href="index.php?action=episode&amp;id=<?= $episode->post_id ?>" class="episodeListe">
-            <p>Le <i><?= $episode->creationDate ?></i></p>
+            <p><i><?= $episode->date ?></i></p>
             <span>Episode n°<?= $episode->chapterNumber ?></span>
             <span class="episodeTitle"><?= $episode->title ?></span>
             <div class="extrait">

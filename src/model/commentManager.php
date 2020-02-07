@@ -57,7 +57,7 @@ class commentManager extends manager
     {
         $bdd = $this->dbConnect();
         $req = $bdd->prepare('DELETE FROM comments WHERE post_id = ? ');
-        $req->execute(array($episodeNumber));
+        $req->execute(array($post_id));
         $req->closeCursor();
     }
 

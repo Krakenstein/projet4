@@ -15,7 +15,7 @@
         </header>
         <section>
             <h2>Dernier épisode mis en ligne</h2>
-            <h3>Episode n°<?= $lastEpisode->chapterNumber ?> publié le <?= $lastEpisode->creationDate ?></h3>
+            <h3>Episode n°<?= $lastEpisode->chapterNumber ?> publié le <?= $lastEpisode->date ?></h3>
         
         <h2><?= $lastEpisode->title?></h2>
         

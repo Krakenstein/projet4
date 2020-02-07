@@ -17,6 +17,14 @@ try {
             $controller = new frontController();
             $controller->episode();
         }
+        elseif ($_GET['action'] == 'previous') {//on affiche un épisode dans le front
+            $controller = new frontController();
+            $controller->previous();
+        }
+        elseif ($_GET['action'] == 'next') {//on affiche un épisode dans le front
+            $controller = new frontController();
+            $controller->next();
+        }
         elseif ($_GET['action'] == 'admConnect') {//on affiche la page d'accueil-liste des épisodes dans le back
             $controller = new backController();
             $controller->admConnect();
