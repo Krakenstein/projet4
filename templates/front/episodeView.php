@@ -12,18 +12,18 @@
         <h1 id="titre">Billet simple pour l'Alaska</h1>
         <h3>Episode n°<?= $episode->chapterNumber ?></h3>
         <h3>Publié <?= $episode->date ?></h3>
-        <div id="backNext">
+        <div class="backNext">
             <a href="index.php?action=previous&amp;dt=<?= $episode->publiDate?>"><div class="left"></div>Episode précédent</a>
-            <a id="currentPage" href="#headCom">Aller aux commentaires</a>
+            <a class="currentPage" href="#headCom">Aller aux commentaires</a>
             <a href="index.php?action=next&amp;dt=<?= $episode->publiDate?>">Episode suivant<div class="right"></div></a>
         </div>
         <h2><?= $episode->title ?></h2>
         
         <div id="chapitre"><?= $episode->content ?></div>
         
-        <div id="backNext">
+        <div class="backNext">
             <a href="index.php?action=previous&amp;dt=<?= $episode->publiDate?>"><div class="left"></div>Episode précédent</a>
-            <a id="currentPage" href="#titre">Revenir au début de l'épisode</a>
+            <a class="currentPage" href="#titre">Revenir au début de l'épisode</a>
             <a href="index.php?action=next&amp;dt=<?= $episode->publiDate?>">Episode suivant<div class="right"></div></a>
         </div>
     </section>

@@ -8,7 +8,7 @@
     <div id="main">
         <nav>
             <a class="btn active" href="index.php?action=episodes">Episodes</a>
-            <a class="btn<?php if(($sum->value_sum) > 0) echo 'Red'?>" href="index.php?action=commentsPage">Commentaires</a>
+            <a class="btn<?php if(($countcoms->comsNb)  < 1) echo 'Hidden'?><?php if(($sum->value_sum) > 0) echo 'Red'?>" href="index.php?action=commentsPage">Commentaires</a>
             <a class="btn" href="index.php?action=profil">Profil</a>
             <a class="btn" href="index.php?action=disconnection">Déconnection</a>
         </nav>
@@ -34,9 +34,9 @@
             <?php endforeach; ?>
                 </a>
             </div>
-            <div id="backNext">
+            <div class="backNext<?php if($totalpages < 2) echo 'Hidden'?>">
             <a href="index.php?action=episodes&amp;currentpage=<?= $currentpage - 1?>&amp;#titre"><div class="left"></div>Page précédente</a>
-            <span id="currentPage"><?='Page ' . $currentpage . '/' . $totalpages?></span>
+            <span class="currentPage"><?='Page ' . $currentpage . '/' . $totalpages?></span>
             <a href="index.php?action=episodes&amp;currentpage=<?= $currentpage + 1?>&amp;#titre">Page suivante<div class="right"></div></a>
             </div>
             <a href="index.php?action=createEpisode" class="bouton">Créer un nouvel épisode</a>

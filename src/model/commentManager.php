@@ -78,4 +78,14 @@ class commentManager extends manager
         return $sum;
         $req->closeCursor();
     }
+
+    public function countComs()//requête pour compter les reports
+    {
+        $bdd = $this->dbConnect();
+        $req = $bdd->prepare('SELECT COUNT(*) AS comsNb FROM comments ');
+        $req->execute();
+        $count = $req->fetch(PDO::FETCH_OBJ);
+        return $count;
+        $req->closeCursor();
+    }
 }

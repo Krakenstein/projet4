@@ -13,11 +13,11 @@
     <section>
         <h1 id="titre">Billet simple pour l'Alaska</h1>
         <h2>Liste des épisodes</h2>
-        <div id="backNext">
+            <div class="backNext<?php if($totalpages < 2) echo 'Hidden'?>">
             <a href="index.php?action=listEpisodes&amp;currentpage=<?= $currentpage - 1?>&amp;#titre"><div class="left"></div>Page précédente</a>
-            <span id="currentPage"><?='Page ' . $currentpage . '/' . $totalpages?></span>
+            <span class="currentPage"><?='Page ' . $currentpage . '/' . $totalpages?></span>
             <a href="index.php?action=listEpisodes&amp;currentpage=<?= $currentpage + 1?>&amp;#titre">Page suivante<div class="right"></div></a>
-        </div>
+            </div>
     
         <?php foreach($pagina as $episode): ?>
         <a href="index.php?action=episode&amp;id=<?= $episode->post_id ?>" class="episodeListe">
@@ -38,9 +38,9 @@
             <button class="read">Lire la suite</button>
         </a>
         <?php endforeach; ?>
-        <div id="backNext">
+        <div class="backNext<?php if($totalpages < 2) echo 'Hidden'?>">
             <a href="index.php?action=listEpisodes&amp;currentpage=<?= $currentpage - 1?>&amp;#titre"><div class="left"></div>Page précédente</a>
-            <span id="currentPage"><?='Page ' . $currentpage . '/' . $totalpages?></span>
+            <span class="currentPage"><?='Page ' . $currentpage . '/' . $totalpages?></span>
             <a href="index.php?action=listEpisodes&amp;currentpage=<?= $currentpage + 1?>&amp;#titre">Page suivante<div class="right"></div></a>
         </div>
     </section>

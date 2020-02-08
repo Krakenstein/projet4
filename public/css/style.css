@@ -249,7 +249,7 @@ label
     margin-top: 15px;
 }
 
-#backNext
+.backNext
 {
     display: flex;
     justify-content: space-between;
@@ -257,7 +257,15 @@ label
     margin-bottom: 15px;
 }
 
-#backNext a
+.backNextHidden
+{
+    display: none;
+    justify-content: space-between;
+    width: 50%;
+    margin-bottom: 15px;
+}
+
+.backNext a
 {
     display: flex;
     justify-content: space-evenly;
@@ -268,7 +276,7 @@ label
     
 }
 
-#backNext #currentPage
+.backNext .currentPage
 {
     display: flex;
     justify-content: center;
@@ -281,7 +289,7 @@ label
     
 }
 
-#backNext a:hover
+.backNext a:hover
 {
     display: flex;
     background-color: #F9FBF2;
@@ -290,12 +298,12 @@ label
     box-shadow: 0px 2px 8px 3px #000807;
 }
 
-#backNext a:hover .right
+.backNext a:hover .right
 {
     border-left: 10px solid #364156;
 }
 
-#backNext a:hover .left
+.backNext a:hover .left
 {
     border-right: 10px solid #364156;
 }

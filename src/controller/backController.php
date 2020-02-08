@@ -50,6 +50,7 @@ class BackController{
         $view = new view();
         $message = null;
         $sum = $commentManager->countReports();
+        $countcoms = $commentManager->countComs();
         $episodesTot = $episodeManager->countEpisodes();
         $nbByPage = 5;
         $offset = 0;
@@ -84,7 +85,7 @@ class BackController{
                  if (empty($tablesJoin)) { 
                     $view->render('front/episodesBlankView', 'frontend/templateFront');
                 }else{
-                    $view->render('back/homePageBackView', 'backend/templateBack', compact('message', 'sum', 'episodesTot', 'tablesJoin','nbByPage', 'offset', 'currentpage', 'totalpages'));
+                    $view->render('back/homePageBackView', 'backend/templateBack', compact('countcoms', 'message', 'sum', 'episodesTot', 'tablesJoin','nbByPage', 'offset', 'currentpage', 'totalpages'));
                 }
         }
         else {         
@@ -133,10 +134,11 @@ class BackController{
         $commentManager = new commentManager();
 
         $sum = $commentManager->countReports();
+        $countcoms = $commentManager->countComs();
         $error = null;
                 
         if (isset($_SESSION['admConnected'])) {               
-            $view->render('back/createEpisodeView', 'backend/templateBack', compact('sum', 'error'));
+            $view->render('back/createEpisodeView', 'backend/templateBack', compact('countcoms', 'sum', 'error'));
         }
         else {         
             $error = 'Vous devez vous connecter';
@@ -282,13 +284,14 @@ class BackController{
         $episode = $episodeManager->getEpisode($_GET['id']);
         $comments = $commentManager->getReportedComments($_GET['id']);
         $sum = $commentManager->countReports();
+        $countcoms = $commentManager->countComs();
         $error = null;
         
         session_start();
                 
         if (isset($_SESSION['admConnected'])) { 
             if (isset($_GET['id']) && $_GET['id'] > 0) {
-                $view->render('back/episodeBackView', 'backend/templateBack', compact('episode', 'comments', 'sum', 'error'));
+                $view->render('back/episodeBackView', 'backend/templateBack', compact('episode', 'comments', 'sum', 'countcoms', 'error'));
             }
             else {
                 throw new Exception('Aucun numéro dépisode envoyé');
@@ -300,18 +303,18 @@ class BackController{
         }     
     }
 
-    function comPage()//on affiche la page de modification d'un épisode dans le back avec ses commentaires
+    function comPage()//on affiche la page de gestion des commentaires
     {
         $commentManager = new commentManager();
         $view = new view();
 
         $comments = $commentManager->getAllComments();
         $sum = $commentManager->countReports();
-        
+        $countcoms = $commentManager->countComs();
         session_start();
                 
         if (isset($_SESSION['admConnected'])) { 
-            $view->render('back/commentsBackView', 'backend/templateBack', compact('comments', 'sum'));           
+            $view->render('back/commentsBackView', 'backend/templateBack', compact('countcoms', 'comments', 'sum'));           
         }
         else {         
             $error = 'Vous devez vous connecter';
@@ -361,9 +364,8 @@ class BackController{
         if (isset($_SESSION['admConnected'])) { 
             $commentManager = new commentManager();
             $commentManager->deleteComment($_GET['id']);
-            $comments = $commentManager->getAllComments();
-            $sum = $commentManager->countReports();              
-            $view->render('back/commentsBackView', 'backend/templateBack', compact('comments', 'sum'));
+            header('Location: index.php?action=commentsPage');
+            exit();
         }
         else {         
             $error = 'Vous devez vous connecter';
@@ -377,11 +379,12 @@ class BackController{
         $view = new view();
         $commentManager = new commentManager();
         $sum = $commentManager->countReports();
+        $countcoms = $commentManager->countComs();
         $error = null;
         $message = null;
                 
         if (isset($_SESSION['admConnected'])) {               
-            $view->render('back/profilView', 'backend/templateBack', compact('sum', 'error', 'message'));
+            $view->render('back/profilView', 'backend/templateBack', compact('countcoms', 'sum', 'error', 'message'));
         }
         else {         
             $error = 'Vous devez vous connecter';
