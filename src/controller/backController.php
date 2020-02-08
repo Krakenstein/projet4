@@ -12,10 +12,7 @@ class BackController{
     {
         $usersManager = new UsersManager();
         $episodeManager = new episodeManager();
-        $commentManager = new commentManager();
 
-        $tablesJoin = $episodeManager->joinTables();
-        $sum = $commentManager->countReports();
         $hash = $usersManager->getHash();
         $pseudRegister = $usersManager->getPseudo();
 
@@ -28,7 +25,8 @@ class BackController{
             if (($_POST['nom']) === $pseudRegister[0]){
                 if (password_verify(($_POST['password']), $hash[0]) === true){
                     $_SESSION['admConnected'] = true;
-                    $view->render('back/homePageBackView', 'backend/templateBack', compact('tablesJoin', 'sum', 'hash','pseudRegister'));
+                    header('Location: index.php?action=episodes');
+                    exit();
                 }else{
                     $error = 'Mot de passe incorrect';
                     $view->render('front/connectionView', 'frontend/templateFront', compact('error'));
@@ -50,14 +48,44 @@ class BackController{
         $episodeManager = new episodeManager();
         $commentManager = new commentManager();
         $view = new view();
-
-        $tablesJoin = $episodeManager->joinTables();
+        $message = null;
         $sum = $commentManager->countReports();
+        $episodesTot = $episodeManager->countEpisodes();
+        $nbByPage = 5;
+        $offset = 0;
+        $totalpages = ceil($episodesTot[0]/$nbByPage);
+        $currentpage=0;
 
         session_start();
 
         if (isset($_SESSION['admConnected'])) {               
-            $view->render('back/homePageBackView', 'backend/templateBack', compact('tablesJoin', 'sum'));
+            if (isset($_GET['currentpage']) && is_numeric($_GET['currentpage'])) {
+
+                $currentpage = (int) $_GET['currentpage'];
+                } else {
+    
+                    $currentpage = 1;
+                 } 
+                 
+    
+                 if ($currentpage > $totalpages) {
+    
+                    $currentpage = $totalpages;
+                 } 
+    
+                 if ($currentpage < 1) {
+     
+                    $currentpage = 1;
+                 } 
+    
+                 $offset = ($currentpage - 1) * $nbByPage;
+                 $tablesJoin = $episodeManager->joinTables($offset, $nbByPage);
+    
+                 if (empty($tablesJoin)) { 
+                    $view->render('front/episodesBlankView', 'frontend/templateFront');
+                }else{
+                    $view->render('back/homePageBackView', 'backend/templateBack', compact('message', 'sum', 'episodesTot', 'tablesJoin','nbByPage', 'offset', 'currentpage', 'totalpages'));
+                }
         }
         else {         
             $error = 'Vous devez vous connecter';
@@ -127,10 +155,8 @@ class BackController{
             if (isset($_POST['publish'])) {
                 if (!empty($_POST['chapterNumber']) && !empty($_POST['title'])) {
                     $this->addPostedEpisode($_POST['chapterNumber'], $_POST['title'], $_POST['content']);
-                    $episodeManager = new episodeManager();
-                    $sum = $commentManager->countReports();
-                    $tablesJoin = $episodeManager->joinTables();
-                    $view->render('back/homePageBackView', 'backend/templateBack', compact('tablesJoin', 'sum'));
+                    header('Location: index.php?action=episodes');
+                    exit(); 
                 }
                 else {
                     $sum = $commentManager->countReports();
@@ -141,10 +167,8 @@ class BackController{
             elseif (isset($_POST['save'])) {
                 if (!empty($_POST['chapterNumber']) && !empty($_POST['title'])) {
                     $this->addSavedEpisode($_POST['chapterNumber'], $_POST['title'], $_POST['content']);
-                    $episodeManager = new episodeManager();
-                    $sum = $commentManager->countReports();
-                    $tablesJoin = $episodeManager->joinTables();
-                    $view->render('back/homePageBackView', 'backend/templateBack', compact('tablesJoin', 'sum'));
+                    header('Location: index.php?action=episodes');
+                    exit(); 
                 }
                 else {
                     $sum = $commentManager->countReports();
@@ -188,9 +212,8 @@ class BackController{
             if (isset($_POST['publish'])) {
                 if (!empty($_POST['nvchapter']) && !empty($_POST['nvtitle'])) {
                     $this->modifyPostedEpisode($_GET['id'], $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
-                    $sum = $commentManager->countReports();
-                    $tablesJoin = $episodeManager->joinTables();
-                    $view->render('back/homePageBackView', 'backend/templateBack', compact('tablesJoin', 'sum'));
+                    header('Location: index.php?action=episodes');
+                    exit(); 
                 }
                 else {
                     $sum = $commentManager->countReports();
@@ -203,9 +226,8 @@ class BackController{
             elseif (isset($_POST['save'])) {
                 if (!empty($_POST['nvchapter']) && !empty($_POST['nvtitle'])) {
                     $this->modifySavedEpisode($_GET['id'], $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
-                    $sum = $commentManager->countReports();
-                    $tablesJoin = $episodeManager->joinTables();
-                    $view->render('back/homePageBackView', 'backend/templateBack', compact('tablesJoin', 'sum'));
+                    header('Location: index.php?action=episodes');
+                    exit(); 
                 }
                 else {
                     $sum = $commentManager->countReports();
@@ -218,9 +240,10 @@ class BackController{
             elseif (isset($_POST['delete'])) {
                 if (isset($_GET['id']) && $_GET['id'] > 0) {
                     $this->episodeDelete();
-                    $sum = $commentManager->countReports();
-                    $tablesJoin = $episodeManager->joinTables();
-                    $view->render('back/homePageBackView', 'backend/templateBack', compact('tablesJoin', 'sum'));
+                    $message = 'Episode Supprimé';
+                    compact('message');
+                    header('Location: index.php?action=episodes');
+                    exit(); 
                 }
                 else {
                     throw new Exception(' aucun identifiant de billet envoyé !');

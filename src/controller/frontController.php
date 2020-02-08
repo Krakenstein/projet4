@@ -7,25 +7,49 @@ require_once('src/view/View.php');
 
 class FrontController{
         
-    public function listEpisodes()//méthode pour récupérer la liste des épisodes publiés
+    public function listEpisodes()//méthode pour récupérer la liste paginée des épisodes publiés
     {
         $episodeManager = new episodeManager();
         $episodes = $episodeManager->getEpisodes();
         $episodesTot = $episodeManager->countEpisodes();
         $nbByPage = 5;
         $offset = 0;
-        $nbOfPages = ceil($episodesTot[0]/$nbByPage);;
-        $pagina = $episodeManager->PagineEpisodes(0, 5);
+        $totalpages = ceil($episodesTot[0]/$nbByPage);
+        $currentpage=0;
         $view = new view();
 
-        if (empty($episodes)) {
-            $view->render('front/episodesBlankView', 'frontend/templateFront');
-        }
-        else {
-            $view->render('front/episodesView', 'frontend/templateFront', compact('episodes', 'episodesTot', 'pagina','nbByPage', 'offset'));
-        }
-    }
 
+        if (isset($_GET['currentpage']) && is_numeric($_GET['currentpage'])) {
+
+            $currentpage = (int) $_GET['currentpage'];
+            } else {
+
+                $currentpage = 1;
+             } 
+             
+
+             if ($currentpage > $totalpages) {
+
+                $currentpage = $totalpages;
+             } 
+
+             if ($currentpage < 1) {
+ 
+                $currentpage = 1;
+             } 
+
+             $offset = ($currentpage - 1) * $nbByPage;
+             $pagina = $episodeManager->PagineEpisodes($offset, $nbByPage);
+
+             if (empty($pagina)) { 
+                $view->render('front/episodesBlankView', 'frontend/templateFront');
+            }else{
+                $view->render('front/episodesView', 'frontend/templateFront', compact('episodes', 'episodesTot', 'pagina','nbByPage', 'offset', 'currentpage', 'totalpages'));
+            }
+            
+        }        
+    
+        
     public function episode()//méthode pour récupérer un épisode publié en fonction de son numéro de chapitre
     {
         $episodeManager = new episodeManager();

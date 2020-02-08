@@ -13,12 +13,13 @@
     <section>
         <h1 id="titre">Billet simple pour l'Alaska</h1>
         <h2>Liste des épisodes</h2>
-        <?php var_dump($episodesTot[0]) ?>
-        <?php var_dump($pagina) ?>
-        <?php var_dump($offset) ?>
-        <h3>(page: <a href="episode.html" class="onPage">1</a><a href="episode.html">2</a><a href="episode.html">3</a>)</h3>
+        <div id="backNext">
+            <a href="index.php?action=listEpisodes&amp;currentpage=<?= $currentpage - 1?>&amp;#titre"><div class="left"></div>Page précédente</a>
+            <span id="currentPage"><?='Page ' . $currentpage . '/' . $totalpages?></span>
+            <a href="index.php?action=listEpisodes&amp;currentpage=<?= $currentpage + 1?>&amp;#titre">Page suivante<div class="right"></div></a>
+        </div>
     
-        <?php foreach($episodes as $episode): ?>
+        <?php foreach($pagina as $episode): ?>
         <a href="index.php?action=episode&amp;id=<?= $episode->post_id ?>" class="episodeListe">
             <p><i><?= $episode->date ?></i></p>
             <span>Episode n°<?= $episode->chapterNumber ?></span>
@@ -37,5 +38,9 @@
             <button class="read">Lire la suite</button>
         </a>
         <?php endforeach; ?>
-        <h3>(page: <a href="episode.html" class="onPage">1</a><a href="episode.html">2</a><a href="episode.html">3</a>)</h3>
+        <div id="backNext">
+            <a href="index.php?action=listEpisodes&amp;currentpage=<?= $currentpage - 1?>&amp;#titre"><div class="left"></div>Page précédente</a>
+            <span id="currentPage"><?='Page ' . $currentpage . '/' . $totalpages?></span>
+            <a href="index.php?action=listEpisodes&amp;currentpage=<?= $currentpage + 1?>&amp;#titre">Page suivante<div class="right"></div></a>
+        </div>
     </section>

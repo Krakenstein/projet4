@@ -14,7 +14,7 @@
         </nav>
         <section id="content">
             <h1>Liste des épisodes</h1>
-            <h3>(pages: <a href="episode.html" class="page onPage">1</a><a href="episode.html" class="page">2</a><a href="episode.html" class="page">3</a>)</h3>
+            <h3><?= $message?></h3>
             <div class="table">
                 <div class="rowsTitle">
                     <div class="cell-title"><h4>Numéro</h4></div>
@@ -33,6 +33,11 @@
                     <div class="cell"><?php if(($episode->reportsNb) == null) echo '0'?><?php if(($episode->reportsNb) !== 0) echo $episode->reportsNb ?></div>
             <?php endforeach; ?>
                 </a>
+            </div>
+            <div id="backNext">
+            <a href="index.php?action=episodes&amp;currentpage=<?= $currentpage - 1?>&amp;#titre"><div class="left"></div>Page précédente</a>
+            <span id="currentPage"><?='Page ' . $currentpage . '/' . $totalpages?></span>
+            <a href="index.php?action=episodes&amp;currentpage=<?= $currentpage + 1?>&amp;#titre">Page suivante<div class="right"></div></a>
             </div>
             <a href="index.php?action=createEpisode" class="bouton">Créer un nouvel épisode</a>
         </section>
