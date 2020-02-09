@@ -83,7 +83,7 @@ class BackController{
                  $tablesJoin = $episodeManager->joinTables($offset, $nbByPage);
     
                  if (empty($tablesJoin)) { 
-                    $view->render('front/episodesBlankView', 'frontend/templateFront');
+                    $view->render('back/homePageBlankBackView', 'backend/templateBack', compact('countcoms', 'message', 'sum', 'episodesTot', 'tablesJoin','nbByPage', 'offset', 'currentpage', 'totalpages'));
                 }else{
                     $view->render('back/homePageBackView', 'backend/templateBack', compact('countcoms', 'message', 'sum', 'episodesTot', 'tablesJoin','nbByPage', 'offset', 'currentpage', 'totalpages'));
                 }
@@ -308,13 +308,46 @@ class BackController{
         $commentManager = new commentManager();
         $view = new view();
 
-        $comments = $commentManager->getAllComments();
         $sum = $commentManager->countReports();
         $countcoms = $commentManager->countComs();
+
+        $nbByPage = 5;
+        $offset = 0;
+        $totalpages = ceil($countcoms[0]/$nbByPage);
+        $currentpage=0;
+
         session_start();
                 
         if (isset($_SESSION['admConnected'])) { 
-            $view->render('back/commentsBackView', 'backend/templateBack', compact('countcoms', 'comments', 'sum'));           
+            if (isset($_GET['currentpage']) && is_numeric($_GET['currentpage'])) {
+
+                $currentpage = (int) $_GET['currentpage'];
+
+                } else {
+    
+                    $currentpage = 1;
+                 } 
+                 
+    
+                 if ($currentpage > $totalpages) {
+    
+                    $currentpage = $totalpages;
+                 } 
+    
+                 if ($currentpage < 1) {
+     
+                    $currentpage = 1;
+                 } 
+    
+                 $offset = ($currentpage - 1) * $nbByPage;
+                 $allComs = $commentManager->getAllComments($offset, $nbByPage);
+
+                 if (empty($allComs)) { 
+                    header('Location: index.php?action=episodes');
+                    exit(); 
+                }else{
+                    $view->render('back/commentsBackView', 'backend/templateBack', compact('nbByPage', 'currentpage', 'offset', 'totalpages', 'countcoms', 'allComs', 'sum'));
+                }           
         }
         else {         
             $error = 'Vous devez vous connecter';

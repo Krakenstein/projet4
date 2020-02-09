@@ -5,10 +5,13 @@ require_once("src/model/Manager.php");
 
 class commentManager extends manager
 {
-    public function getAllComments()//requête pour récupérer tous les commentaires par ordre décroissant de signalement
+    public function getAllComments($offset, $nbByPage)//requête pour paginer tous les commentaires par ordre décroissant de signalement
     {
         $bdd = $this->dbConnect();
-        $req = $bdd->prepare('SELECT id, episodeNumber, author, comment, report, DATE_FORMAT(commentDate, \'Le %d/%m/%Y à %Hh %imin %ss\') AS commentDate FROM comments ORDER BY report DESC');
+        $req = $bdd->prepare('SELECT id, episodeNumber, author, comment, report, DATE_FORMAT(commentDate, \'Le %d/%m/%Y à %Hh %imin %ss\') AS commentDate FROM comments ORDER BY report DESC
+        LIMIT :offset, :limitation;');
+        $req->bindValue(':limitation', (int) $nbByPage, PDO::PARAM_INT);
+        $req->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
         $req->execute();
         $allComs = $req->fetchALL(PDO::FETCH_OBJ);
         return $allComs;
@@ -84,7 +87,7 @@ class commentManager extends manager
         $bdd = $this->dbConnect();
         $req = $bdd->prepare('SELECT COUNT(*) AS comsNb FROM comments ');
         $req->execute();
-        $count = $req->fetch(PDO::FETCH_OBJ);
+        $count = $req->fetch();
         return $count;
         $req->closeCursor();
     }
