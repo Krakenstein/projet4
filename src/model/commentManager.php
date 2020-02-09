@@ -21,7 +21,7 @@ class commentManager extends manager
     public function getComments($post_id)//requête pour récupérer les commentaires associés à un épisode en fonction de son id
     {
         $bdd = $this->dbConnect();
-        $req = $bdd->prepare('SELECT id, post_id, episodeNumber, author, comment, DATE_FORMAT(commentDate, \'Le %d/%m/%Y à %Hh %imin %ss\') AS commentDate, report FROM comments WHERE post_id = ?');
+        $req = $bdd->prepare('SELECT id, post_id, episodeNumber, author, comment, DATE_FORMAT(commentDate, \'Le %d/%m/%Y à %Hh %imin %ss\') AS commentDate, report FROM comments WHERE post_id = ? ORDER BY commentDate DESC');
         $req->execute(array($post_id));
         $data = $req->fetchALL(PDO::FETCH_OBJ);
         return $data;

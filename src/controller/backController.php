@@ -138,6 +138,10 @@ class BackController{
     function createEpisode()//méthode pour afficher la page de création d'épisode
     {
         session_start();
+        $_SESSION['chapterNumber'] = null;
+        $_SESSION['title'] = null;
+        $_SESSION['content'] = null;
+        
         $view = new view();
         $commentManager = new commentManager();
 
@@ -157,6 +161,13 @@ class BackController{
     function addEpisode()//méthode pour ajouter un épisode dans la bdd archivé ou publié
     {
         session_start();
+        if(isset($_POST) && !empty($_POST))
+        {
+            $_SESSION['chapterNumber'] = $_POST['chapterNumber'];
+            $_SESSION['title'] = $_POST['title'];
+            $_SESSION['content'] = $_POST['content'];
+        };
+
         $commentManager = new commentManager();
         $view = new view();
                 
@@ -171,8 +182,9 @@ class BackController{
                 }
                 else {
                     $sum = $commentManager->countReports();
-                    $error = 'tous les champs ne sont pas remplis !';
-                    $view->render('back/createEpisodeView', 'backend/templateBack', compact('sum', 'error'));
+                    $countcoms = $commentManager->countComs();
+                    $error = 'Vous devez spécifier le numéro et le titre de l\'épisode';
+                    $view->render('back/createEpisodeView', 'backend/templateBack', compact('countcoms', 'sum', 'error'));
                 }
             }
             elseif (isset($_POST['save'])) {
@@ -184,8 +196,9 @@ class BackController{
                 }
                 else {
                     $sum = $commentManager->countReports();
+                    $countcoms = $commentManager->countComs();
                     $error = 'Vous devez spécifier le numéro et le titre de l\'épisode';
-                    $view->render('back/createEpisodeView', 'backend/templateBack', compact('sum', 'error'));
+                    $view->render('back/createEpisodeView', 'backend/templateBack', compact('countcoms', 'sum', 'error'));
                 }
             }
             else {
@@ -215,6 +228,13 @@ class BackController{
     function episodeModications()//méthode pour modifier un épisode
     {
         session_start();
+        if(isset($_POST) && !empty($_POST))
+        {
+            $_SESSION['chapterNumber'] = $_POST['nvchapter'];
+            $_SESSION['title'] = $_POST['nvtitle'];
+            $_SESSION['content'] = $_POST['nvcontent'];
+        };
+
         $commentManager = new commentManager();
         $episodeManager = new episodeManager();
         $view = new view();
@@ -230,10 +250,11 @@ class BackController{
                 }
                 else {
                     $sum = $commentManager->countReports();
+                    $countcoms = $commentManager->countComs();
                     $episode = $episodeManager->getEpisode($_GET['id']);
                     $comments = $commentManager->getReportedComments($_GET['id']);
                     $error = 'Vous devez spécifier le titre et le numéro de l\'épisode';
-                    $view->render('back/episodeBackView', 'backend/templateBack', compact('sum', 'error', 'episode', 'comments'));
+                    $view->render('back/episodeBackView', 'backend/templateBack', compact('countcoms', 'sum', 'error', 'episode', 'comments'));
                 }
             }
             elseif (isset($_POST['save'])) {
@@ -245,10 +266,11 @@ class BackController{
                 }
                 else {
                     $sum = $commentManager->countReports();
+                    $countcoms = $commentManager->countComs();
                     $episode = $episodeManager->getEpisode($_GET['id']);
                     $comments = $commentManager->getReportedComments($_GET['id']);
                     $error = 'Vous devez spécifier le titre et le numéro de l\'épisode';
-                    $view->render('back/episodeBackView', 'backend/templateBack', compact('sum', 'error', 'episode', 'comments'));
+                    $view->render('back/episodeBackView', 'backend/templateBack', compact('countcoms', 'sum', 'error', 'episode', 'comments'));
                 }
             }
             elseif (isset($_POST['delete'])) {
@@ -299,6 +321,9 @@ class BackController{
         $error = null;
         
         session_start();
+        $_SESSION['chapterNumber'] = null;
+        $_SESSION['title'] = null;
+        $_SESSION['content'] = null;
                 
         if (isset($_SESSION['admConnected'])) { 
             if (isset($_GET['id']) && $_GET['id'] > 0) {

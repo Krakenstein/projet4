@@ -15,13 +15,13 @@
         <section id="content">
             <form id="modification" action="index.php?action=modifiedEpisode&amp;id=<?= $episode->post_id ?>" method="post">
                 <h3>Gestion de l'épisode</h3>
-                <input title="chapterNumber" class="champ" type="text" name="nvchapter" id="number" value="<?= $episode->chapterNumber ?>" size="5" />
+                <input title="chapterNumber" class="champ" type="text" name="nvchapter" id="number" value="<?php if (isset($_SESSION['chapterNumber'])) echo $_SESSION['chapterNumber']; else echo $episode->chapterNumber; ?>" size="5" />
                 <label id="labelChapterNumber" for="chapterNumber"></label>
                 <h3>Statut: <?php if(($episode->stat) == 1) echo 'publié'?><?php if(($episode->stat) == 0) echo 'archivé'?></h3>
                 <h3><?= $episode->date ?></h3>
-                <h3>Titre de l'épisode</h3><input title="title" class="champ" type="text" name="nvtitle" id="titre" value="<?= $episode->title ?>" size="45"/>
+                <h3>Titre de l'épisode</h3><input title="title" class="champ" type="text" name="nvtitle" id="titre" value="<?php if (isset($_SESSION['title'])) echo $_SESSION['title']; else echo $episode->title; ?>" size="45"/>
                 <label id="labelTitle" for="title"><?php echo $error ?></label>
-                <textarea title="content" name="nvcontent" id="episode" cols="150" rows="50"><?= $episode->content ?></textarea>
+                <textarea title="content" name="nvcontent" id="episode" cols="150" rows="50"><?php if (isset($_SESSION['content'])) echo $_SESSION['content']; else echo $episode->content; ?></textarea>
                     <label id="labelEpisode" for="content"></label>
                 <div id="btnAction">
                     <input type="submit" class="bouton" name="save" value="Archiver">
@@ -35,8 +35,8 @@
 
             <?php foreach($comments as $com): ?>
             <div class="comment">
-                <span><?= $com->commentDate ?></span><span>par <b><?= $com->author ?></b></span>
-                <p class="content"><?= $com->comment ?></p>
+                <span><?= $com->commentDate ?></span><span>par <b><?= htmlspecialchars($com->author) ?></b></span>
+                <p class="content"><?= htmlspecialchars($com->comment) ?></p>
                 <h3>Nombre de signalements: <?= $com->report ?></h3>
                 <a href="index.php?action=deleteComEpisode&amp;id=<?= $com->id ?>&amp;postid=<?= $com->post_id ?>&amp;chpt=<?= $com->episodeNumber ?>" class="boutonRouge">supprimer</a>
             </div>

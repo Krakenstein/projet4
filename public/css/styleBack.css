@@ -59,9 +59,21 @@ label
     justify-content: center;
 }
 
-#message
+#infosEp
 {
     background-color: #084C61;
+    border: solid 5px  rgb(45, 134, 161);
+    padding: 15px;
+    color: #F9FBF2;
+    width: 30%;
+    align-self: center;
+    justify-content: center;
+}
+
+#message
+{
+    background-color: rgb(45, 134, 161);
+    border: solid 5px  #084C61;
     padding: 15px;
     color: #F9FBF2;
     width: 30%;
@@ -293,9 +305,13 @@ label
     width: 15%;
     background-color: #084C61;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: 2%;
     margin: 2px;
     color: #F9FBF2;
+    height: 15px;
 }
 
 .cell
@@ -468,9 +484,10 @@ label
 {
     display: flex;
     flex-direction: column;
-    border: 2px solid #364156;
+    border: solid 5px  rgb(45, 134, 161);
+    background-color: rgb(119, 184, 204);
     padding: 15px;
-    margin-bottom: 15px;
+    margin: 7px;
     width: 75%;
     align-self: center;
 }
@@ -479,13 +496,18 @@ label
 {
     display: flex;
     flex-direction: column;
+    align-self: center;
+    width: 75%;
+    border: solid 5px rgb(45, 134, 161);
+    border-radius: 5%;
+    background-color: rgb(119, 184, 204);
     justify-content: center;
     margin-top: 25px;
 }
 
 #pseudo
 {
-    width: 30%;
+    width: 40%;
     align-self: center;
     text-align: center;
     margin-bottom: 25px;
@@ -493,7 +515,7 @@ label
 
 .password
 {
-    width: 30%;
+    width: 40%;
     align-self: center;
     margin-bottom: 25px;
 }
