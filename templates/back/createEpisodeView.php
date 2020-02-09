@@ -10,7 +10,7 @@
             <a class="btn" href="index.php?action=episodes">Episodes</a>
             <a class="btn<?php if(($countcoms[0])  < 1) echo 'Hidden'?><?php if(($sum->value_sum) > 0) echo 'Red'?>" href="index.php?action=commentsPage">Commentaires</a>
             <a class="btn" href="index.php?action=profil">Profil</a>
-            <a class="btn" href="accueil.html">Déconnection</a>
+            <a class="btn" href="index.php?action=disconnection">Déconnection</a>
         </nav>
         <section id="content">
             <form id="modification"  action="index.php?action=addEpisode" method="post">

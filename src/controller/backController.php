@@ -48,10 +48,15 @@ class BackController{
         $episodeManager = new episodeManager();
         $commentManager = new commentManager();
         $view = new view();
-        $message = null;
+
+        if (isset($_GET['ms'])){
+            $message = $_GET['ms'];
+        }else $message = null;
+        
         $sum = $commentManager->countReports();
         $countcoms = $commentManager->countComs();
         $episodesTot = $episodeManager->countEpisodes();
+        $episodesPubTot = $episodeManager->countEpisodesPub();
         $nbByPage = 5;
         $offset = 0;
         $totalpages = ceil($episodesTot[0]/$nbByPage);
@@ -83,9 +88,9 @@ class BackController{
                  $tablesJoin = $episodeManager->joinTables($offset, $nbByPage);
     
                  if (empty($tablesJoin)) { 
-                    $view->render('back/homePageBlankBackView', 'backend/templateBack', compact('countcoms', 'message', 'sum', 'episodesTot', 'tablesJoin','nbByPage', 'offset', 'currentpage', 'totalpages'));
+                    $view->render('back/homePageBlankBackView', 'backend/templateBack', compact('episodesPubTot', 'countcoms', 'message', 'sum', 'episodesTot', 'tablesJoin','nbByPage', 'offset', 'currentpage', 'totalpages'));
                 }else{
-                    $view->render('back/homePageBackView', 'backend/templateBack', compact('countcoms', 'message', 'sum', 'episodesTot', 'tablesJoin','nbByPage', 'offset', 'currentpage', 'totalpages'));
+                    $view->render('back/homePageBackView', 'backend/templateBack', compact('episodesPubTot', 'countcoms', 'message', 'sum', 'episodesTot', 'tablesJoin','nbByPage', 'offset', 'currentpage', 'totalpages'));
                 }
         }
         else {         
@@ -102,6 +107,7 @@ class BackController{
         $view = new view();
 
         $sum = $commentManager->countReports();
+        $countcoms = $commentManager->countComs();
         
         session_start();
         
@@ -110,19 +116,21 @@ class BackController{
             
             if ($_POST['pass'] != $_POST['pass2']) {// on teste les deux mots de passe
                 $error = 'Les 2 mots de passe sont différents';
-                $view->render('back/profilView', 'backend/templateBack', compact('error', 'sum'));
+                $message = null;
+                $view->render('back/profilView', 'backend/templateBack', compact('message', 'error', 'sum', 'countcoms'));
             }
             else {
                 $infos = $usersManager->resetInfos($_POST['pseudo'], password_hash($_POST['pass'], PASSWORD_DEFAULT));
                 $message = 'Vos changements ont bien été pris en compte';
                 $error = null;
-                $view->render('back/profilView', 'backend/templateBack', compact('infos', 'sum', 'message', 'error'));
+                $view->render('back/profilView', 'backend/templateBack', compact('countcoms', 'infos', 'sum', 'message', 'error'));
                 
                 }
             }
             else {
                 $error = 'Au moins un des champs est vide';
-                $view->render('back/profilView', 'backend/templateBack', compact('error', 'sum'));
+                $message = null;
+                $view->render('back/profilView', 'backend/templateBack', compact('message', 'countcoms', 'error', 'sum'));
             }
         
     }
@@ -156,8 +164,9 @@ class BackController{
         
             if (isset($_POST['publish'])) {
                 if (!empty($_POST['chapterNumber']) && !empty($_POST['title'])) {
+                    $message = 'Episode créé et posté';
                     $this->addPostedEpisode($_POST['chapterNumber'], $_POST['title'], $_POST['content']);
-                    header('Location: index.php?action=episodes');
+                    header('Location: index.php?action=episodes&ms=' . $message . '');
                     exit(); 
                 }
                 else {
@@ -168,8 +177,9 @@ class BackController{
             }
             elseif (isset($_POST['save'])) {
                 if (!empty($_POST['chapterNumber']) && !empty($_POST['title'])) {
+                    $message = 'Episode créé et archivé';
                     $this->addSavedEpisode($_POST['chapterNumber'], $_POST['title'], $_POST['content']);
-                    header('Location: index.php?action=episodes');
+                    header('Location: index.php?action=episodes&ms=' . $message . '');
                     exit(); 
                 }
                 else {
@@ -214,7 +224,8 @@ class BackController{
             if (isset($_POST['publish'])) {
                 if (!empty($_POST['nvchapter']) && !empty($_POST['nvtitle'])) {
                     $this->modifyPostedEpisode($_GET['id'], $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
-                    header('Location: index.php?action=episodes');
+                    $message = 'Episode modifié et posté';
+                    header('Location: index.php?action=episodes&ms=' . $message . '');
                     exit(); 
                 }
                 else {
@@ -228,7 +239,8 @@ class BackController{
             elseif (isset($_POST['save'])) {
                 if (!empty($_POST['nvchapter']) && !empty($_POST['nvtitle'])) {
                     $this->modifySavedEpisode($_GET['id'], $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
-                    header('Location: index.php?action=episodes');
+                    $message = 'Episode modifié et archivé';
+                    header('Location: index.php?action=episodes&ms=' . $message . '');
                     exit(); 
                 }
                 else {
@@ -243,8 +255,7 @@ class BackController{
                 if (isset($_GET['id']) && $_GET['id'] > 0) {
                     $this->episodeDelete();
                     $message = 'Episode Supprimé';
-                    compact('message');
-                    header('Location: index.php?action=episodes');
+                    header('Location: index.php?action=episodes&ms=' . $message . '');
                     exit(); 
                 }
                 else {

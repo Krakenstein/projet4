@@ -14,7 +14,9 @@
         </nav>
         <section id="content">
             <h1>Liste des épisodes</h1>
-            <h3><?= $message?></h3>
+            <h3>Nombre total d'épisodes: <?=$episodesTot[0]?></h3>
+            <h3>Episodes publiés: <?=$episodesPubTot[0]?></h3>
+            <h3 id="message<?php if($message === null ) echo 'Hidden'?>"><?= $message?></h3>
             <div class="table">
                 <div class="rowsTitle">
                     <div class="cell-title"><h4>Numéro</h4></div>

@@ -13,18 +13,19 @@
             <a class="btn" href="index.php?action=disconnection">Déconnection</a>
         </nav>
         <section id="content">
+            <h1>Vous pouvez changer ici votre identifiant et votre mot de passe</h1>
             <form id="formProfil" action="index.php?action=resetAdmin" method="post">
-                <h3>pseudo:</h3>
+                <h3>pseudo</h3>
                 <input title="pseudo" class="champ" type="text" name="pseudo" id="pseudo" placeholder="" size="25"/>
                 <label id="labelPseudo" for="pseudo"></label>
-                <h3>Changer de mot de passe:</h3>
+                <h3>Changer de mot de passe</h3>
                 <input title="pass" type="password" name="pass" class="password" placeholder="" size="15"/>
                 <label id="labelPass" for="pass"></label>
-                <h3>Saisissez à nouveau le nouveau mot de passe:</h3>
+                <h3>Saisissez à nouveau le nouveau mot de passe</h3>
                 <input title="pass2" type="password" name="pass2" class="password" placeholder="" size="15"/>
                 <label id="labelPass2" for="pass2"><?php echo $error ?></label>
                 <input type="submit" name="resetAdmin" class="boutonVert" value="Valider">
             </form>
-            <span id="profilChanges"><?php echo $message ?></span>
+            <span id="profilChanges<?php if($message === null ) echo 'Hidden'?>"><?php echo $message ?></span>
         </section>
     </div>

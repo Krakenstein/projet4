@@ -11,7 +11,7 @@ class FrontController{
     {
         $episodeManager = new episodeManager();
         $episodes = $episodeManager->getEpisodes();
-        $episodesTot = $episodeManager->countEpisodes();
+        $episodesTot = $episodeManager->countEpisodesPub();
         $nbByPage = 5;
         $offset = 0;
         $totalpages = ceil($episodesTot[0]/$nbByPage);

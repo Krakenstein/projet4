@@ -43,11 +43,30 @@ label
 {
     color: red;
     text-align: center;
+    font-size: 25px;
 }
 
 #profilChanges
 {
+    margin-top: 15px;
+    background-color: #084C61;
+    border: solid 5px  rgb(45, 134, 161);
+    padding: 15px;
+    color: #F9FBF2;
+    width: 30%;
     text-align: center;
+    align-self: center;
+    justify-content: center;
+}
+
+#message
+{
+    background-color: #084C61;
+    padding: 15px;
+    color: #F9FBF2;
+    width: 30%;
+    align-self: center;
+    justify-content: center;
 }
 
 .backNext

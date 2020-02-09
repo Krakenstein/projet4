@@ -5,10 +5,20 @@ require_once("src/model/manager.php");
 
 class episodeManager extends manager
 {
-    public function countEpisodes()// requete pour compter le nombre d'épisodes publiés
+    public function countEpisodesPub()// requete pour compter le nombre d'épisodes publiés
     {
         $bdd = $this->dbConnect();
         $req = $bdd->prepare('SELECT COUNT(*) FROM posts WHERE stat = 1');
+        $req->execute();
+        $episodesTot = $req->fetch();
+        return $episodesTot;
+        $req->closeCursor();
+    }
+
+    public function countEpisodes()// requete pour compter le nombre d'épisodes publiés
+    {
+        $bdd = $this->dbConnect();
+        $req = $bdd->prepare('SELECT COUNT(*) FROM posts');
         $req->execute();
         $episodesTot = $req->fetch();
         return $episodesTot;

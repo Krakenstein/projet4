@@ -14,6 +14,7 @@
         </nav>
         <section id="content">
             <h1>Liste des commentaires</h1>
+            <h3>Nombre total de commentaires:<?=$countcoms[0]?></h3>
             <div class="backNext<?php if($totalpages < 2) echo 'Hidden'?>">
             <a href="index.php?action=commentsPage&amp;currentpage=<?= $currentpage - 1?>&amp;#titre"><div class="left"></div>Page précédente</a>
             <span class="currentPage"><?='Page ' . $currentpage . '/' . $totalpages?></span>
