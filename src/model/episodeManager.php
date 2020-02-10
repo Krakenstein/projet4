@@ -28,7 +28,7 @@ class episodeManager extends manager
     public function PagineEpisodes($offset, $nbByPage)//requête pour récupérer les épisodes publiés en fonction de la pagination
     {
         $bdd = $this->dbConnect();
-        $req = $bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'Le %d/%m/%Y\') AS date FROM posts WHERE stat = 1 ORDER BY publiDate DESC LIMIT :offset, :limitation  ');
+        $req = $bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'Le %d/%m/%Y\') AS date FROM posts WHERE stat = 1 ORDER BY chapterNumber  LIMIT :offset, :limitation  ');
         $req->bindValue(':limitation', (int) $nbByPage, PDO::PARAM_INT);
         $req->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
         $req->execute();
@@ -170,7 +170,7 @@ class episodeManager extends manager
         FROM comments
         RIGHT JOIN posts ON posts.post_id = comments.post_id
         GROUP BY(posts.post_id)
-        ORDER BY chapterNumber DESC, publiDate DESC
+        ORDER BY chapterNumber , publiDate 
         LIMIT :offset, :limitation;');
         $req->bindValue(':limitation', (int) $nbByPage, PDO::PARAM_INT);
         $req->bindValue(':offset', (int) $offset, PDO::PARAM_INT);

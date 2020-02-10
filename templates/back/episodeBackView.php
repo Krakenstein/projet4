@@ -24,7 +24,7 @@
                 <textarea title="content" name="nvcontent" id="episode" cols="150" rows="50"><?php if (isset($_SESSION['content'])) echo $_SESSION['content']; else echo $episode->content; ?></textarea>
                     <label id="labelEpisode" for="content"></label>
                 <div id="btnAction">
-                    <input type="submit" class="bouton" name="save" value="Archiver">
+                    <input type="submit" class="bouton" name="save" value="Sauvegarder">
                     <input type="submit" class="boutonVert" name="publish" value="Publier">
                     <input type="submit" class="boutonRouge" name="delete" value="Supprimmer">
                 </div>

@@ -22,7 +22,7 @@
                 <textarea title="episode" name="content" id="episode" cols="150" rows="50"><?php if (isset($_SESSION['content'])) echo $_SESSION['content']; else echo ''; ?></textarea>
                 <label id="labelEpisode" for="episode"></label>
                 <div id="btnAction">
-                    <input type="submit" class="bouton" name="save" value="Archiver">
+                    <input type="submit" class="bouton" name="save" value="Sauvegarder">
                     <input type="submit" class="boutonVert" name="publish" value="Publier">
                 </div>
             </form>
