@@ -83,7 +83,8 @@ class FrontController{
         $episode = $episodeManager->previousEpisode($_GET['dt']);
 
         if ($episode === false) {
-            $view->render('front/episodeBlankView', 'frontend/templateFront');
+            header('Location: index.php?action=episode&id=' . $_GET['id']);
+            exit();
         }
         else {
             if (isset($_GET['dt']) && $_GET['dt'] > 0) {
@@ -106,7 +107,8 @@ class FrontController{
         $episode = $episodeManager->nextEpisode($_GET['dt']);
 
         if ($episode === false) {
-            $view->render('front/episodeBlankView', 'frontend/templateFront');
+            header('Location: index.php?action=episode&id=' . $_GET['id']);
+            exit();
         }
         else {
             if (isset($_GET['dt']) && $_GET['dt'] > 0) {

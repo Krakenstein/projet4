@@ -13,9 +13,9 @@
         <h3>Episode n°<?= $episode->chapterNumber ?></h3>
         <h3>Publié <?= $episode->date ?></h3>
         <div class="backNext">
-            <a href="index.php?action=previous&amp;dt=<?= $episode->publiDate?>"><div class="left"></div>Episode précédent</a>
+            <a href="index.php?action=previous&amp;dt=<?= $episode->publiDate?>&amp;id=<?= $episode->post_id?>"><div class="left"></div>Episode précédent</a>
             <a class="currentPage" href="#headCom">Aller aux commentaires</a>
-            <a href="index.php?action=next&amp;dt=<?= $episode->publiDate?>">Episode suivant<div class="right"></div></a>
+            <a href="index.php?action=next&amp;dt=<?= $episode->publiDate?>&amp;id=<?= $episode->post_id?>">Episode suivant<div class="right"></div></a>
         </div>
         <h2><?= $episode->title ?></h2>
         

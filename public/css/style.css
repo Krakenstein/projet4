@@ -156,6 +156,33 @@ label
     color: red;
 }
 
+.anchor
+{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    width: 20%;
+    border: solid 2px #F9FBF2;
+    background-color: #364156;
+    padding: 15px;
+    color: #F9FBF2;
+    margin-bottom: 15px;
+}
+
+.anchor:hover
+{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    width: 20%;
+    border: solid 2px #F9FBF2;
+    background-color: #364156;
+    padding: 15px;
+    color: #F9FBF2;
+    transition: 0.5s;
+    box-shadow: 0px 2px 5px 1px #000807;
+}
+
 .episodeTitle
 {
     font-size: 1.3em;
