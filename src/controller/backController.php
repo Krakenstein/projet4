@@ -28,11 +28,11 @@ class BackController{
                     header('Location: index.php?action=episodes');
                     exit();
                 }else{
-                    $error = 'Mot de passe incorrect';
+                    $error = 'Pseudo ou mot de passe incorrect';
                     $view->render('front/connectionView', 'frontend/templateFront', compact('error'));
                 }
             }else{
-                $error = 'Pseudo incorrect';
+                $error = 'Pseudo ou mot de passe incorrect';
                 $view->render('front/connectionView', 'frontend/templateFront', compact('error'));
             } 
             
@@ -108,30 +108,50 @@ class BackController{
 
         $sum = $commentManager->countReports();
         $countcoms = $commentManager->countComs();
+        $hash = $usersManager->getHash();
         
         session_start();
         
-            // on teste l'existence de nos variables. On teste également si elles ne sont pas vides
-            if ((isset($_POST['pseudo']) && !empty($_POST['pseudo'])) && (isset($_POST['pass']) && !empty($_POST['pass'])) && (isset($_POST['pass2']) && !empty($_POST['pass2']))) {
-            
-            if ($_POST['pass'] != $_POST['pass2']) {// on teste les deux mots de passe
-                $error = 'Les 2 mots de passe sont différents';
-                $message = null;
-                $view->render('back/profilView', 'backend/templateBack', compact('message', 'error', 'sum', 'countcoms'));
-            }
-            else {
-                $infos = $usersManager->resetInfos($_POST['pseudo'], password_hash($_POST['pass'], PASSWORD_DEFAULT));
-                $message = 'Vos changements ont bien été pris en compte';
-                $error = null;
-                $view->render('back/profilView', 'backend/templateBack', compact('countcoms', 'infos', 'sum', 'message', 'error'));
-                
+        if (isset($_SESSION['admConnected'])){
+            if ((isset($_POST['pseudo']) && !empty($_POST['pseudo'])) && (isset($_POST['passOld']) && !empty($_POST['passOld'])) && (isset($_POST['pass']) && !empty($_POST['pass'])) && (isset($_POST['pass2']) && !empty($_POST['pass2']))) {
+                if (password_verify(($_POST['passOld']), $hash[0]) === true){
+                    if ($_POST['pass'] != $_POST['pass2']) {// on teste les deux mots de passe
+                        $error = 'Les 2 mots de passe sont différents';
+                        $message = null;
+                        $view->render('back/profilView', 'backend/templateBack', compact('message', 'error', 'sum', 'countcoms'));
+                    }
+                    else {
+                        if (preg_match("((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,50})", $_POST['pass'])){
+                            $infos = $usersManager->resetInfos($_POST['pseudo'], password_hash($_POST['pass'], PASSWORD_DEFAULT));
+                            $_SESSION['admConnected'] = false;
+                            session_destroy();
+                            $error = 'Vos changements ont bien été pris en compte';
+                            $view->render('front/connectionView', 'frontend/templateFront', compact('error'));
+                        }else{
+                            $error = 'Le nouveau mot de passe choisi n\'est pas valide';
+                            $message = null;
+                            $view->render('back/profilView', 'backend/templateBack', compact('message', 'error', 'sum', 'countcoms'));
+                        }
+                        
+                        
+                    }
+                }else{
+                    $error = 'Impossible de modifier les informations';
+                    $message = null;
+                    $view->render('back/profilView', 'backend/templateBack', compact('message', 'error', 'sum', 'countcoms'));
                 }
+
             }
             else {
                 $error = 'Au moins un des champs est vide';
                 $message = null;
                 $view->render('back/profilView', 'backend/templateBack', compact('message', 'countcoms', 'error', 'sum'));
             }
+        }else {         
+            $error = 'Vous devez vous connecter';
+            $view->render('front/connectionView', 'frontend/templateFront', compact('error'));
+        }   
+            
         
     }
 
