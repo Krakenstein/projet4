@@ -280,9 +280,11 @@ label
 .backNext
 {
     display: flex;
-    justify-content: space-between;
+    align-self: center;
+    justify-content: center;
     width: 50%;
     margin-bottom: 15px;
+    margin-top: 15px;
 }
 
 .backNextHidden
@@ -301,7 +303,12 @@ label
     background-color: #364156;
     padding: 15px;
     color: #F9FBF2;
-    
+    width: 35%;
+}
+
+.backNext .hidden
+{
+    display: none;
 }
 
 .backNext .currentPage
@@ -309,7 +316,7 @@ label
     display: flex;
     justify-content: center;
     text-align: center;
-    width: 20%;
+    width: 30%;
     border: solid 2px #F9FBF2;
     background-color: #364156;
     padding: 15px;

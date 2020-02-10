@@ -8,7 +8,7 @@
     <div id="main">
         <nav>
             <a class="btn" href="index.php?action=episodes">Episodes</a>
-            <a class="btn<?php if(($countcoms[0])  < 1) echo 'Hidden'?><?php if(($sum->value_sum) > 0) echo 'Red'?>" href="index.php?action=commentsPage">Commentaires</a>
+            <a class="btnCom<?php if(($countcoms[0])  < 1) echo 'Blue'?><?php if(($sum->value_sum) > 0) echo 'Red'?>" href="index.php?action=commentsPage">Commentaires</a>
             <a class="btn" href="index.php?action=profil">Profil</a>
             <a class="btn" href="index.php?action=disconnection">Déconnection</a>
         </nav>
@@ -18,9 +18,9 @@
                 <h3>Nombre total de commentaires: <?=$countcoms[0]?></h3>
             </div>
             <div class="backNext<?php if($totalpages < 2) echo 'Hidden'?>">
-            <a href="index.php?action=commentsPage&amp;currentpage=<?= $currentpage - 1?>&amp;#titre"><div class="left"></div>Page précédente</a>
+            <a href="index.php?action=commentsPage&amp;currentpage=<?= $currentpage - 1?>&amp;#titre" class="<?php if($currentpage === 1) echo 'hidden'?>"><div class="left"></div>Page précédente</a>
             <span class="currentPage"><?='Page ' . $currentpage . '/' . $totalpages?></span>
-            <a href="index.php?action=commentsPage&amp;currentpage=<?= $currentpage + 1?>&amp;#titre">Page suivante<div class="right"></div></a>
+            <a href="index.php?action=commentsPage&amp;currentpage=<?= $currentpage + 1?>&amp;#titre" class="<?php if($currentpage == $totalpages ) echo 'hidden' ?>">Page suivante<div class="right"></div></a>
             </div>
             <?php foreach($allComs as $com): ?>
             <div class="comment">
@@ -28,13 +28,16 @@
                 <span>Posté <?= $com->commentDate ?></span><span>par <b><?= htmlspecialchars($com->author) ?></b></span>
                 <p class="content"><?= htmlspecialchars($com->comment) ?></p>
                 <h3>Nombre de signalements: <?= $com->report ?></h3>
-                <a href="index.php?action=deleteCom&amp;id=<?= $com->id ?>" class="boutonRouge">supprimer</a>
+                <div id="btnAction">
+                    <a href="index.php?action=deleteCom&amp;id=<?= $com->id ?>" class="boutonRouge">Supprimer le commentaire</a>
+                    <a href="index.php?action=deleteRep&amp;id=<?= $com->id ?>" class="bouton">Retirer les signalements</a>
+                </div>
             </div>
         <?php endforeach; ?>
             <div class="backNext<?php if($totalpages < 2) echo 'Hidden'?>">
-            <a href="index.php?action=commentsPage&amp;currentpage=<?= $currentpage - 1?>&amp;#titre"><div class="left"></div>Page précédente</a>
+            <a href="index.php?action=commentsPage&amp;currentpage=<?= $currentpage - 1?>&amp;#titre" class="<?php if($currentpage === 1) echo 'hidden'?>"><div class="left"></div>Page précédente</a>
             <span class="currentPage"><?='Page ' . $currentpage . '/' . $totalpages?></span>
-            <a href="index.php?action=commentsPage&amp;currentpage=<?= $currentpage + 1?>&amp;#titre">Page suivante<div class="right"></div></a>
+            <a href="index.php?action=commentsPage&amp;currentpage=<?= $currentpage + 1?>&amp;#titre" class="<?php if($currentpage == $totalpages ) echo 'hidden' ?>">Page suivante<div class="right"></div></a>
             </div>
         </section>
     </div>

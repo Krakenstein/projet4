@@ -64,6 +64,10 @@ try {
             
             $controller->comDelete();
         }
+        elseif ($_GET['action'] == 'deleteRep') {//action pour supprimmer un commentaire depuis la page commentaires du back
+            
+            $controller->deleteR();
+        }
         elseif ($_GET['action'] == 'commentsPage') {//action pour supprimmer un commentaire depuis le back
             
             $controller->comPage();

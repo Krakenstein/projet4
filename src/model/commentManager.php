@@ -56,6 +56,15 @@ class commentManager extends manager
         $req->closeCursor();
     }
 
+    public function deleteReports($id)//requête pour ajouter 1 au signalement d'un commentaire 
+    {
+        $bdd = $this->dbConnect();
+        $req = $bdd->prepare('UPDATE comments SET report = 0  WHERE id = ? ');
+        $reportDelet = $req->execute(array($id));
+        return $reportDelet;
+        $req->closeCursor();
+    }
+
     public function deleteComments($post_id)//requête pour supprimer les commentaires d'un épisode en fonction de id
     {
         $bdd = $this->dbConnect();

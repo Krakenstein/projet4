@@ -121,19 +121,6 @@ label
     display: none;
 }
 
-.backNext .visible
-{
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    background-color: #084C61;
-    padding: 15px;
-    color: #F9FBF2;
-    border: solid 2px #F9FBF2;
-    text-decoration: none;
-    z-index: 1;;
-}
-
 .backNext .currentPage
 {
     display: flex;
@@ -203,12 +190,64 @@ label
     border-radius: 20px;
     font-family: Geneva, Kalimati, sans-serif;
     font-size: 1.25em;
-    border: 2px solid #F9FBF2;;   
+    border: 2px solid #F9FBF2;  
 }
 
-.btnHidden
+.btnCom
 {
-    display: none;    
+    display: inline-block;    
+    vertical-align: center;  
+    text-align: center;    
+    padding: 10px;
+    margin: 5px;
+    color: #F9FBF2;
+    background-color: #2ac331;
+    text-decoration: none; 
+    border-radius: 20px;
+    font-family: Geneva, Kalimati, sans-serif;
+    font-size: 1.25em;
+    border: 2px solid #F9FBF2;  
+}
+
+.btnCom:hover
+{
+    display: inline-block;    
+    vertical-align: center;  
+    text-align: center;    
+    padding: 10px;
+    margin: 5px;
+    color: rgb(0, 0, 0);
+    background-color: #51ff5a;
+    border-radius: 20px;
+    border: 2px solid #000807;
+    transition: ease-in 0.25s;
+    box-shadow: 0 8px 6px -6px black;   
+}
+
+.btnComBlue
+{
+    display: inline-block;    
+    vertical-align: center;  
+    text-align: center;    
+    padding: 10px;
+    margin: 5px;
+    color: #F9FBF2;
+    background-color: #364156;
+    text-decoration: none; 
+    border-radius: 20px;
+    font-family: Geneva, Kalimati, sans-serif;
+    font-size: 1.25em;
+    border: 2px solid #F9FBF2;  
+}
+
+.btnComBlue:hover
+{
+    color: #364156;
+    background-color: #F9FBF2;
+    border-radius: 20px;
+    border: 2px solid #000807;
+    transition: ease-in 0.25s;
+    box-shadow: 0 8px 6px -6px black;   
 }
 
 .btn:hover
@@ -221,7 +260,7 @@ label
     box-shadow: 0 8px 6px -6px black;
 }
 
-.btnRed
+.btnComRed
 {
     display: inline-block;    
     vertical-align: center;  
@@ -237,7 +276,7 @@ label
     border: 2px solid #F9FBF2;;   
 }
 
-.btnRed:hover
+.btnComRed:hover
 {
     color: #364156;
     background-color: rgb(255, 70, 70);

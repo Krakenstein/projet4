@@ -195,7 +195,7 @@ class BackController{
         
             if (isset($_POST['publish'])) {
                 if (!empty($_POST['chapterNumber']) && !empty($_POST['title'])) {
-                    $message = 'Episode créé et posté';
+                    $message = 'Episode ' . $_POST['chapterNumber'] . ' créé et posté';
                     $this->addPostedEpisode($_POST['chapterNumber'], $_POST['title'], $_POST['content']);
                     header('Location: index.php?action=episodes&ms=' . $message . '');
                     exit(); 
@@ -209,7 +209,7 @@ class BackController{
             }
             elseif (isset($_POST['save'])) {
                 if (!empty($_POST['chapterNumber']) && !empty($_POST['title'])) {
-                    $message = 'Episode créé et archivé';
+                    $message = 'Episode ' . $_POST['chapterNumber'] . ' créé et sauvegardé';
                     $this->addSavedEpisode($_POST['chapterNumber'], $_POST['title'], $_POST['content']);
                     header('Location: index.php?action=episodes&ms=' . $message . '');
                     exit(); 
@@ -264,7 +264,7 @@ class BackController{
             if (isset($_POST['publish'])) {
                 if (!empty($_POST['nvchapter']) && !empty($_POST['nvtitle'])) {
                     $this->modifyPostedEpisode($_GET['id'], $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
-                    $message = 'Episode modifié et posté';
+                    $message = 'Episode ' . $_POST['nvchapter'] . ' modifié et posté';
                     header('Location: index.php?action=episodes&ms=' . $message . '');
                     exit(); 
                 }
@@ -280,7 +280,7 @@ class BackController{
             elseif (isset($_POST['save'])) {
                 if (!empty($_POST['nvchapter']) && !empty($_POST['nvtitle'])) {
                     $this->modifySavedEpisode($_GET['id'], $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
-                    $message = 'Episode modifié et archivé';
+                    $message = 'Episode ' . $_POST['nvchapter'] . ' modifié et sauvegardé';
                     header('Location: index.php?action=episodes&ms=' . $message . '');
                     exit(); 
                 }
@@ -296,7 +296,7 @@ class BackController{
             elseif (isset($_POST['delete'])) {
                 if (isset($_GET['id']) && $_GET['id'] > 0) {
                     $this->episodeDelete();
-                    $message = 'Episode Supprimé';
+                    $message = 'Episode ' . $_POST['nvchapter'] . ' Supprimé';
                     header('Location: index.php?action=episodes&ms=' . $message . '');
                     exit(); 
                 }
@@ -399,8 +399,7 @@ class BackController{
                  $allComs = $commentManager->getAllComments($offset, $nbByPage);
 
                  if (empty($allComs)) { 
-                    header('Location: index.php?action=episodes');
-                    exit(); 
+                    $view->render('back/commentsBackBlankView', 'backend/templateBack', compact('nbByPage', 'currentpage', 'offset', 'totalpages', 'countcoms', 'allComs', 'sum'));
                 }else{
                     $view->render('back/commentsBackView', 'backend/templateBack', compact('nbByPage', 'currentpage', 'offset', 'totalpages', 'countcoms', 'allComs', 'sum'));
                 }           
@@ -453,6 +452,24 @@ class BackController{
         if (isset($_SESSION['admConnected'])) { 
             $commentManager = new commentManager();
             $commentManager->deleteComment($_GET['id']);
+            header('Location: index.php?action=commentsPage');
+            exit();
+        }
+        else {         
+            $error = 'Vous devez vous connecter';
+            $view->render('front/connectionView', 'frontend/templateFront', compact('error'));
+        }
+    }
+
+    function deleteR()//méthode pour supprimer un commentaire depuis la page des commentaires
+    {   
+        $view = new view();
+
+        session_start();
+
+        if (isset($_SESSION['admConnected'])) { 
+            $commentManager = new commentManager();
+            $commentManager->deleteReports($_GET['id']);
             header('Location: index.php?action=commentsPage');
             exit();
         }

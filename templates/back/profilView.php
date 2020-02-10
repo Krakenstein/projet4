@@ -8,7 +8,7 @@
     <div id="main">
         <nav>
             <a class="btn" href="index.php?action=episodes">Episodes</a>
-            <a class="btn<?php if(($countcoms[0])  < 1) echo 'Hidden'?><?php if(($sum->value_sum) > 0) echo 'Red'?>" href="index.php?action=commentsPage">Commentaires</a>
+            <a class="btnCom<?php if(($countcoms[0])  < 1) echo 'Blue'?><?php if(($sum->value_sum) > 0) echo 'Red'?>" href="index.php?action=commentsPage">Commentaires</a>
             <a class="btn active" href="index.php?action=profil">Profil</a>
             <a class="btn" href="index.php?action=disconnection">Déconnection</a>
         </nav>
@@ -27,7 +27,7 @@
                 <h3>Nouveau de mot de passe</h3>
                 <input title="pass" type="password" name="pass" class="password" placeholder="" size="50"/>
                 <label id="labelPass" for="pass"></label>
-                <h3>Resaisissez le nouveau mot de passe</h3>
+                <h3>Ressaisissez le nouveau mot de passe</h3>
                 <input title="pass2" type="password" name="pass2" class="password" placeholder="" size="50"/>
                 <label id="labelPass2" for="pass2"><?php echo $error ?></label>
                 <input type="submit" name="resetAdmin" class="boutonVert" value="Valider">

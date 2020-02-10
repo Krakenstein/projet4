@@ -173,14 +173,17 @@ class FrontController{
     public function report()
     {
         if (isset($_GET['id']) && $_GET['id'] > 0) {
-            $this->reportComment($_GET['id']);
+            if($_GET['rp'] < 24){
+                $this->reportComment($_GET['id']);
+            }
+                header('Location: index.php?action=episode&id=' . ($_GET['postid']) . '#headCom');
         }
         else {
             throw new Exception('Erreur : aucun identifiant de commentaire envoyé');
         }
     }
 
-    public function reportComment(string $id)//méthode pour signalé un commentaire
+    public function reportComment(string $id)//méthode pour signaler un commentaire
     {
         $commentManager = new commentManager();
         $episodeManager = new episodeManager();
