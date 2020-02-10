@@ -154,6 +154,7 @@ section a
 label
 {
     color: red;
+    margin: 10px;
 }
 
 .anchor
@@ -452,7 +453,7 @@ label
     font-size: .95em;
     font-family: Geneva, Kalimati, sans-serif;
     padding: 5px;
-    margin-bottom: 15px;
+    margin: 0px;
 }
 
 #makeComment textarea

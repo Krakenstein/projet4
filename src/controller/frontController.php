@@ -7,7 +7,7 @@ require_once('src/view/View.php');
 
 class FrontController{
         
-    public function listEpisodes()//méthode pour récupérer la liste paginée des épisodes publiés
+    public function listEpisodes():void //méthode pour récupérer la liste paginée des épisodes publiés
     {
         $episodeManager = new episodeManager();
         $episodes = $episodeManager->getEpisodes();
@@ -50,7 +50,7 @@ class FrontController{
         }        
     
         
-    public function episode()//méthode pour récupérer un épisode publié en fonction de son numéro de chapitre
+    public function episode():void //méthode pour récupérer un épisode publié en fonction de son numéro de chapitre
     {
         $episodeManager = new episodeManager();
         $commentManager = new commentManager();
@@ -58,7 +58,10 @@ class FrontController{
 
         $episode = $episodeManager->getPostedEpisode($_GET['id']);
         $comments = $commentManager->getComments($_GET['id']);
-        $error = null;
+
+        if (isset($_GET['er'])){
+            $error = $_GET['er'];
+        }else $error = null;
 
         if ($episode === false) {
             $view->render('front/episodeBlankView', 'frontend/templateFront');
@@ -73,7 +76,7 @@ class FrontController{
         }
     }
 
-    public function previous()
+    public function previous():bolean
     {
         $episodeManager = new episodeManager();
         $commentManager = new commentManager();
@@ -97,7 +100,7 @@ class FrontController{
         }
     }
 
-    public function next()
+    public function next():bolean
     {
         $episodeManager = new episodeManager();
         $commentManager = new commentManager();
@@ -121,7 +124,7 @@ class FrontController{
         }
     }
 
-    public function newCom()
+    public function newCom():void
     {
         $episodeManager = new episodeManager();
         $commentManager = new commentManager();
@@ -136,8 +139,9 @@ class FrontController{
                 $this->countCom($_GET['id']);
             }
             else {
-                $error = 'tous les champs ne sont pas remplis !';
-                $view->render('front/episodeView', 'frontend/templateFront', compact('episode', 'comments', 'error'));
+                $error = 'Veuillez remplir tous les champs';
+                header('Location: index.php?action=episode&id=' . $_GET['id'] . '&er=' . $error . '#makeComment');
+                exit();
             }
         }
         else {
@@ -145,7 +149,7 @@ class FrontController{
         }
     }
 
-    public function addComment(string $post_id, string $episodeNumber, string $author, string $comment)//méthode pour rajouter un commentaire à un épisode donné en fonction de son numéro de chapitre
+    public function addComment(string $post_id, string $episodeNumber, string $author, string $comment):bolean //méthode pour rajouter un commentaire à un épisode donné en fonction de son numéro de chapitre
     {
         $commentManager = new commentManager();
         
@@ -160,7 +164,7 @@ class FrontController{
         }
     }
 
-    public function countCom(string $post_id)//méthode pour compter le nbre de commentaires d'un épisode
+    public function countCom(string $post_id):bolean //méthode pour compter le nbre de commentaires d'un épisode
     {
         $commentManager = new commentManager();
         $numberComments = $commentManager->countComments($post_id);
