@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+namespace projet4\view ;
+
 class View{
 
     protected $viewPath = 'templates/';

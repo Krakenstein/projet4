@@ -1,6 +1,10 @@
 <?php
 declare(strict_types=1);
 
+namespace Projet4\Manager;
+
+use \PDO ;
+
 require_once("src/model/manager.php");
 
 class episodeManager extends manager

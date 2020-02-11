@@ -1,6 +1,12 @@
 <?php
 declare(strict_types=1);
 
+namespace Projet4\Controller;
+
+use Projet4\Manager\episodeManager;
+use Projet4\Manager\commentManager;
+use Projet4\View\View;
+
 require_once('src/model/episodeManager.php');
 require_once('src/model/commentManager.php');
 require_once('src/view/View.php');
@@ -96,67 +102,21 @@ class FrontController{
             }
     }    
 
-
-    /*public function episode():void //méthode pour récupérer un épisode publié en fonction de son numéro de chapitre
-    {
-        $episodeManager = new episodeManager();
-        $commentManager = new commentManager();
-        $view = new view();
-
-        $episode = $episodeManager->getPostedEpisode($_GET['id']);
-        $comments = $commentManager->getComments($_GET['id']);
-        $totalpages = $episodeManager->countEpisodesPub();
-        $currentpage = 0;
-
-        if (isset($_GET['er'])){
-            $error = $_GET['er'];
-        }else $error = null;
-
-        
-        if (isset($_GET['ps']) && is_numeric($_GET['ps'])) {
-
-            $currentpage = (int) $_GET['ps'];
-            } else {
-
-                $currentpage = 1;
-             } 
-             
-
-             if ($currentpage > $totalpages) {
-
-                $currentpage = $totalpages;
-             } 
-
-             if ($currentpage < 1) {
- 
-                $currentpage = 1;
-             } 
-
-             if ($episode === false) {
-                $view->render('front/episodeBlankView', 'frontend/templateFront');
-            }
-            else {
-                if (isset($_GET['id']) && $_GET['id'] > 0) {
-                    $view->render('front/episodeView', 'frontend/templateFront', compact('currentpage', 'totalpages', 'episode', 'comments', 'error'));
-                }
-                else {
-                    throw new Exception('Aucun numéro dépisode envoyé');
-                }
-            }
-        
-    }*/
-
     public function episode():void //méthode pour récupérer un épisode publié en fonction de son id
     {
         $episodeManager = new episodeManager();
         $commentManager = new commentManager();
         $view = new view();
 
+        if (isset($_GET['ps'])){
+            $position = $_GET['ps'];
+        }else $position = null;
+
         $episodesTot = $episodeManager->countEpisodesPub();
         $nbByPage = 1;
         $offset = 0;
         $totalpages = ceil($episodesTot[0]/$nbByPage);
-        $currentpage=$_GET['ps'] + 1;
+        $currentpage= $position + 1;
 
         $episode = $episodeManager->getPostedEpisode($_GET['id']);
         $comments = $commentManager->getComments($_GET['id']);
@@ -177,57 +137,6 @@ class FrontController{
             }
         }
     }
-    /*public function previous():void
-    {
-        $episodeManager = new episodeManager();
-        $commentManager = new commentManager();
-        $view = new view();
-        $error = null;
-        $totalpages = $episodeManager->countEpisodesPub();
-        $currentpage = (int) $_GET['currentpage'];
-
-        $episode = $episodeManager->previousEpisode($_GET['chpt'], $_GET['dt']);
-
-        if ($episode === false) {
-            header('Location: index.php?action=episode&id=' . $_GET['id']);
-            exit();
-        }
-        else {
-            if (isset($_GET['chpt']) && $_GET['chpt'] > 0) {
-                $comments = $commentManager->getComments($episode->post_id);
-                $view->render('front/episodeView', 'frontend/templateFront', compact('currentpage', 'totalpages', 'episode', 'comments', 'error'));
-            }
-            else {
-                throw new Exception('Aucun numéro dépisode envoyé');
-            }
-        }
-    }
-
-    public function next():void
-    {
-        $episodeManager = new episodeManager();
-        $commentManager = new commentManager();
-        $view = new view();
-        $error = null;
-        $totalpages = $episodeManager->countEpisodesPub();
-        $currentpage = (int) $_GET['currentpage'];
-
-        $episode = $episodeManager->nextEpisode($_GET['chpt'], $_GET['dt']);
-
-        if ($episode === false) {
-            header('Location: index.php?action=episode&id=' . $_GET['id']);
-            exit();
-        }
-        else {
-            if (isset($_GET['chpt']) && $_GET['chpt'] > 0) {
-                $comments = $commentManager->getComments($episode->post_id);
-                $view->render('front/episodeView', 'frontend/templateFront', compact('currentpage', 'totalpages', 'episode', 'comments', 'error'));
-            }
-            else {
-                throw new Exception('Aucun numéro dépisode envoyé');
-            }
-        }
-    }*/
 
     public function newCom():void
     {
@@ -245,7 +154,7 @@ class FrontController{
             }
             else {
                 $error = 'Veuillez remplir tous les champs';
-                header('Location: index.php?action=episode&id=' . $_GET['id'] . '&er=' . $error . '#makeComment');
+                header('Location: index.php?action=episodePage&currentpage=' . $_GET['currentpage'] . '&er=' . $error . '#makeComment');
                 exit();
             }
         }
@@ -264,15 +173,9 @@ class FrontController{
             throw new Exception('Impossible d\'ajouter le commentaire !');
         }
         else {
-            header('Location: index.php?action=episode&id=' . $post_id . '#headCom');
+            header('Location: index.php?action=episodePage&currentpage=' . $_GET['currentpage'] . '#headCom');
             exit();
         }
-    }
-
-    public function countCom(string $post_id):bolean //méthode pour compter le nbre de commentaires d'un épisode
-    {
-        $commentManager = new commentManager();
-        $numberComments = $commentManager->countComments($post_id);
     }
 
     public function report()

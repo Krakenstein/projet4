@@ -1,5 +1,11 @@
 <?php
 declare(strict_types=1);
+namespace Projet4\Controller;
+
+use Projet4\Manager\episodeManager;
+use Projet4\Manager\commentManager;
+use Projet4\Manager\usersManager;
+use Projet4\View\View;
 
 require_once('src/model/episodeManager.php');
 require_once('src/model/commentManager.php');

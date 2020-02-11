@@ -1,4 +1,7 @@
 <?php
+use Projet4\Controller\frontController;
+use Projet4\Controller\backController;
+
 require('src/controller/frontController.php');
 require('src/controller/backController.php');
 

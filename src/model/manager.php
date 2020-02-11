@@ -1,6 +1,10 @@
 <?php
 declare(strict_types=1);
 
+namespace Projet4\Manager;
+
+use \PDO ;
+
 class Manager
 {
     protected function dbConnect()
