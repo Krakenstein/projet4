@@ -209,13 +209,19 @@ class FrontController{
         $episodeManager = new episodeManager();
         $view = new view();
 
+        $episodesTot = $episodeManager->countEpisodesPub();
+        $nbByPage = $episodesTot[0];
+        $offset = 0;
+        $totalpages = $episodesTot;
+
         $lastEpisode = $episodeManager->getLastEpisode();
+        $pagina = $episodeManager->PagineEpisodes($offset, $nbByPage);
 
         if ($lastEpisode === false) {
             $view->render('front/homePageBlankView', 'frontend/templateFront');
         }
         else {   
-            $view->render('front/homePageView', 'frontend/templateFront', compact('lastEpisode'));
+            $view->render('front/homePageView', 'frontend/templateFront', compact('lastEpisode', 'pagina', 'totalpages', 'offset', 'nbByPage', 'episodesTot'));
         }
     }
 

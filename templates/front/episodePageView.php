@@ -13,10 +13,10 @@
         <h1 id="titre">Billet simple pour l'Alaska</h1>
         <h3>Episode n°<?= $pagina[0]->chapterNumber ?></h3>
         <h3>Publié <?= $pagina[0]->date ?></h3>
-        <span class="currentPage"><?='Episode ' . $currentpage . '/' . $totalpages?></span>
+        <a class="anchor" href="#headCom">Aller aux commentaires</a>
         <div class="backNext<?php if($totalpages < 2) echo 'Hidden'?>">
             <a href="index.php?action=episodePage&amp;currentpage=<?= $currentpage - 1?>&amp;#titre" class="<?php if($currentpage === 1) echo 'hidden'?>"><div class="left"></div>Episode précédent</a>
-            <span class="currentPage"><?='Episode ' . $currentpage . '/' . $totalpages?></span>
+            <span class="currentPage"><?='Page ' . $currentpage . '/' . $totalpages?></span>
             <a href="index.php?action=episodePage&amp;currentpage=<?= $currentpage + 1?>&amp;#titre" class="<?php if($currentpage == $totalpages ) echo 'hidden' ?>">Episode suivant<div class="right"></div></a>
         </div>
         <h2><?= $pagina[0]->title ?></h2>
@@ -25,9 +25,10 @@
 
         <div class="backNext<?php if($totalpages < 2) echo 'Hidden'?>">
             <a href="index.php?action=episodePage&amp;currentpage=<?= $currentpage - 1?>&amp;#titre" class="<?php if($currentpage === 1) echo 'hidden'?>"><div class="left"></div>Episode précédent</a>
-            <span class="currentPage"><?='Episode ' . $currentpage . '/' . $totalpages?></span>
+            <span class="currentPage"><?='Page ' . $currentpage . '/' . $totalpages?></span>
             <a href="index.php?action=episodePage&amp;currentpage=<?= $currentpage + 1?>&amp;#titre" class="<?php if($currentpage == $totalpages ) echo 'hidden' ?>">Episode suivant<div class="right"></div></a>
         </div>
+        <a class="anchor" href="#titre">Revenir au début de l'épisode</a>
     </section>
     <section class="comments">
         <h2 id="headCom">Commentaires</h2>
