@@ -18,9 +18,9 @@
             <span class="currentPage"><?='Page ' . $currentpage . '/' . $totalpages?></span>
             <a href="index.php?action=listEpisodes&amp;currentpage=<?= $currentpage + 1?>&amp;#titre" class="<?php if($currentpage == $totalpages ) echo 'hidden' ?>">Page suivante<div class="right"></div></a>
             </div>
-    
+   
         <?php foreach($pagina as $episode): ?>
-        <a href="index.php?action=episode&amp;id=<?= $episode->post_id ?>" class="episodeListe">
+        <a href="index.php?action=episode&amp;id=<?= $episode->post_id ?>&amp;ps=<?= array_search($episode->post_id, array_column($pagina, 'post_id')) ?>" class="episodeListe">
             <p><i><?= $episode->date ?></i></p>
             <span>Episode n°<?= $episode->chapterNumber ?></span>
             <span class="episodeTitle"><?= $episode->title ?></span>

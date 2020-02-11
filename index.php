@@ -8,6 +8,7 @@ try {
         if (($_GET['action'] == 'listEpisodes') ||
             ($_GET['action'] == 'connection') ||
             ($_GET['action'] == 'episode') ||
+            ($_GET['action'] == 'episodePage') ||
             ($_GET['action'] == 'previous') ||
             ($_GET['action'] == 'next') ||
             ($_GET['action'] == 'addComment') ||
@@ -27,6 +28,10 @@ try {
         elseif ($_GET['action'] == 'episode') {//on affiche un épisode dans le front
             
             $controller->episode();
+        }
+        elseif ($_GET['action'] == 'episodePage') {//on affiche un épisode dans le front
+            
+            $controller->episodePage();
         }
         elseif ($_GET['action'] == 'previous') {//on affiche un épisode dans le front
             

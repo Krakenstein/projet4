@@ -28,7 +28,7 @@ class episodeManager extends manager
     public function PagineEpisodes($offset, $nbByPage)//requête pour récupérer les épisodes publiés en fonction de la pagination
     {
         $bdd = $this->dbConnect();
-        $req = $bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'Le %d/%m/%Y\') AS date FROM posts WHERE stat = 1 ORDER BY chapterNumber  LIMIT :offset, :limitation  ');
+        $req = $bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'Le %d/%m/%Y\') AS date FROM posts WHERE stat = 1 ORDER BY chapterNumber, publiDate  LIMIT :offset, :limitation  ');
         $req->bindValue(':limitation', (int) $nbByPage, PDO::PARAM_INT);
         $req->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
         $req->execute();
@@ -87,21 +87,21 @@ class episodeManager extends manager
         return $data;
     }
 
-    public function previousEpisode($publiDate)
+    public function previousEpisode($chapterNumber, $publidate)
     {
         $bdd = $this->dbConnect();
-        $req = $bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'Le %d/%m/%Y\') AS date, publiDate FROM posts WHERE publiDate < ? AND stat = 1 ORDER BY publiDate DESC LIMIT 1;');
-        $req->execute(array($publiDate));
+        $req = $bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'Le %d/%m/%Y\') AS date, publiDate FROM posts WHERE chapterNumber < ? AND publiDate < ? AND stat = 1 ORDER BY chapterNumber, publiDate DESC LIMIT 1;');
+        $req->execute(array($chapterNumber));
         $previousEp = $req->fetch(PDO::FETCH_OBJ);
         return $previousEp;
         $req->closeCursor();
     }
 
-    public function nextEpisode($publiDate)
+    public function nextEpisode($chapterNumber, $publiDate)
     {
         $bdd = $this->dbConnect();
-        $req = $bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'Le %d/%m/%Y\') AS date, publiDate FROM posts WHERE publiDate > ? AND stat = 1 ORDER BY publiDate LIMIT 1;');
-        $req->execute(array($publiDate));
+        $req = $bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'Le %d/%m/%Y\') AS date, publiDate FROM posts WHERE chapterNumber > ? AND publiDate < ? AND stat = 1 ORDER BY chapterNumber, publiDate LIMIT 1;');
+        $req->execute(array($chapterNumber));
         $nextEp = $req->fetch(PDO::FETCH_OBJ);
         return $nextEp;
         $req->closeCursor();

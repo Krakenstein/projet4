@@ -1,4 +1,5 @@
-<?php $title = $episode->title; ?>
+
+<?php $title = $pagina[0]->title; ?>
 
     <nav class="navigation-bar">
         <a href="#foot" id="signature"><h2>Jean Forteroche</h2></a>
@@ -8,19 +9,20 @@
         </div>
     </nav>
     <section>
-    
+
         <h1 id="titre">Billet simple pour l'Alaska</h1>
-        <h3>Episode n°<?= $episode->chapterNumber ?></h3>
-        <h3>Publié <?= $episode->date ?></h3>
+        <h3>Episode n°<?= $pagina[0]->chapterNumber ?></h3>
+        <h3>Publié <?= $pagina[0]->date ?></h3>
+        <span class="currentPage"><?='Episode ' . $currentpage . '/' . $totalpages?></span>
         <div class="backNext<?php if($totalpages < 2) echo 'Hidden'?>">
             <a href="index.php?action=episodePage&amp;currentpage=<?= $currentpage - 1?>&amp;#titre" class="<?php if($currentpage === 1) echo 'hidden'?>"><div class="left"></div>Episode précédent</a>
             <span class="currentPage"><?='Episode ' . $currentpage . '/' . $totalpages?></span>
             <a href="index.php?action=episodePage&amp;currentpage=<?= $currentpage + 1?>&amp;#titre" class="<?php if($currentpage == $totalpages ) echo 'hidden' ?>">Episode suivant<div class="right"></div></a>
         </div>
-        <h2><?= $episode->title ?></h2>
+        <h2><?= $pagina[0]->title ?></h2>
         
-        <div id="chapitre"><?= $episode->content ?></div>
-        
+        <div id="chapitre"><?= $pagina[0]->content ?></div>
+
         <div class="backNext<?php if($totalpages < 2) echo 'Hidden'?>">
             <a href="index.php?action=episodePage&amp;currentpage=<?= $currentpage - 1?>&amp;#titre" class="<?php if($currentpage === 1) echo 'hidden'?>"><div class="left"></div>Episode précédent</a>
             <span class="currentPage"><?='Episode ' . $currentpage . '/' . $totalpages?></span>
@@ -38,7 +40,7 @@
         </div>
         <?php endforeach; ?>
 
-        <form id="makeComment" action="index.php?action=addComment&amp;nb=<?= $episode->chapterNumber ?>&amp;id=<?= $episode->post_id ?>" method="post">
+        <form id="makeComment" action="index.php?action=addComment&amp;nb=<?= $pagina[0]->chapterNumber ?>&amp;id=<?= $pagina[0]->post_id ?>" method="post">
             <h2>Laissez moi un commentaire</h2>
             <input title="author" class="champ" type="text" name="author" id="author" placeholder=" Votre pseudo" size="15"/>
             <label id="labelAuthor" for="author"><?php echo $error ?></label>
