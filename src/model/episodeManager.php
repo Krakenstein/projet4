@@ -1,11 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Projet4\Manager;
+namespace Projet4\Model;
 
 use \PDO ;
 
-require_once("src/model/manager.php");
 
 class episodeManager extends manager
 {
@@ -19,7 +18,7 @@ class episodeManager extends manager
         $req->closeCursor();
     }
 
-    public function countEpisodes()// requete pour compter le nombre d'épisodes publiés
+    public function countEpisodes()// requete pour compter le nombre d'épisodes total
     {
         $bdd = $this->dbConnect();
         $req = $bdd->prepare('SELECT COUNT(*) FROM posts');
@@ -64,7 +63,7 @@ class episodeManager extends manager
     public function getEpisode($post_id)//requête pour récupérer un épisode en fonction de son id
     {
         $bdd = $this->dbConnect();
-        $req = $bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'Le %d/%m/%Y\') AS date FROM posts WHERE post_id = ? ');
+        $req = $bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'le %d/%m/%Y à %Hh %imin\') AS date FROM posts WHERE post_id = ? ');
         $req->execute(array($post_id));
         $data = $req->fetch(PDO::FETCH_OBJ);
 
@@ -84,7 +83,7 @@ class episodeManager extends manager
     public function getPostedEpisode($post_id)//requête pour récupérer un épisode publié en fonction de son id
     {
         $bdd = $this->dbConnect();
-        $req = $bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'Le %d/%m/%Y\') AS date, publiDate FROM posts WHERE post_id = ? AND stat = 1');
+        $req = $bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'Le %d/%m/%Y à %Hh %imin %ss\') AS date, publiDate FROM posts WHERE post_id = ? AND stat = 1');
         $req->execute(array($post_id));
         $data = $req->fetch(PDO::FETCH_OBJ);
 
@@ -129,7 +128,7 @@ class episodeManager extends manager
         $req->closeCursor();
     }
 
-    public function postModifiedEpisode($post_id, $nvchapter, $nvtitle, $nvcontent)//requête pour modifier un épisode et le publier 
+    public function postModifiedEpisode($post_id, $nvchapter, $nvtitle, $nvcontent)//requête pour modifier un épisode et le publier à la date d'aujourd'hui
     {
         $bdd = $this->dbConnect();
         $req = $bdd->prepare('UPDATE posts SET post_id = :sameid, chapterNumber = :nvchapter, title = :nvtitle, content = :nvcontent, publiDate =  NOW(), stat = 1 WHERE post_id = :sameid ');
@@ -143,10 +142,25 @@ class episodeManager extends manager
         $req->closeCursor();
     }
 
+    public function postModifiedEpisodeSameDate($post_id, $nvchapter, $nvtitle, $nvcontent, $publiDate)//requête pour modifier un épisode et le publier sans changer la date de publication
+    {
+        $bdd = $this->dbConnect();
+        $req = $bdd->prepare('UPDATE posts SET post_id = :sameid, chapterNumber = :nvchapter, title = :nvtitle, content = :nvcontent, publiDate = :samedate, stat = 1 WHERE post_id = :sameid ');
+        $postedModifiedEpisode = $req->execute(array(
+            'sameid' => $post_id,
+            'nvchapter' => $nvchapter, 
+            'nvtitle' => $nvtitle, 
+            'nvcontent' => $nvcontent,
+            'samedate' => $publiDate
+            ));
+        return $postedModifiedEpisode;
+        $req->closeCursor();
+    }
+
     public function saveModifiedEpisode($post_id, $nvchapter, $nvtitle, $nvcontent)//requête pour modifier un épisode et l'archiver
     {
         $bdd = $this->dbConnect();
-        $req = $bdd->prepare('UPDATE posts SET post_id = :sameid, chapterNumber = :nvchapter, title = :nvtitle, content = :nvcontent, publiDate =  null, stat = 0 WHERE post_id = :sameid ');
+        $req = $bdd->prepare('UPDATE posts SET post_id = :sameid, chapterNumber = :nvchapter, title = :nvtitle, content = :nvcontent, stat = 0 WHERE post_id = :sameid ');
         $savedModifiedEpisode = $req->execute(array(
             'sameid' => $post_id,
             'nvchapter' => $nvchapter, 

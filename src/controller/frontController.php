@@ -3,13 +3,10 @@ declare(strict_types=1);
 
 namespace Projet4\Controller;
 
-use Projet4\Manager\episodeManager;
-use Projet4\Manager\commentManager;
+use Projet4\Model\episodeManager;
+use Projet4\Model\commentManager;
 use Projet4\View\View;
 
-require_once('src/model/episodeManager.php');
-require_once('src/model/commentManager.php');
-require_once('src/view/View.php');
 
 class FrontController{
         

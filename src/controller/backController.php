@@ -2,15 +2,10 @@
 declare(strict_types=1);
 namespace Projet4\Controller;
 
-use Projet4\Manager\episodeManager;
-use Projet4\Manager\commentManager;
-use Projet4\Manager\usersManager;
+use Projet4\Model\episodeManager;
+use Projet4\Model\commentManager;
+use Projet4\Model\usersManager;
 use Projet4\View\View;
-
-require_once('src/model/episodeManager.php');
-require_once('src/model/commentManager.php');
-require_once('src/model/usersManager.php');
-require_once('src/view/View.php');
 
 class BackController{
 
@@ -269,12 +264,27 @@ class BackController{
         
             if (isset($_POST['publish'])) {
                 if (!empty($_POST['nvchapter']) && !empty($_POST['nvtitle'])) {
-                    $this->modifyPostedEpisode($_GET['id'], $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
-                    $message = 'Episode ' . $_POST['nvchapter'] . ' modifié et posté';
-                    header('Location: index.php?action=episodes&ms=' . $message . '');
-                    exit(); 
+                    if(($_GET['dt']) != 'empty'){
+                        if($_POST['dateChoice'] === 'oldDate'){
+                            $this->modifyPostedEpisodeSameDate($_GET['id'], $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent'], $_GET['dt']);
+                            $message = 'Episode ' . $_POST['nvchapter'] . ' modifié et publié';
+                            header('Location: index.php?action=episodes&ms=' . $message . '');
+                            exit(); 
+                        }else{
+                            $this->modifyPostedEpisode($_GET['id'], $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
+                            $message = 'Episode ' . $_POST['nvchapter'] . ' modifié et publié';
+                            header('Location: index.php?action=episodes&ms=' . $message . '');
+                            exit(); 
+                        }
+                    }else{
+                        $this->modifyPostedEpisode($_GET['id'], $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
+                        $message = 'Episode ' . $_POST['nvchapter'] . ' modifié et publié';
+                        header('Location: index.php?action=episodes&ms=' . $message . '');
+                        exit(); 
                 }
-                else {
+                    
+                    
+            }else {
                     $sum = $commentManager->countReports();
                     $countcoms = $commentManager->countComs();
                     $episode = $episodeManager->getEpisode($_GET['id']);
@@ -282,6 +292,7 @@ class BackController{
                     $error = 'Vous devez spécifier le titre et le numéro de l\'épisode';
                     $view->render('back/episodeBackView', 'backend/templateBack', compact('countcoms', 'sum', 'error', 'episode', 'comments'));
                 }
+                
             }
             elseif (isset($_POST['save'])) {
                 if (!empty($_POST['nvchapter']) && !empty($_POST['nvtitle'])) {
@@ -324,6 +335,13 @@ class BackController{
     {
         $episodeManager = new episodeManager();
         $postedModifiedEpisode = $episodeManager->postModifiedEpisode($_GET['id'], $nvchapter, $nvtitle, $nvcontent);
+
+    }
+
+    function modifyPostedEpisodeSameDate(string $post_id, string $nvchapter, string $nvtitle, string $nvcontent)//méthode pour modifier un épisode en le publiant
+    {
+        $episodeManager = new episodeManager();
+        $postedModifiedEpisode = $episodeManager->postModifiedEpisodeSameDate($_GET['id'], $nvchapter, $nvtitle, $nvcontent, $_GET['dt']);
 
     }
 
@@ -441,7 +459,8 @@ class BackController{
         session_start();
                 
         if (isset($_SESSION['admConnected'])) {               
-            $view->render('back/episodeBackView', 'backend/templateBack', compact('episode', 'comments', 'sum', 'error'));
+            header('Location: index.php?action=modifyEpisode&id='. $_GET['postid'] );
+            exit();
         }
         else {         
             $error = 'Vous devez vous connecter';
@@ -467,7 +486,7 @@ class BackController{
         }
     }
 
-    function deleteR()//méthode pour supprimer un commentaire depuis la page des commentaires
+    function deleteR()//méthode pour supprimer les signalements d'un commentaire depuis la page des commentaires
     {   
         $view = new view();
 
@@ -513,18 +532,8 @@ class BackController{
         if (isset($_SESSION['admConnected'])) {
             $_SESSION['admConnected'] = false;
             session_destroy();
-            session_start();
-            $episodeManager = new episodeManager();
-            $view = new view();
-
-            $lastEpisode = $episodeManager->getLastEpisode();
-
-            if ($lastEpisode === false) {
-                $view->render('front/homePageBlankView', 'frontend/templateFront');
-            }
-            else {   
-                $view->render('front/homePageView', 'frontend/templateFront', compact('lastEpisode'));
-            }
+            header('Location: index.php?');
+            exit();
         }
         else {
             $error = 'Vous devez vous connecter';

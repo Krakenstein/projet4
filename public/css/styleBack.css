@@ -558,6 +558,19 @@ label
     margin-bottom: 5px;
 }
 
+#dateChoice
+{
+    width: 30%;
+    align-self: center;
+    text-align: center;
+}
+
+#dateChoiceHidden
+{
+    display: none;
+}
+
+
 #btnAction 
 {
     align-self: center;

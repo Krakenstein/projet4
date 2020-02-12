@@ -13,12 +13,16 @@
             <a class="btn" href="index.php?action=disconnection">Déconnection</a>
         </nav>
         <section id="content">
-            <form id="modification" action="index.php?action=modifiedEpisode&amp;id=<?= $episode->post_id ?>" method="post">
+            <form id="modification" action="index.php?action=modifiedEpisode&amp;id=<?= $episode->post_id ?>&amp;dt=<?= $episode->date ?>" method="post">
                 <h3>Gestion de l'épisode</h3>
                 <input title="chapterNumber" class="champ" type="text" name="nvchapter" id="number" value="<?php if (isset($_SESSION['chapterNumber'])) echo $_SESSION['chapterNumber']; else echo $episode->chapterNumber; ?>" size="5" />
                 <label id="labelChapterNumber" for="chapterNumber"></label>
-                <h3>Statut: <?php if(($episode->stat) == 1) echo 'publié'?><?php if(($episode->stat) == 0) echo 'archivé'?></h3>
-                <h3><?= $episode->date ?></h3>
+                <h3>Statut: <?php if(($episode->stat) == 1) echo 'publié'?><?php if(($episode->stat) == 0) echo 'Sauvegardé'?></h3>
+                <h3><?php if(($episode->date) != null) echo 'Publié ' . $episode->date ?></h3>
+                <select id="dateChoice<?php if(($episode->date) === null) echo 'Hidden' ?>" name="dateChoice">
+                    <option value="oldDate">Garder cette date de publication</option>
+                    <option value="newDate">Republier à la date de maintenant</option>
+                </select>
                 <h3>Titre de l'épisode</h3><input title="title" class="champ" type="text" name="nvtitle" id="titre" value="<?php if (isset($_SESSION['title'])) echo $_SESSION['title']; else echo $episode->title; ?>" size="45"/>
                 <label id="labelTitle" for="title"><?php echo $error ?></label>
                 <textarea title="content" name="nvcontent" id="episode" cols="150" rows="50"><?php if (isset($_SESSION['content'])) echo $_SESSION['content']; else echo $episode->content; ?></textarea>
@@ -31,7 +35,7 @@
             </form>
  
 
-            <h3>Commentaires</h3>
+            <h3><?php if(($countcoms[0])  < 1) echo ''?><?php if(($sum->value_sum) > 0) echo 'Commentaires'?></h3>
 
             <?php foreach($comments as $com): ?>
             <div class="comment">

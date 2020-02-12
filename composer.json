@@ -1,0 +1,16 @@
+{
+    "name": "projet4/blog",
+    "description": "blog pour ecrivain",
+    "authors": [
+        {
+            "name": "SebH2as",
+            "email": "se.haas@laposte.net"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Projet4\\":"src/"
+        }
+    },
+    "require": {}
+}

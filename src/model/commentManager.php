@@ -1,11 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Projet4\Manager;
+namespace Projet4\Model;
 
 use \PDO ;
 
-require_once("src/model/Manager.php");
 
 class commentManager extends manager
 {
