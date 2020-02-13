@@ -3,13 +3,23 @@ declare(strict_types=1);
 
 namespace Projet4\Controller;
 
-use Projet4\Model\episodeManager;
-use Projet4\Model\commentManager;
+use Projet4\Model\EpisodeManager;
+use Projet4\Model\CommentManager;
 use Projet4\View\View;
+use Projet4\Tools\Request;
 
 
 class FrontController{
         
+    private function getInstances($method) 
+    {
+        if ($method === 'listEpisodes'){
+            $episodeManager = new episodeManager();
+            $view = new view();
+            $request = new Request();
+        }
+    }
+       
     public function listEpisodes():void //méthode pour récupérer la liste paginée des épisodes publiés
     {
         $episodeManager = new episodeManager();
@@ -20,11 +30,13 @@ class FrontController{
         $totalpages = ceil($episodesTot[0]/$nbByPage);
         $currentpage=0;
         $view = new view();
+        $request = new Request();
 
 
-        if (isset($_GET['currentpage']) && is_numeric($_GET['currentpage'])) {
+        if (null != ($request->get('currentpage')) && is_numeric($request->get('currentpage'))) {
 
-            $currentpage = (int) $_GET['currentpage'];
+            $currentpage = (int) $request->get('currentpage');
+
             } else {
 
                 $currentpage = 1;
@@ -44,11 +56,8 @@ class FrontController{
              $offset = ($currentpage - 1) * $nbByPage;
              $pagina = $episodeManager->PagineEpisodes($offset, $nbByPage);
 
-             if (empty($pagina)) { 
-                $view->render('front/episodesBlankView', 'frontend/templateFront');
-            }else{
-                $view->render('front/episodesView', 'frontend/templateFront', compact('episodes', 'episodesTot', 'pagina','nbByPage', 'offset', 'currentpage', 'totalpages'));
-            }
+            $view->render('front/episodes', 'frontend/templateFront', compact('episodes', 'episodesTot', 'pagina','nbByPage', 'offset', 'currentpage', 'totalpages'));
+            
             
         }        
     
@@ -62,15 +71,16 @@ class FrontController{
         $totalpages = ceil($episodesTot[0]/$nbByPage);
         $currentpage=0;
         $view = new view();
+        $request = new Request();
 
-        if (isset($_GET['er'])){
-            $error = $_GET['er'];
+        if (null != ($request->get('er'))){
+            $error = $request->get('er');
         }else $error = null;
 
 
-        if (isset($_GET['currentpage']) && is_numeric($_GET['currentpage'])) {
+        if (null != ($request->get('currentpage')) && is_numeric($request->get('currentpage'))) {
 
-            $currentpage = (int) $_GET['currentpage'];
+            $currentpage = (int) $request->get('currentpage');
             } else {
 
                 $currentpage = 1;
@@ -90,23 +100,21 @@ class FrontController{
              $offset = ($currentpage - 1) * $nbByPage;
              $pagina = $episodeManager->PagineEpisodes($offset, $nbByPage);
 
-             if (empty($pagina)) { 
-                $view->render('front/episodePageBlankView', 'frontend/templateFront');
-            }else{
-                $commentManager = new commentManager();
-                $comments = $commentManager->getComments($pagina[0]->post_id);
-                $view->render('front/episodePageView', 'frontend/templateFront', compact('comments', 'error', 'episodes', 'episodesTot', 'pagina','nbByPage', 'offset', 'currentpage', 'totalpages'));
-            }
+            $commentManager = new commentManager();
+            $comments = $commentManager->getComments($pagina[0]->post_id);
+            $view->render('front/episodePage', 'frontend/templateFront', compact('comments', 'error', 'episodes', 'episodesTot', 'pagina','nbByPage', 'offset', 'currentpage', 'totalpages'));
+            
     }    
 
-    public function episode():void //méthode pour récupérer un épisode publié en fonction de son id
+    /*public function episode():void //méthode pour récupérer un épisode publié en fonction de son id
     {
         $episodeManager = new episodeManager();
         $commentManager = new commentManager();
         $view = new view();
+        $request = new Request();
 
-        if (isset($_GET['ps'])){
-            $position = $_GET['ps'];
+        if (null != ($request->get('ps'))){
+            $position = $request->get('ps');
         }else $position = null;
 
         $episodesTot = $episodeManager->countEpisodesPub();
@@ -127,19 +135,20 @@ class FrontController{
         }
         else {
             if (isset($_GET['id']) && $_GET['id'] > 0) {
-                $view->render('front/episodeView', 'frontend/templateFront', compact('currentpage', 'totalpages', 'episode', 'comments', 'error'));
+                $view->render('front/episode', 'frontend/templateFront', compact('currentpage', 'totalpages', 'episode', 'comments', 'error'));
             }
             else {
                 throw new Exception('Aucun numéro dépisode envoyé');
             }
         }
-    }
+    }*/
 
     public function newCom():void
     {
         $episodeManager = new episodeManager();
         $commentManager = new commentManager();
         $view = new view();
+        $request = new Request();
 
         $episode = $episodeManager->getPostedEpisode($_GET['id']);
         $comments = $commentManager->getComments($_GET['id']);
@@ -147,7 +156,6 @@ class FrontController{
         if (isset($_GET['id']) && $_GET['id'] > 0) {
             if (!empty($_POST['author']) && !empty($_POST['comment'])) {
                 $this->addComment($_GET['id'], $_GET['nb'], $_POST['author'], $_POST['comment']);
-                $this->countCom($_GET['id']);
             }
             else {
                 $error = 'Veuillez remplir tous les champs';
@@ -162,6 +170,7 @@ class FrontController{
 
     public function addComment(string $post_id, string $episodeNumber, string $author, string $comment):bolean //méthode pour rajouter un commentaire à un épisode donné en fonction de son numéro de chapitre
     {
+ 
         $commentManager = new commentManager();
         
         $affectedLines = $commentManager->postComment($post_id, $episodeNumber, $author, $comment);
@@ -181,7 +190,7 @@ class FrontController{
             if($_GET['rp'] < 24){
                 $this->reportComment($_GET['id']);
             }
-                header('Location: index.php?action=episode&id=' . ($_GET['postid']) . '#headCom');
+                header('Location: index.php?action=episodePage&currentpage=' . ($_GET['currentpage']) . '#headCom');
         }
         else {
             throw new Exception('Erreur : aucun identifiant de commentaire envoyé');
@@ -197,7 +206,7 @@ class FrontController{
         $comments = $commentManager->getComments($_GET['id']);
         $numberComments = $commentManager->reports($id);
 
-        header('Location: index.php?action=episode&id=' . ($_GET['postid']) . '#headCom');
+        header('Location: index.php?action=episodePage&currentpage=' . ($_GET['currentpage']) . '#headCom');
     }
 
     public function homePage()//méthode pour démarrer une session lorsque on affiche la page d'accueil et récupérer le dernier épisode posté
@@ -214,12 +223,8 @@ class FrontController{
         $lastEpisode = $episodeManager->getLastEpisode();
         $pagina = $episodeManager->PagineEpisodes($offset, $nbByPage);
 
-        if ($lastEpisode === false) {
-            $view->render('front/homePageBlankView', 'frontend/templateFront');
-        }
-        else {   
-            $view->render('front/homePageView', 'frontend/templateFront', compact('lastEpisode', 'pagina', 'totalpages', 'offset', 'nbByPage', 'episodesTot'));
-        }
+        $view->render('front/homePage', 'frontend/templateFront', compact('lastEpisode', 'pagina', 'totalpages', 'offset', 'nbByPage', 'episodesTot'));
+        
     }
 
     public function connectionPage()//méthode pour afficher la page de connection
@@ -227,7 +232,8 @@ class FrontController{
         $view = new view();
         $error = null;
 
-        $view->render('front/connectionView', 'frontend/templateFrontAdmin', compact('error'));
+
+        $view->render('front/connection', 'frontend/templateFrontAdmin', compact('error'));
     }
 }
 

@@ -6,7 +6,7 @@ namespace Projet4\Model;
 use \PDO ;
 
 
-class commentManager extends manager
+class CommentManager extends manager
 {
     public function getAllComments($offset, $nbByPage)//requête pour paginer tous les commentaires par ordre décroissant de signalement
     {

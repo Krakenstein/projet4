@@ -2,9 +2,9 @@
 declare(strict_types=1);
 namespace Projet4\Controller;
 
-use Projet4\Model\episodeManager;
-use Projet4\Model\commentManager;
-use Projet4\Model\usersManager;
+use Projet4\Model\EpisodeManager;
+use Projet4\Model\CommentManager;
+use Projet4\Model\UsersManager;
 use Projet4\View\View;
 
 class BackController{
@@ -30,16 +30,16 @@ class BackController{
                     exit();
                 }else{
                     $error = 'Pseudo ou mot de passe incorrect';
-                    $view->render('front/connectionView', 'frontend/templateFront', compact('error'));
+                    $view->render('front/connection', 'frontend/templateFront', compact('error'));
                 }
             }else{
                 $error = 'Pseudo ou mot de passe incorrect';
-                $view->render('front/connectionView', 'frontend/templateFront', compact('error'));
+                $view->render('front/connection', 'frontend/templateFront', compact('error'));
             } 
             
         }else{
             $error = 'Pseudo ou mot de passe oublié';
-            $view->render('front/connectionView', 'frontend/templateFront', compact('error'));
+            $view->render('front/connection', 'frontend/templateFront', compact('error'));
         }    
               
     }
@@ -88,15 +88,12 @@ class BackController{
                  $offset = ($currentpage - 1) * $nbByPage;
                  $tablesJoin = $episodeManager->joinTables($offset, $nbByPage);
     
-                 if (empty($tablesJoin)) { 
-                    $view->render('back/homePageBlankBackView', 'backend/templateBack', compact('episodesPubTot', 'countcoms', 'message', 'sum', 'episodesTot', 'tablesJoin','nbByPage', 'offset', 'currentpage', 'totalpages'));
-                }else{
-                    $view->render('back/homePageBackView', 'backend/templateBack', compact('episodesPubTot', 'countcoms', 'message', 'sum', 'episodesTot', 'tablesJoin','nbByPage', 'offset', 'currentpage', 'totalpages'));
-                }
+                $view->render('back/homePageBack', 'backend/templateBack', compact('episodesPubTot', 'countcoms', 'message', 'sum', 'episodesTot', 'tablesJoin','nbByPage', 'offset', 'currentpage', 'totalpages'));
+                
         }
         else {         
             $error = 'Vous devez vous connecter';
-            $view->render('front/connectionView', 'frontend/templateFront', compact('error'));
+            $view->render('front/connection', 'frontend/templateFront', compact('error'));
         } 
 
     }
@@ -119,7 +116,7 @@ class BackController{
                     if ($_POST['pass'] != $_POST['pass2']) {// on teste les deux mots de passe
                         $error = 'Les 2 mots de passe sont différents';
                         $message = null;
-                        $view->render('back/profilView', 'backend/templateBack', compact('message', 'error', 'sum', 'countcoms'));
+                        $view->render('back/profil', 'backend/templateBack', compact('message', 'error', 'sum', 'countcoms'));
                     }
                     else {
                         if (preg_match("((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,50})", $_POST['pass'])){
@@ -127,11 +124,11 @@ class BackController{
                             $_SESSION['admConnected'] = false;
                             session_destroy();
                             $error = 'Vos changements ont bien été pris en compte';
-                            $view->render('front/connectionView', 'frontend/templateFront', compact('error'));
+                            $view->render('front/connection', 'frontend/templateFront', compact('error'));
                         }else{
                             $error = 'Le nouveau mot de passe choisi n\'est pas valide';
                             $message = null;
-                            $view->render('back/profilView', 'backend/templateBack', compact('message', 'error', 'sum', 'countcoms'));
+                            $view->render('back/profil', 'backend/templateBack', compact('message', 'error', 'sum', 'countcoms'));
                         }
                         
                         
@@ -139,18 +136,18 @@ class BackController{
                 }else{
                     $error = 'Impossible de modifier les informations';
                     $message = null;
-                    $view->render('back/profilView', 'backend/templateBack', compact('message', 'error', 'sum', 'countcoms'));
+                    $view->render('back/profil', 'backend/templateBack', compact('message', 'error', 'sum', 'countcoms'));
                 }
 
             }
             else {
                 $error = 'Au moins un des champs est vide';
                 $message = null;
-                $view->render('back/profilView', 'backend/templateBack', compact('message', 'countcoms', 'error', 'sum'));
+                $view->render('back/profil', 'backend/templateBack', compact('message', 'countcoms', 'error', 'sum'));
             }
         }else {         
             $error = 'Vous devez vous connecter';
-            $view->render('front/connectionView', 'frontend/templateFront', compact('error'));
+            $view->render('front/connection', 'frontend/templateFront', compact('error'));
         }   
             
         
@@ -171,11 +168,11 @@ class BackController{
         $error = null;
                 
         if (isset($_SESSION['admConnected'])) {               
-            $view->render('back/createEpisodeView', 'backend/templateBack', compact('countcoms', 'sum', 'error'));
+            $view->render('back/createEpisode', 'backend/templateBack', compact('countcoms', 'sum', 'error'));
         }
         else {         
             $error = 'Vous devez vous connecter';
-            $view->render('front/connectionView', 'frontend/templateFront', compact('error'));
+            $view->render('front/connection', 'frontend/templateFront', compact('error'));
         }  
     }
 
@@ -205,7 +202,7 @@ class BackController{
                     $sum = $commentManager->countReports();
                     $countcoms = $commentManager->countComs();
                     $error = 'Vous devez spécifier le numéro et le titre de l\'épisode';
-                    $view->render('back/createEpisodeView', 'backend/templateBack', compact('countcoms', 'sum', 'error'));
+                    $view->render('back/createEpisode', 'backend/templateBack', compact('countcoms', 'sum', 'error'));
                 }
             }
             elseif (isset($_POST['save'])) {
@@ -219,7 +216,7 @@ class BackController{
                     $sum = $commentManager->countReports();
                     $countcoms = $commentManager->countComs();
                     $error = 'Vous devez spécifier le numéro et le titre de l\'épisode';
-                    $view->render('back/createEpisodeView', 'backend/templateBack', compact('countcoms', 'sum', 'error'));
+                    $view->render('back/createEpisode', 'backend/templateBack', compact('countcoms', 'sum', 'error'));
                 }
             }
             else {
@@ -228,7 +225,7 @@ class BackController{
         }
         else {         
             $error = 'Vous devez vous connecter';
-            $view->render('front/connectionView', 'frontend/templateFront', compact('error'));
+            $view->render('front/connection', 'frontend/templateFront', compact('error'));
         }
     }
 
@@ -290,7 +287,7 @@ class BackController{
                     $episode = $episodeManager->getEpisode($_GET['id']);
                     $comments = $commentManager->getReportedComments($_GET['id']);
                     $error = 'Vous devez spécifier le titre et le numéro de l\'épisode';
-                    $view->render('back/episodeBackView', 'backend/templateBack', compact('countcoms', 'sum', 'error', 'episode', 'comments'));
+                    $view->render('back/episodeBack', 'backend/templateBack', compact('countcoms', 'sum', 'error', 'episode', 'comments'));
                 }
                 
             }
@@ -307,7 +304,7 @@ class BackController{
                     $episode = $episodeManager->getEpisode($_GET['id']);
                     $comments = $commentManager->getReportedComments($_GET['id']);
                     $error = 'Vous devez spécifier le titre et le numéro de l\'épisode';
-                    $view->render('back/episodeBackView', 'backend/templateBack', compact('countcoms', 'sum', 'error', 'episode', 'comments'));
+                    $view->render('back/episodeBack', 'backend/templateBack', compact('countcoms', 'sum', 'error', 'episode', 'comments'));
                 }
             }
             elseif (isset($_POST['delete'])) {
@@ -327,7 +324,7 @@ class BackController{
         }
         else {         
             $error = 'Vous devez vous connecter';
-            $view->render('front/connectionView', 'frontend/templateFront', compact('error'));
+            $view->render('front/connection', 'frontend/templateFront', compact('error'));
         }
     }
 
@@ -371,7 +368,7 @@ class BackController{
                 
         if (isset($_SESSION['admConnected'])) { 
             if (isset($_GET['id']) && $_GET['id'] > 0) {
-                $view->render('back/episodeBackView', 'backend/templateBack', compact('episode', 'comments', 'sum', 'countcoms', 'error'));
+                $view->render('back/episodeBack', 'backend/templateBack', compact('episode', 'comments', 'sum', 'countcoms', 'error'));
             }
             else {
                 throw new Exception('Aucun numéro dépisode envoyé');
@@ -379,7 +376,7 @@ class BackController{
         }
         else {         
             $error = 'Vous devez vous connecter';
-            $view->render('front/connectionView', 'frontend/templateFront', compact('error'));
+            $view->render('front/connection', 'frontend/templateFront', compact('error'));
         }     
     }
 
@@ -422,11 +419,8 @@ class BackController{
                  $offset = ($currentpage - 1) * $nbByPage;
                  $allComs = $commentManager->getAllComments($offset, $nbByPage);
 
-                 if (empty($allComs)) { 
-                    $view->render('back/commentsBackBlankView', 'backend/templateBack', compact('nbByPage', 'currentpage', 'offset', 'totalpages', 'countcoms', 'allComs', 'sum'));
-                }else{
-                    $view->render('back/commentsBackView', 'backend/templateBack', compact('nbByPage', 'currentpage', 'offset', 'totalpages', 'countcoms', 'allComs', 'sum'));
-                }           
+                $view->render('back/commentsBack', 'backend/templateBack', compact('nbByPage', 'currentpage', 'offset', 'totalpages', 'countcoms', 'allComs', 'sum'));
+                           
         }
         else {         
             $error = 'Vous devez vous connecter';
@@ -464,7 +458,7 @@ class BackController{
         }
         else {         
             $error = 'Vous devez vous connecter';
-            $view->render('front/connectionView', 'frontend/templateFront', compact('error'));
+            $view->render('front/connection', 'frontend/templateFront', compact('error'));
         }
     }
 
@@ -482,7 +476,7 @@ class BackController{
         }
         else {         
             $error = 'Vous devez vous connecter';
-            $view->render('front/connectionView', 'frontend/templateFront', compact('error'));
+            $view->render('front/connection', 'frontend/templateFront', compact('error'));
         }
     }
 
@@ -500,7 +494,7 @@ class BackController{
         }
         else {         
             $error = 'Vous devez vous connecter';
-            $view->render('front/connectionView', 'frontend/templateFront', compact('error'));
+            $view->render('front/connection', 'frontend/templateFront', compact('error'));
         }
     }
 
@@ -515,11 +509,11 @@ class BackController{
         $message = null;
                 
         if (isset($_SESSION['admConnected'])) {               
-            $view->render('back/profilView', 'backend/templateBack', compact('countcoms', 'sum', 'error', 'message'));
+            $view->render('back/profil', 'backend/templateBack', compact('countcoms', 'sum', 'error', 'message'));
         }
         else {         
             $error = 'Vous devez vous connecter';
-            $view->render('front/connectionView', 'frontend/templateFront', compact('error'));
+            $view->render('front/connection', 'frontend/templateFront', compact('error'));
         }  
     }
 
@@ -537,7 +531,7 @@ class BackController{
         }
         else {
             $error = 'Vous devez vous connecter';
-            $view->render('front/connectionView', 'frontend/templateFront', compact('error'));
+            $view->render('front/connection', 'frontend/templateFront', compact('error'));
         }
     }
 }

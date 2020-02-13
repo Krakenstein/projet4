@@ -13,6 +13,10 @@
             <a class="btn" href="index.php?action=disconnection">Déconnection</a>
         </nav>
         <section id="content">
+        <?php if (empty($tablesJoin[0])): ?>
+            <h1>Aucun épisode pour le moment</h1>
+            <a href="index.php?action=createEpisode" class="bouton">Créer un nouvel épisode</a>
+        <?php else: ?>
             <h1>Liste des épisodes</h1>
             <div id="infosEp">
                 <h3>Nombre total d'épisodes: <?=$episodesTot[0]?></h3>
@@ -44,5 +48,6 @@
             <span class="currentPage"><?='Page ' . $currentpage . '/' . $totalpages?></span>
             <a href="index.php?action=episodes&amp;currentpage=<?= $currentpage + 1?>&amp;#titre" class="<?php if($currentpage == $totalpages ) echo 'hidden' ?>">Page suivante<div class="right"></div></a>
             </div>
+        <?php endif; ?>
         </section>
     </div>

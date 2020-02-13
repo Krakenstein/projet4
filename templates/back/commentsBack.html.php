@@ -13,6 +13,9 @@
             <a class="btn" href="index.php?action=disconnection">Déconnection</a>
         </nav>
         <section id="content">
+        <?php if (empty($allComs[0])): ?>
+            <h1>Aucun commentaire posté pour le moment</h1>
+        <?php else: ?>
             <h1>Liste des commentaires</h1>
             <div id="infosEp">
                 <h3>Nombre total de commentaires: <?=$countcoms[0]?></h3>
@@ -39,5 +42,6 @@
             <span class="currentPage"><?='Page ' . $currentpage . '/' . $totalpages?></span>
             <a href="index.php?action=commentsPage&amp;currentpage=<?= $currentpage + 1?>&amp;#titre" class="<?php if($currentpage == $totalpages ) echo 'hidden' ?>">Page suivante<div class="right"></div></a>
             </div>
+        <?php endif; ?>
         </section>
     </div>

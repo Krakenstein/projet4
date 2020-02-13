@@ -37,7 +37,7 @@
         <div class="comment">
             <span><?= $com->commentDate ?></span><span>par <b><?= htmlspecialchars($com->author) ?></b></span>
             <p class="content"><?= htmlspecialchars($com->comment) ?></p>
-            <a href="index.php?action=report&amp;id=<?= $com->id ?>&amp;rp=<?= $com->report ?>&amp;postid=<?= $com->post_id ?>" type="submit" class="<?php if(($com->report) < 24) {echo 'reporting';} else {echo 'reported';}?>"><?php if(($com->report) > 0 && ($com->report)< 24) {echo 'Signalé ',  $com->report, ' fois';} if(($com->report) > 23) {echo 'Maximum de signalements atteint';} if(($com->report) < 1) {echo 'Signaler';}?></a>
+            <a href="index.php?action=report&amp;id=<?= $com->id ?>&amp;rp=<?= $com->report ?>&amp;postid=<?= $com->post_id ?>&amp;currentpage=<?= $currentpage ?>" type="submit" class="<?php if(($com->report) < 24) {echo 'reporting';} else {echo 'reported';}?>"><?php if(($com->report) > 0 && ($com->report)< 24) {echo 'Signalé ',  $com->report, ' fois';} if(($com->report) > 23) {echo 'Maximum de signalements atteint';} if(($com->report) < 1) {echo 'Signaler';}?></a>
         </div>
         <?php endforeach; ?>
 

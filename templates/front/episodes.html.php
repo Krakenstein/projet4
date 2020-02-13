@@ -11,6 +11,10 @@
         <img id="imgHeader" src="public/images/headerEpisodes.jpg" alt="forest by Daniel H. Tong"/>
     </header>
     <section>
+    <?php if (empty($pagina)): ?>
+        <h1 id="titre">Billet simple pour l'Alaska</h1>
+        <h2>Aucun épisode n'est encore publié...</h2>
+    <?php else: ?>
         <h1 id="titre">Billet simple pour l'Alaska</h1>
         <h2>Liste des épisodes</h2>
             <div class="backNext<?php if($totalpages < 2) echo 'Hidden'?>">
@@ -43,4 +47,5 @@
             <span class="currentPage"><?='Page ' . $currentpage . '/' . $totalpages?></span>
             <a href="index.php?action=listEpisodes&amp;currentpage=<?= $currentpage + 1?>&amp;#titre" class="<?php if($currentpage == $totalpages ) echo 'hidden' ?>">Page suivante<div class="right"></div></a>
             </div>
+    <?php endif; ?>
     </section>

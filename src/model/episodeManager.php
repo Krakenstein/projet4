@@ -6,7 +6,7 @@ namespace Projet4\Model;
 use \PDO ;
 
 
-class episodeManager extends manager
+class EpisodeManager extends manager
 {
     public function countEpisodesPub()// requete pour compter le nombre d'épisodes publiés
     {
