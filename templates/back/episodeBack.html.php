@@ -13,13 +13,13 @@
             <a class="btn" href="index.php?action=disconnection">Déconnection</a>
         </nav>
         <section id="content">
-            <form id="modification" action="index.php?action=modifiedEpisode&amp;id=<?= $episode->post_id ?>&amp;dt=<?= $episode->date ?>" method="post">
+            <form id="modification" action="index.php?action=modifiedEpisode&amp;id=<?= $episode->post_id ?>&amp;dt=<?= $episode->publiDate ?>" method="post">
                 <h3>Gestion de l'épisode</h3>
                 <input title="chapterNumber" class="champ" type="text" name="nvchapter" id="number" value="<?php if (isset($_SESSION['chapterNumber'])) echo $_SESSION['chapterNumber']; else echo $episode->chapterNumber; ?>" size="5" />
                 <label id="labelChapterNumber" for="chapterNumber"></label>
                 <h3>Statut: <?php if(($episode->stat) == 1) echo 'publié'?><?php if(($episode->stat) == 0) echo 'Sauvegardé'?></h3>
-                <h3><?php if(($episode->date) != null) echo 'Publié ' . $episode->date ?></h3>
-                <select id="dateChoice<?php if(($episode->date) === null) echo 'Hidden' ?>" name="dateChoice">
+                <h3><?php if(($episode->publiDate) != null) echo 'Publié ' . $episode->publiDate ?></h3>
+                <select id="dateChoice<?php if(($episode->publiDate) === null) echo 'Hidden' ?>" name="dateChoice">
                     <option value="oldDate">Garder cette date de publication</option>
                     <option value="newDate">Republier à la date de maintenant</option>
                 </select>

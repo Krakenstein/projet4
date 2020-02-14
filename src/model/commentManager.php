@@ -4,103 +4,93 @@ declare(strict_types=1);
 namespace Projet4\Model;
 
 use \PDO ;
+use Projet4\Tools\Database;
 
-
-class CommentManager extends manager
+class CommentManager
 {
-    public function getAllComments($offset, $nbByPage)//requête pour paginer tous les commentaires par ordre décroissant de signalement
+    private $dataBase;
+    private $bdd;
+   
+    public function __construct()
     {
-        $bdd = $this->dbConnect();
-        $req = $bdd->prepare('SELECT id, episodeNumber, author, comment, report, DATE_FORMAT(commentDate, \'Le %d/%m/%Y à %Hh %imin %ss\') AS commentDate FROM comments ORDER BY report DESC
+        $this->dataBase = new Database();
+        $this->bdd = $this->dataBase->dbConnect();
+    }
+
+
+    public function findAllComments($offset, $nbByPage)//requête pour paginer tous les commentaires par ordre décroissant de signalement
+    {
+        $req = $this->bdd->prepare('SELECT id, episodeNumber, author, comment, report, DATE_FORMAT(commentDate, \'Le %d/%m/%Y à %Hh %imin %ss\') AS commentDate FROM comments ORDER BY report DESC
         LIMIT :offset, :limitation;');
         $req->bindValue(':limitation', (int) $nbByPage, PDO::PARAM_INT);
         $req->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
         $req->execute();
         $allComs = $req->fetchALL(PDO::FETCH_OBJ);
         return $allComs;
-        $req->closeCursor();
     }
     
-    public function getComments($post_id)//requête pour récupérer les commentaires associés à un épisode en fonction de son id
+    public function findComments($post_id)//requête pour récupérer les commentaires associés à un épisode en fonction de son id
     {
-        $bdd = $this->dbConnect();
-        $req = $bdd->prepare('SELECT id, post_id, episodeNumber, author, comment, DATE_FORMAT(commentDate, \'Le %d/%m/%Y à %Hh %imin %ss\') AS commentDate, report FROM comments WHERE post_id = ? ORDER BY commentDate DESC');
+        $req = $this->bdd->prepare('SELECT id, post_id, episodeNumber, author, comment, DATE_FORMAT(commentDate, \'Le %d/%m/%Y à %Hh %imin %ss\') AS commentDate, report FROM comments WHERE post_id = ? ORDER BY commentDate DESC');
         $req->execute(array($post_id));
         $data = $req->fetchALL(PDO::FETCH_OBJ);
         return $data;
-        $req->closeCursor();
     }
 
-    public function getReportedComments($post_id)//requête pour récupérer les commentaires par ordre décroissant de signalement associés à un épisode en fonction de id
+    public function findReportedComments($post_id)//requête pour récupérer les commentaires par ordre décroissant de signalement associés à un épisode en fonction de id
     {
-        $bdd = $this->dbConnect();
-        $req = $bdd->prepare('SELECT id, post_id, episodeNumber, author, comment, report, DATE_FORMAT(commentDate, \'Le %d/%m/%Y à %Hh %imin %ss\') AS commentDate FROM comments WHERE post_id = ? ORDER BY report DESC');
+        $req = $this->bdd->prepare('SELECT id, post_id, episodeNumber, author, comment, report, DATE_FORMAT(commentDate, \'Le %d/%m/%Y à %Hh %imin %ss\') AS commentDate FROM comments WHERE post_id = ? ORDER BY report DESC');
         $req->execute(array($post_id));
         $data = $req->fetchALL(PDO::FETCH_OBJ);
         return $data;
-        $req->closeCursor();
     }
 
     public function postComment($post_id, $episodeNumber, $author, $comment)//requête pour ajouter un commentaire à la bdd
     {
-        $bdd = $this->dbConnect();
-        $req = $bdd->prepare('INSERT INTO comments (post_id, episodeNumber, author, comment, commentDate, report) VALUES (?, ?, ?, ?, NOW(), 0)');
+        $req = $this->bdd->prepare('INSERT INTO comments (post_id, episodeNumber, author, comment, commentDate, report) VALUES (?, ?, ?, ?, NOW(), 0)');
         $affectedLines = $req->execute(array($post_id, $episodeNumber, $author, $comment));
         return $affectedLines;
-        $req->closeCursor();
     }
 
     public function reports($id)//requête pour ajouter 1 au signalement d'un commentaire 
     {
-        $bdd = $this->dbConnect();
-        $req = $bdd->prepare('UPDATE comments SET report = report + 1  WHERE id = ? ');
+        $req = $this->bdd->prepare('UPDATE comments SET report = report + 1  WHERE id = ? ');
         $report = $req->execute(array($id));
         return $report;
-        $req->closeCursor();
     }
 
     public function deleteReports($id)//requête pour ajouter 1 au signalement d'un commentaire 
     {
-        $bdd = $this->dbConnect();
-        $req = $bdd->prepare('UPDATE comments SET report = 0  WHERE id = ? ');
+        $req = $this->bdd->prepare('UPDATE comments SET report = 0  WHERE id = ? ');
         $reportDelet = $req->execute(array($id));
         return $reportDelet;
-        $req->closeCursor();
     }
 
     public function deleteComments($post_id)//requête pour supprimer les commentaires d'un épisode en fonction de id
     {
-        $bdd = $this->dbConnect();
-        $req = $bdd->prepare('DELETE FROM comments WHERE post_id = ? ');
+        $req = $this->bdd->prepare('DELETE FROM comments WHERE post_id = ? ');
         $req->execute(array($post_id));
-        $req->closeCursor();
     }
 
     public function deleteComment($id)//requête pour supprimer un commentaire d'un épisode en fonction de son id
     {
-        $bdd = $this->dbConnect();
-        $req = $bdd->prepare('DELETE FROM comments WHERE id = ? ');
+        $req = $this->bdd->prepare('DELETE FROM comments WHERE id = ? ');
         $req->execute(array($id));
-        $req->closeCursor();
     }
 
     public function countReports()//requête pour compter les reports
     {
-        $bdd = $this->dbConnect();
-        $req = $bdd->prepare('SELECT SUM(report) AS value_sum FROM comments ');
+        $req = $this->bdd->prepare('SELECT SUM(report) AS value_sum FROM comments ');
         $req->execute();
         $sum = $req->fetch(PDO::FETCH_OBJ);
         return $sum;
-        $req->closeCursor();
     }
 
     public function countComs()//requête pour compter les reports
     {
-        $bdd = $this->dbConnect();
-        $req = $bdd->prepare('SELECT COUNT(*) AS comsNb FROM comments ');
+        $req = $this->bdd->prepare('SELECT COUNT(*) AS comsNb FROM comments ');
         $req->execute();
         $count = $req->fetch();
         return $count;
-        $req->closeCursor();
     }
 }
