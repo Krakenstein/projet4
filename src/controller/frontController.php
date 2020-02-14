@@ -23,45 +23,24 @@ class FrontController{
     }
        
     public function listEpisodes():void //méthode pour récupérer la liste paginée des épisodes publiés
-    {
-        
-        $episodes = $this->episodeManager->findEpisodes();
+    {        
         $episodesTot = $this->episodeManager->countEpisodesPub();
         $nbByPage = 5;
-        $offset = 0;
         $totalpages = ceil($episodesTot[0]/$nbByPage);
-        $currentpage=0;
-        
         $request = new Request();
 
-
-        if (null != ($request->get('currentpage')) && is_numeric($request->get('currentpage'))) {
-
+        if (($request->get('currentpage')) !== null && is_numeric($request->get('currentpage'))) {
             $currentpage = (int) $request->get('currentpage');
-
-            } else {
-
-                $currentpage = 1;
-             } 
-             
-
-             if ($currentpage > $totalpages) {
-
+            if ($currentpage > $totalpages) {
                 $currentpage = $totalpages;
-             } 
-
-             if ($currentpage < 1) {
- 
-                $currentpage = 1;
-             } 
-
-             $offset = ($currentpage - 1) * $nbByPage;
-             $pagina = $this->episodeManager->PagineEpisodes($offset, $nbByPage);
-
-             $this->view->render('front/episodes', 'frontend/templateFront', compact('episodes', 'episodesTot', 'pagina','nbByPage', 'offset', 'currentpage', 'totalpages'));
-            
-            
-        }        
+            } 
+        }else{
+            $currentpage = 1;
+            } 
+        $offset = ($currentpage - 1) * $nbByPage;
+        $pagina = $this->episodeManager->PagineEpisodes($offset, $nbByPage);
+        $this->view->render('front/episodes', 'frontend/templateFront', compact('episodesTot', 'pagina','nbByPage', 'offset', 'currentpage', 'totalpages'));   
+    }        
     
     public function episodePage():void //méthode pour récupérer un épisode publié en fonction de son numéro de chapitre
     {

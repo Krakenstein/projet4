@@ -6,6 +6,7 @@ use Projet4\Model\EpisodeManager;
 use Projet4\Model\CommentManager;
 use Projet4\Model\UsersManager;
 use Projet4\View\View;
+use Projet4\Tools\Request;
 
 class BackController{
 
@@ -13,6 +14,7 @@ class BackController{
     private $commentManager;
     private $usersManager;
     private $view;
+    private $request;
    
     public function __construct()
     {
@@ -20,6 +22,7 @@ class BackController{
         $this->commentManager = new CommentManager();
         $this->usersManager = new UsersManager();
         $this->view = new View();
+        $this->request = new Request();
     }
 
     function admConnect()//méthode pour se connecter au back
@@ -59,37 +62,22 @@ class BackController{
         $episodesTot = $this->episodeManager->countEpisodes();
         $episodesPubTot = $this->episodeManager->countEpisodesPub();
         $nbByPage = 5;
-        $offset = 0;
         $totalpages = ceil($episodesTot[0]/$nbByPage);
-        $currentpage=0;
 
         session_start();
 
         if (isset($_SESSION['admConnected'])) {               
-            if (isset($_GET['currentpage']) && is_numeric($_GET['currentpage'])) {
-
-                $currentpage = (int) $_GET['currentpage'];
-                } else {
-    
-                    $currentpage = 1;
-                 } 
-                 
-    
-                 if ($currentpage > $totalpages) {
-    
+            if (($this->request->get('currentpage')) !== null && is_numeric($this->request->get('currentpage'))) {
+                $currentpage = (int) $this->request->get('currentpage');
+                if ($currentpage > $totalpages) {
                     $currentpage = $totalpages;
-                 } 
-    
-                 if ($currentpage < 1) {
-     
-                    $currentpage = 1;
-                 } 
-    
-                 $offset = ($currentpage - 1) * $nbByPage;
-                 $tablesJoin = $this->episodeManager->joinTables($offset, $nbByPage);
-    
-                 $this->view->render('back/homePageBack', 'backend/templateBack', compact('episodesPubTot', 'countcoms', 'sum', 'episodesTot', 'tablesJoin','nbByPage', 'offset', 'currentpage', 'totalpages'));
-                
+                } 
+            }else{
+                $currentpage = 1;
+                } 
+            $offset = ($currentpage - 1) * $nbByPage;
+            $tablesJoin = $this->episodeManager->joinTables($offset, $nbByPage);
+            $this->view->render('back/homePageBack', 'backend/templateBack', compact('episodesPubTot', 'countcoms', 'sum', 'episodesTot', 'tablesJoin','nbByPage', 'offset', 'currentpage', 'totalpages'));                
         }
         else {         
             $error = 'Vous devez vous connecter';
@@ -113,8 +101,7 @@ class BackController{
                         $error = 'Les 2 mots de passe sont différents';
                         $message = null;
                         $this->view->render('back/profil', 'backend/templateBack', compact('message', 'error', 'sum', 'countcoms'));
-                    }
-                    else {
+                    }else{
                         if (preg_match("((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,50})", $_POST['pass'])){
                             $infos = $this->usersManager->resetInfos($_POST['pseudo'], password_hash($_POST['pass'], PASSWORD_DEFAULT));
                             $_SESSION['admConnected'] = false;
@@ -125,9 +112,7 @@ class BackController{
                             $error = 'Le nouveau mot de passe choisi n\'est pas valide';
                             $message = null;
                             $this->view->render('back/profil', 'backend/templateBack', compact('message', 'error', 'sum', 'countcoms'));
-                        }
-                        
-                        
+                        }     
                     }
                 }else{
                     $error = 'Impossible de modifier les informations';
@@ -135,18 +120,15 @@ class BackController{
                     $this->view->render('back/profil', 'backend/templateBack', compact('message', 'error', 'sum', 'countcoms'));
                 }
 
-            }
-            else {
+            }else{
                 $error = 'Au moins un des champs est vide';
                 $message = null;
                 $this->view->render('back/profil', 'backend/templateBack', compact('message', 'countcoms', 'error', 'sum'));
             }
-        }else {         
+        }else{         
             $error = 'Vous devez vous connecter';
             $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
-        }   
-            
-        
+        }    
     }
 
     function createEpisode()//méthode pour afficher la page de création d'épisode
@@ -365,40 +347,23 @@ class BackController{
         $countcoms = $this->commentManager->countComs();
 
         $nbByPage = 5;
-        $offset = 0;
         $totalpages = ceil($countcoms[0]/$nbByPage);
-        $currentpage=0;
 
         session_start();
                 
         if (isset($_SESSION['admConnected'])) { 
-            if (isset($_GET['currentpage']) && is_numeric($_GET['currentpage'])) {
-
-                $currentpage = (int) $_GET['currentpage'];
-
-                } else {
-    
-                    $currentpage = 1;
-                 } 
-                 
-    
-                 if ($currentpage > $totalpages) {
-    
+            if (($this->request->get('currentpage')) !== null && is_numeric($this->request->get('currentpage'))) {
+                $currentpage = (int) $this->request->get('currentpage');
+                if ($currentpage > $totalpages) {
                     $currentpage = $totalpages;
-                 } 
-    
-                 if ($currentpage < 1) {
-     
-                    $currentpage = 1;
-                 } 
-    
-                 $offset = ($currentpage - 1) * $nbByPage;
-                 $allComs = $this->commentManager->findAllComments($offset, $nbByPage);
-
-                 $this->view->render('back/commentsBack', 'backend/templateBack', compact('nbByPage', 'currentpage', 'offset', 'totalpages', 'countcoms', 'allComs', 'sum'));
-                           
-        }
-        else {         
+                } 
+            }else{
+                $currentpage = 1;
+                } 
+            $offset = ($currentpage - 1) * $nbByPage;
+            $allComs = $this->commentManager->findAllComments($offset, $nbByPage);
+            $this->view->render('back/commentsBack', 'backend/templateBack', compact('nbByPage', 'currentpage', 'offset', 'totalpages', 'countcoms', 'allComs', 'sum'));                          
+        }else{         
             $error = 'Vous devez vous connecter';
             $this->view->render('front/connectionView', 'frontend/templateFront', compact('error'));
         }     
