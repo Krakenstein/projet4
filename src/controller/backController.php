@@ -24,8 +24,6 @@ class BackController{
 
     function admConnect()//méthode pour se connecter au back
     {
-
-
         $hash = $this->usersManager->getHash();
         $pseudRegister = $this->usersManager->getPseudo();
         
@@ -49,19 +47,13 @@ class BackController{
             
         }else{
             $error = 'Pseudo ou mot de passe oublié';
-            $view->render('front/connection', 'frontend/templateFront', compact('error'));
+            $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
         }    
               
     }
 
     function episodes()
-    {
-
-
-        if (isset($_GET['ms'])){
-            $message = $_GET['ms'];
-        }else $message = null;
-        
+    {        
         $sum = $this->commentManager->countReports();
         $countcoms = $this->commentManager->countComs();
         $episodesTot = $this->episodeManager->countEpisodes();
@@ -96,7 +88,7 @@ class BackController{
                  $offset = ($currentpage - 1) * $nbByPage;
                  $tablesJoin = $this->episodeManager->joinTables($offset, $nbByPage);
     
-                 $this->view->render('back/homePageBack', 'backend/templateBack', compact('episodesPubTot', 'countcoms', 'message', 'sum', 'episodesTot', 'tablesJoin','nbByPage', 'offset', 'currentpage', 'totalpages'));
+                 $this->view->render('back/homePageBack', 'backend/templateBack', compact('episodesPubTot', 'countcoms', 'sum', 'episodesTot', 'tablesJoin','nbByPage', 'offset', 'currentpage', 'totalpages'));
                 
         }
         else {         
@@ -108,8 +100,6 @@ class BackController{
 
     function reset()
     {
-
-
         $sum = $this->commentManager->countReports();
         $countcoms = $this->commentManager->countComs();
         $hash = $this->usersManager->getHash();
@@ -195,7 +185,7 @@ class BackController{
         
             if (isset($_POST['publish'])) {
                 if (!empty($_POST['chapterNumber']) && !empty($_POST['title'])) {
-                    $message = 'Episode ' . $_POST['chapterNumber'] . ' créé et posté';
+                    $message = 'Episode ' . $_POST['chapterNumber'] . ' créé et publié';
                     $this->addPostedEpisode($_POST['chapterNumber'], $_POST['title'], $_POST['content']);
                     header('Location: index.php?action=episodes&ms=' . $message . '');
                     exit(); 
@@ -260,7 +250,7 @@ class BackController{
                     if(($_GET['dt']) != null){
                         if($_POST['dateChoice'] === 'oldDate'){
                             $this->modifyPostedEpisodeSameDate($_GET['id'], $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
-                            $message = 'Episode ' . $_POST['nvchapter'] . ' modifié et republié à sa date initiale';
+                            $message = 'Episode ' . $_POST['nvchapter'] . ' modifié et republié à la même date';
                             header('Location: index.php?action=episodes&ms=' . $message . '');
                             exit(); 
                         }else{
@@ -281,7 +271,7 @@ class BackController{
                         $episode = $this->episodeManager->findEpisode($_GET['id']);
                         $comments = $this->commentManager->findReportedComments($_GET['id']);
                         $error = 'Vous devez spécifier le titre et le numéro de l\'épisode';
-                        $view->render('back/episodeBack', 'backend/templateBack', compact('countcoms', 'sum', 'error', 'episode', 'comments'));
+                        $this->view->render('back/episodeBack', 'backend/templateBack', compact('countcoms', 'sum', 'error', 'episode', 'comments'));
                     }
                 
             }
@@ -298,7 +288,7 @@ class BackController{
                     $episode = $this->episodeManager->findEpisode($_GET['id']);
                     $comments = $this->commentManager->findReportedComments($_GET['id']);
                     $error = 'Vous devez spécifier le titre et le numéro de l\'épisode';
-                    $view->render('back/episodeBack', 'backend/templateBack', compact('countcoms', 'sum', 'error', 'episode', 'comments'));
+                    $this->view->render('back/episodeBack', 'backend/templateBack', compact('countcoms', 'sum', 'error', 'episode', 'comments'));
                 }
             }
             elseif (isset($_POST['delete'])) {
@@ -349,7 +339,6 @@ class BackController{
         $comments = $this->commentManager->findReportedComments($_GET['id']);
         $sum = $this->commentManager->countReports();
         $countcoms = $this->commentManager->countComs();
-        $error = null;
         
         session_start();
         $_SESSION['chapterNumber'] = null;
@@ -358,7 +347,7 @@ class BackController{
                 
         if (isset($_SESSION['admConnected'])) { 
             if (isset($_GET['id']) && $_GET['id'] > 0) {
-                $this->view->render('back/episodeBack', 'backend/templateBack', compact('episode', 'comments', 'sum', 'countcoms', 'error'));
+                $this->view->render('back/episodeBack', 'backend/templateBack', compact('episode', 'comments', 'sum', 'countcoms'));
             }
             else {
                 throw new Exception('Aucun numéro dépisode envoyé');
@@ -427,7 +416,6 @@ class BackController{
         $episode = $this->episodeManager->findEpisode($_GET['postid']);
         $comments = $this->commentManager->findReportedComments($_GET['postid']);
         $sum = $this->commentManager->countReports();
-        $error = null;
 
         session_start();
                 
@@ -479,11 +467,9 @@ class BackController{
         
         $sum = $this->commentManager->countReports();
         $countcoms = $this->commentManager->countComs();
-        $error = null;
-        $message = null;
                 
         if (isset($_SESSION['admConnected'])) {               
-            $this->view->render('back/profil', 'backend/templateBack', compact('countcoms', 'sum', 'error', 'message'));
+            $this->view->render('back/profil', 'backend/templateBack', compact('countcoms', 'sum'));
         }
         else {         
             $error = 'Vous devez vous connecter';

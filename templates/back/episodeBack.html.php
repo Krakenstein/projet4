@@ -24,7 +24,7 @@
                     <option value="newDate">Republier à la date de maintenant</option>
                 </select>
                 <h3>Titre de l'épisode</h3><input title="title" class="champ" type="text" name="nvtitle" id="titre" value="<?php if (isset($_SESSION['title'])) echo $_SESSION['title']; else echo $episode->title; ?>" size="45"/>
-                <label id="labelTitle" for="title"><?php echo $error ?></label>
+                <label id="labelTitle" for="title"><?php if(isset($error)) echo $error ?></label>
                 <textarea title="content" name="nvcontent" id="episode" cols="150" rows="50"><?php if (isset($_SESSION['content'])) echo $_SESSION['content']; else echo $episode->content; ?></textarea>
                     <label id="labelEpisode" for="content"></label>
                 <div id="btnAction">

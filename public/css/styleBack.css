@@ -77,10 +77,10 @@ label
 #message
 {
     background-color: rgb(45, 134, 161);
-    border: solid 5px  #084C61;
+    
     padding: 15px;
     color: #F9FBF2;
-    width: 30%;
+    width: 95%;
     align-self: center;
     justify-content: center;
     animation: blink .5s step-end 6 alternate;

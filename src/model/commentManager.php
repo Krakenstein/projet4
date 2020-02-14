@@ -20,11 +20,11 @@ class CommentManager
 
     public function findAllComments($offset, $nbByPage)//requête pour paginer tous les commentaires par ordre décroissant de signalement
     {
+        $this->bdd->setAttribute(PDO::ATTR_EMULATE_PREPARES, FALSE);
         $req = $this->bdd->prepare('SELECT id, episodeNumber, author, comment, report, DATE_FORMAT(commentDate, \'Le %d/%m/%Y à %Hh %imin %ss\') AS commentDate FROM comments ORDER BY report DESC
         LIMIT :offset, :limitation;');
-        $req->bindValue(':limitation', (int) $nbByPage, PDO::PARAM_INT);
-        $req->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
-        $req->execute();
+        $req->execute(['limitation' => (int) $nbByPage, 
+                        'offset' => (int) $offset ]);
         $allComs = $req->fetchALL(PDO::FETCH_OBJ);
         return $allComs;
     }

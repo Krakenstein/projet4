@@ -15,14 +15,16 @@
         <section id="content">
         <?php if (empty($tablesJoin[0])): ?>
             <h1>Aucun épisode pour le moment</h1>
-            <a href="index.php?action=createEpisode" class="bouton">Créer un nouvel épisode</a>
+            <a href="index.php?action=createEpisode" class="boutonVert">Créer un nouvel épisode</a>
         <?php else: ?>
             <h1>Liste des épisodes</h1>
             <div id="infosEp">
                 <h3>Nombre total d'épisodes: <?=$episodesTot[0]?></h3>
                 <h3>Episodes publiés: <?=$episodesPubTot[0]?></h3>
             </div>
-            <h3 id="message<?php if($message === null ) echo 'Hidden'?>"><?= $message?></h3>
+            <?php if(isset($_GET['ms'])): ?>
+            <h3 id="message"><?= $_GET['ms'] ?></h3>
+            <?php endif; ?>
             <a href="index.php?action=createEpisode" class="boutonVert">Créer un nouvel épisode</a>
             <div class="table">
                 <div class="rowsTitle">

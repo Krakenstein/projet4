@@ -202,10 +202,7 @@ class FrontController{
 
     public function connectionPage()//méthode pour afficher la page de connection
     {
-        $error = null;
-
-
-        $this->view->render('front/connection', 'frontend/templateFrontAdmin', compact('error'));
+        $this->view->render('front/connection', 'frontend/templateFrontAdmin');
     }
 }
 
