@@ -26,29 +26,12 @@ class UsersManager
         return $infos;
     }
 
-
-    public function testInfos($pseudo, $pass)//requête pour vérifier les identifiants qd on essaie de se connecter à la bdd
+    public function testInfos($pseudo)//requête pour obtenir le mdp haché
     {
-        $req = $this->bdd->prepare('SELECT COUNT(*) FROM users WHERE pseudo = :newPseudo, pass = :newPass AND id = 1');
-        $infos = $req->execute(array(
-        'newPseudo' => $pseudo, 
-        'newPass' => $pass));
+        $req = $this->bdd->prepare('SELECT id, pseudo, pass FROM users WHERE pseudo = :testPseudo');
+        $req->execute([
+            'testPseudo' => $pseudo]);
+        $infos = $req->fetch();
         return $infos;
-    }
-
-    public function getHash()//requête pour obtenir le mdp haché
-    {
-        $req = $this->bdd->prepare('SELECT pass FROM users WHERE id = 1');
-        $req->execute(array());
-        $hash = $req->fetch();
-        return $hash;
-    }
-
-    public function getPseudo()//requête pour obtenir le mdp haché
-    {
-        $req = $this->bdd->prepare('SELECT pseudo FROM users WHERE id = 1');
-        $req->execute(array());
-        $pseudRegister = $req->fetch();
-        return $pseudRegister;
     }
 }

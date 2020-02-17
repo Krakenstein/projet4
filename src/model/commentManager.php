@@ -47,46 +47,47 @@ class CommentManager
 
     public function postComment($post_id, $episodeNumber, $author, $comment)//requête pour ajouter un commentaire à la bdd
     {
-        $req = $this->bdd->prepare('INSERT INTO comments (post_id, episodeNumber, author, comment, commentDate, report) VALUES (?, ?, ?, ?, NOW(), 0)');
-        $affectedLines = $req->execute(array($post_id, $episodeNumber, $author, $comment));
+        $req = $this->bdd->prepare('INSERT INTO comments SET post_id = :idPost, episodeNumber = :episNumb, author = :auth, comment = :com, commentDate = NOW(), report = 0');
+        $affectedLines = $req->execute(array(
+            'idPost' => $post_id, 
+            'episNumb' => $episodeNumber, 
+            'auth' => $author, 
+            'com' => $comment));
         return $affectedLines;
     }
 
     public function reports($id)//requête pour ajouter 1 au signalement d'un commentaire 
     {
-        $req = $this->bdd->prepare('UPDATE comments SET report = report + 1  WHERE id = ? ');
-        $report = $req->execute(array($id));
+        $req = $this->bdd->prepare('UPDATE comments SET report = report + 1  WHERE id = :comId ');
+        $report = $req->execute(array(
+            'comId' => $id));
         return $report;
     }
 
-    public function deleteReports($id)//requête pour ajouter 1 au signalement d'un commentaire 
+    public function deleteReports($id)//requête pour supprimmer les signalements d'un commentaire 
     {
-        $req = $this->bdd->prepare('UPDATE comments SET report = 0  WHERE id = ? ');
-        $reportDelet = $req->execute(array($id));
+        $req = $this->bdd->prepare('UPDATE comments SET report = 0  WHERE id = :comId ');
+        $reportDelet = $req->execute(array(
+            'comId' => $id));
         return $reportDelet;
-    }
-
-    public function deleteComments($post_id)//requête pour supprimer les commentaires d'un épisode en fonction de id
-    {
-        $req = $this->bdd->prepare('DELETE FROM comments WHERE post_id = ? ');
-        $req->execute(array($post_id));
     }
 
     public function deleteComment($id)//requête pour supprimer un commentaire d'un épisode en fonction de son id
     {
-        $req = $this->bdd->prepare('DELETE FROM comments WHERE id = ? ');
-        $req->execute(array($id));
+        $req = $this->bdd->prepare('DELETE FROM comments WHERE id = :comId ');
+        $req->execute(array(
+            'comId' => $id));
     }
 
     public function countReports()//requête pour compter les reports
     {
         $req = $this->bdd->prepare('SELECT SUM(report) AS value_sum FROM comments ');
         $req->execute();
-        $sum = $req->fetch(PDO::FETCH_OBJ);
+        $sum = $req->fetch();
         return $sum;
     }
 
-    public function countComs()//requête pour compter les reports
+    public function countComs()//requête pour compter les commentaires
     {
         $req = $this->bdd->prepare('SELECT COUNT(*) AS comsNb FROM comments ');
         $req->execute();

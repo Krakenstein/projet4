@@ -88,7 +88,7 @@ class EpisodeManager
         return $data;
     }
 
-    public function previousEpisode($chapterNumber, $publidate)
+    /*public function previousEpisode($chapterNumber, $publidate)
     {
         $req = $this->bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'Le %d/%m/%Y\') AS date, publiDate FROM posts WHERE chapterNumber < ? AND publiDate < ? AND stat = 1 ORDER BY chapterNumber, publiDate DESC LIMIT 1;');
         $req->execute(array($chapterNumber));
@@ -102,19 +102,25 @@ class EpisodeManager
         $req->execute(array($chapterNumber));
         $nextEp = $req->fetch(PDO::FETCH_OBJ);
         return $nextEp;
-    }
+    }*/
 
     public function postEpisode($chapterNumber, $title, $content)//requête pour rajouter un épisode publié dans la bdd
     {
-        $req = $this->bdd->prepare('INSERT INTO posts (chapterNumber, title, content, publiDate, stat) VALUES (?, ?, ?, NOW(), 1)');
-        $postedEpisode = $req->execute(array($chapterNumber, $title, $content));
+        $req = $this->bdd->prepare('INSERT INTO posts SET chapterNumber = :chapNumb, title = :epTitle, content = :epCont, publiDate = NOW(), stat = 1');
+        $postedEpisode = $req->execute(array(
+            'chapNumb' => $chapterNumber, 
+            'epTitle' => $title, 
+            'epCont' => $content));
         return $postedEpisode;
     }
 
-    public function saveEpisode($chapterNumber, $title, $content)//requête pour rajouter un épisode archivé dans la bdd
+    public function saveEpisode($chapterNumber, $title, $content)//requête pour rajouter un épisode sauvegardé dans la bdd
     {
-        $req = $this->bdd->prepare('INSERT INTO posts (chapterNumber, title, content, publiDate, stat) VALUES (?, ?, ?, null, 0)');
-        $savedEpisode = $req->execute(array($chapterNumber, $title, $content));
+        $req = $this->bdd->prepare('INSERT INTO posts SET chapterNumber = :chapNumb, title = :epTitle, content = :epCont, publiDate = null, stat = 0');
+        $savedEpisode = $req->execute(array(
+            'chapNumb' => $chapterNumber, 
+            'epTitle' => $title, 
+            'epCont' => $content));
         return $savedEpisode;
     }
 

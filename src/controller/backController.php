@@ -25,7 +25,7 @@ class BackController{
         $this->request = new Request();
     }
 
-    function admConnect()//méthode pour se connecter au back
+    /*function admConnect()//méthode pour se connecter au back
     {
         $hash = $this->usersManager->getHash();
         $pseudRegister = $this->usersManager->getPseudo();
@@ -41,11 +41,11 @@ class BackController{
                     exit();
                 }else{
                     $error = 'Pseudo ou mot de passe incorrect';
-                    $view->render('front/connection', 'frontend/templateFront', compact('error'));
+                    $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
                 }
             }else{
                 $error = 'Pseudo ou mot de passe incorrect';
-                $view->render('front/connection', 'frontend/templateFront', compact('error'));
+                $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
             } 
             
         }else{
@@ -53,6 +53,34 @@ class BackController{
             $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
         }    
               
+    }*/
+
+    function admConnect()//méthode pour se connecter au back
+    {  
+        session_start();
+
+        if ((isset($_POST['nom']) && !empty($_POST['nom'])) && (isset($_POST['password']) && !empty($_POST['password']))) {
+            $infos = $this->usersManager->testInfos($_POST['nom']);
+            if(!empty($infos)){
+                if ((password_verify(($_POST['password']), $infos[2]) === true)){
+                    $_SESSION['admConnected'] = true;
+                    header('Location: index.php?action=episodes');
+                    exit();
+                
+                }else{
+                    $error = 'Pseudo ou mot de passe incorrect';
+                    $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
+                } 
+            }else{
+                $error = 'Pseudo ou mot de passe incorrect';
+                $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
+            }
+            
+            
+        }else{
+            $error = 'Pseudo ou mot de passe oublié';
+            $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
+        }                
     }
 
     function episodes()
@@ -87,6 +115,57 @@ class BackController{
     }
 
     function reset()
+    {
+        $sum = $this->commentManager->countReports();
+        $countcoms = $this->commentManager->countComs();
+        $infos = $this->usersManager->testInfos($_POST['pseudo']);
+        
+        session_start();
+        
+        if (isset($_SESSION['admConnected'])){
+            if ((isset($_POST['pseudo']) && !empty($_POST['pseudo'])) && (isset($_POST['passOld']) && !empty($_POST['passOld'])) && (isset($_POST['pass']) && !empty($_POST['pass'])) && (isset($_POST['pass2']) && !empty($_POST['pass2']))) {
+                $infos = $this->usersManager->testInfos($_POST['pseudo']);
+                if (!empty($infos)){
+                    if (password_verify(($_POST['passOld']), $infos[2]) === true){
+                        if ($_POST['pass'] != $_POST['pass2']) {// on teste les deux mots de passe
+                            $error = 'Les 2 mots de passe sont différents';
+                            $message = null;
+                            $this->view->render('back/profil', 'backend/templateBack', compact('message', 'error', 'sum', 'countcoms'));
+                        }else{
+                            if (preg_match("((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,50})", $_POST['pass'])){
+                                $infos = $this->usersManager->resetInfos($_POST['pseudo'], password_hash($_POST['pass'], PASSWORD_DEFAULT));
+                                $_SESSION['admConnected'] = false;
+                                session_destroy();
+                                $error = 'Vos changements ont bien été pris en compte';
+                                $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
+                            }else{
+                                $error = 'Le nouveau mot de passe choisi n\'est pas valide';
+                                $message = null;
+                                $this->view->render('back/profil', 'backend/templateBack', compact('message', 'error', 'sum', 'countcoms'));
+                            }     
+                        }
+                    }else{
+                        $error = 'Impossible de modifier les informations';
+                        $message = null;
+                        $this->view->render('back/profil', 'backend/templateBack', compact('message', 'error', 'sum', 'countcoms'));
+                    }
+                }else{
+                    $error = 'Impossible de modifier les informations';
+                    $message = null;
+                    $this->view->render('back/profil', 'backend/templateBack', compact('message', 'error', 'sum', 'countcoms'));
+                }              
+            }else{
+                $error = 'Au moins un des champs est vide';
+                $message = null;
+                $this->view->render('back/profil', 'backend/templateBack', compact('message', 'countcoms', 'error', 'sum'));
+            }
+        }else{         
+            $error = 'Vous devez vous connecter';
+            $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
+        }   
+    }
+
+    /*function reset()
     {
         $sum = $this->commentManager->countReports();
         $countcoms = $this->commentManager->countComs();
@@ -128,8 +207,8 @@ class BackController{
         }else{         
             $error = 'Vous devez vous connecter';
             $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
-        }    
-    }
+        }   
+    }*/
 
     function createEpisode()//méthode pour afficher la page de création d'épisode
     {
@@ -372,7 +451,6 @@ class BackController{
     function episodeDelete()//méthode pour supprimer un épisode
     {
         $this->episodeManager->deleteEpisode($_GET['id']);
-        $this->commentManager->deleteComments($_GET['id']);
     }
 
     function commentDelete()//méthode pour supprimer un commentaire depuis la page d'un épisode
@@ -432,6 +510,7 @@ class BackController{
         
         $sum = $this->commentManager->countReports();
         $countcoms = $this->commentManager->countComs();
+
                 
         if (isset($_SESSION['admConnected'])) {               
             $this->view->render('back/profil', 'backend/templateBack', compact('countcoms', 'sum'));
@@ -439,7 +518,7 @@ class BackController{
         else {         
             $error = 'Vous devez vous connecter';
             $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
-        }  
+        }
     }
 
     function disconnection()//méthode pour se déconnecter du back
