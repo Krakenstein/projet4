@@ -13,8 +13,6 @@ class View{
         require($this->viewPath . $view . '.html.php');
         $content = ob_get_clean();
         require($this->viewPath . 'templates/' . $template . '.php');
-
-
     }
 
 }

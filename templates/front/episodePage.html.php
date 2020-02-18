@@ -44,7 +44,7 @@
         <form id="makeComment" action="index.php?action=addComment&amp;currentpage=<?= $currentpage ?>&amp;nb=<?= $pagina[0]->chapterNumber ?>&amp;id=<?= $pagina[0]->post_id ?>" method="post">
             <h2>Laissez moi un commentaire</h2>
             <input title="author" class="champ" type="text" name="author" id="author" placeholder=" Votre pseudo" size="15"/>
-            <label id="labelAuthor" for="author"><?php echo $error ?></label>
+            <label id="labelAuthor" for="author"><?php if(isset($error)) echo $error ?></label>
             <p>Votre commentaire</p>
             <textarea title="comment" name="comment" id="comment" cols="40" rows="5"></textarea>
             <label id="labelComment" for="comment"></label>

@@ -22,16 +22,14 @@ class EpisodeManager
     {
         $req =$this->bdd->prepare('SELECT COUNT(*) FROM posts WHERE stat = 1');
         $req->execute();
-        $episodesTot = $req->fetch();
-        return $episodesTot;
+        return $req->fetch();
     }
 
     public function countEpisodes()// requete pour compter le nombre d'épisodes total
     {
         $req = $this->bdd->prepare('SELECT COUNT(*) FROM posts');
         $req->execute();
-        $episodesTot = $req->fetch();
-        return $episodesTot;
+        return $req->fetch();
     }
 
     public function PagineEpisodes($offset, $nbByPage)//requête pour récupérer les épisodes publiés en fonction de la pagination
@@ -40,8 +38,7 @@ class EpisodeManager
         $req = $this->bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'Le %d/%m/%Y\') AS date FROM posts WHERE stat = 1 ORDER BY chapterNumber, publiDate  LIMIT :offset, :limitation  ');
         $req->execute(['limitation' => (int) $nbByPage, 
                         'offset' => (int) $offset ]);
-        $pagina = $req->fetchALL(PDO::FETCH_OBJ);
-        return $pagina;
+        return $req->fetchALL(PDO::FETCH_OBJ);
     }
 
     public function findEpisodes()//requête pour récupérer tous les épisodes publiés
@@ -49,43 +46,37 @@ class EpisodeManager
  
         $req = $this->bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'Le %d/%m/%Y\') AS date FROM posts WHERE stat = 1 ORDER BY publiDate DESC');
         $req->execute();
-        $episodes = $req->fetchALL(PDO::FETCH_OBJ);
-        return $episodes;
+        return $req->fetchALL(PDO::FETCH_OBJ);
     }
 
     public function findAllEpisodes()//requête pour récupérer la liste de tous les épisodes 
     {
         $req = $this->bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'Le %d/%m/%Y à %Hh %imin %ss\') AS publiDate FROM posts ORDER BY chapterNumber DESC');
         $req->execute();
-        $allEpisodes = $req->fetchALL(PDO::FETCH_OBJ);
-        return $allEpisodes;
+        return $req->fetchALL(PDO::FETCH_OBJ);
     }
 
-    public function findEpisode($post_id)//requête pour récupérer un épisode en fonction de son id
+    public function findEpisode($postId)//requête pour récupérer un épisode en fonction de son id
     {
-        $req = $this->bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'le %d/%m/%Y à %Hh %imin\') AS publiDate FROM posts WHERE post_id = ? ');
-        $req->execute(array($post_id));
-        $data = $req->fetch(PDO::FETCH_OBJ);
-
-        return $data;
+        $req = $this->bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'le %d/%m/%Y à %Hh %imin\') AS publiDate FROM posts WHERE post_id = :idPost ');
+        $req->execute(array(
+            'idPost' => $postId));
+        return $req->fetch(PDO::FETCH_OBJ);
     }
 
     public function findLastEpisode()//requête pour récupérer le dernier épisode publié par date de publication
     {
         $req = $this->bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'Le %d/%m/%Y\') AS date FROM posts WHERE stat = 1 ORDER BY publiDate DESC ');
         $req->execute();
-        $lastEpisode = $req->fetch(PDO::FETCH_OBJ);
-
-        return $lastEpisode;
+        return $req->fetch(PDO::FETCH_OBJ);
     }
 
-    public function findPostedEpisode($post_id)//requête pour récupérer un épisode publié en fonction de son id
+    public function findPostedEpisode($postId)//requête pour récupérer un épisode publié en fonction de son id
     {
-        $req = $this->bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'Le %d/%m/%Y à %Hh %imin %ss\') AS date, publiDate FROM posts WHERE post_id = ? AND stat = 1');
-        $req->execute(array($post_id));
-        $data = $req->fetch(PDO::FETCH_OBJ);
-
-        return $data;
+        $req = $this->bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'Le %d/%m/%Y à %Hh %imin %ss\') AS date, publiDate FROM posts WHERE post_id = :idPost AND stat = 1');
+        $req->execute(array(
+            'idPost' => $postId));
+        return $req->fetch(PDO::FETCH_OBJ);
     }
 
     /*public function previousEpisode($chapterNumber, $publidate)
@@ -107,64 +98,59 @@ class EpisodeManager
     public function postEpisode($chapterNumber, $title, $content)//requête pour rajouter un épisode publié dans la bdd
     {
         $req = $this->bdd->prepare('INSERT INTO posts SET chapterNumber = :chapNumb, title = :epTitle, content = :epCont, publiDate = NOW(), stat = 1');
-        $postedEpisode = $req->execute(array(
+        return $req->execute(array(
             'chapNumb' => $chapterNumber, 
             'epTitle' => $title, 
             'epCont' => $content));
-        return $postedEpisode;
     }
 
     public function saveEpisode($chapterNumber, $title, $content)//requête pour rajouter un épisode sauvegardé dans la bdd
     {
         $req = $this->bdd->prepare('INSERT INTO posts SET chapterNumber = :chapNumb, title = :epTitle, content = :epCont, publiDate = null, stat = 0');
-        $savedEpisode = $req->execute(array(
+        return $req->execute(array(
             'chapNumb' => $chapterNumber, 
             'epTitle' => $title, 
             'epCont' => $content));
-        return $savedEpisode;
     }
 
-    public function postModifiedEpisode($post_id, $nvchapter, $nvtitle, $nvcontent)//requête pour modifier un épisode et le publier à la date d'aujourd'hui
+    public function postModifiedEpisode($postId, $nvchapter, $nvtitle, $nvcontent)//requête pour modifier un épisode et le publier à la date d'aujourd'hui
     {
         $req = $this->bdd->prepare('UPDATE posts SET post_id = :sameid, chapterNumber = :nvchapter, title = :nvtitle, content = :nvcontent, publiDate =  NOW(), stat = 1 WHERE post_id = :sameid ');
-        $postedModifiedEpisode = $req->execute(array(
-            'sameid' => $post_id,
+        return $req->execute(array(
+            'sameid' => $postId,
             'nvchapter' => $nvchapter, 
             'nvtitle' => $nvtitle, 
             'nvcontent' => $nvcontent
             ));
-        return $postedModifiedEpisode;
     }
 
-    public function postModifiedEpisodeSameDate($post_id, $nvchapter, $nvtitle, $nvcontent)//requête pour modifier un épisode et le publier sans changer la date de publication
+    public function postModifiedEpisodeSameDate($postId, $nvchapter, $nvtitle, $nvcontent)//requête pour modifier un épisode et le publier sans changer la date de publication
     {
         $req = $this->bdd->prepare('UPDATE posts SET post_id = :sameid, chapterNumber = :nvchapter, title = :nvtitle, content = :nvcontent, stat = 1 WHERE post_id = :sameid ');
-        $postedModifiedEpisode = $req->execute(array(
-            'sameid' => $post_id,
+        return $req->execute(array(
+            'sameid' => $postId,
             'nvchapter' => $nvchapter, 
             'nvtitle' => $nvtitle, 
-            'nvcontent' => $nvcontent,
-            
+            'nvcontent' => $nvcontent           
             ));
-        return $postedModifiedEpisode;
     }
 
-    public function saveModifiedEpisode($post_id, $nvchapter, $nvtitle, $nvcontent)//requête pour modifier un épisode et l'archiver
+    public function saveModifiedEpisode($postId, $nvchapter, $nvtitle, $nvcontent)//requête pour modifier un épisode et l'archiver
     {
         $req = $this->bdd->prepare('UPDATE posts SET post_id = :sameid, chapterNumber = :nvchapter, title = :nvtitle, content = :nvcontent, stat = 0 WHERE post_id = :sameid ');
-        $savedModifiedEpisode = $req->execute(array(
-            'sameid' => $post_id,
+        return $req->execute(array(
+            'sameid' => $postId,
             'nvchapter' => $nvchapter, 
             'nvtitle' => $nvtitle, 
             'nvcontent' => $nvcontent
             ));
-        return $savedModifiedEpisode;
     }
 
-    public function deleteEpisode($post_id)//requête pour supprimer un épisode en fonction de son numéro de chapitre
+    public function deleteEpisode($postId)//requête pour supprimer un épisode en fonction de son numéro de chapitre
     {
-        $req = $this->bdd->prepare('DELETE FROM posts WHERE post_id = ? ');
-        $req->execute(array($post_id));
+        $req = $this->bdd->prepare('DELETE FROM posts WHERE post_id = :idPost ');
+        $req->execute(array(
+            'idPost' => $postId));
     }
     
     public function joinTables($offset, $nbByPage)//requête pour faire une jointure entre la table posts et la table comments
@@ -180,8 +166,6 @@ class EpisodeManager
         LIMIT :offset, :limitation;');
         $req->execute(['limitation' => (int) $nbByPage, 
                         'offset' => (int) $offset ]);
-        $tablesJoin = $req->fetchALL(PDO::FETCH_OBJ);
- 
-        return $tablesJoin; 
+        return $req->fetchALL(PDO::FETCH_OBJ); 
     }
 }

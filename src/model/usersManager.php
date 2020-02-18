@@ -20,18 +20,16 @@ class UsersManager
     public function resetInfos($pseudo, $pass)//requête pour choisir son pseudo et son mot de passe en tant qu'admin
     {
         $req = $this->bdd->prepare('UPDATE users set pseudo = :newPseudo, pass = :newPass WHERE id = 1');
-        $infos = $req->execute(array(
+        return $req->execute(array(
         'newPseudo' => $pseudo, 
         'newPass' => $pass));
-        return $infos;
     }
 
-    public function testInfos($pseudo)//requête pour obtenir le mdp haché
+    public function testInfos($pseudo)//requête pour tester les infos lors d'une tentative de connection
     {
         $req = $this->bdd->prepare('SELECT id, pseudo, pass FROM users WHERE pseudo = :testPseudo');
         $req->execute([
             'testPseudo' => $pseudo]);
-        $infos = $req->fetch();
-        return $infos;
+        return $req->fetch();
     }
 }

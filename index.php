@@ -27,10 +27,10 @@ $actions =
     17 =>'disconnection'
 ];
 
-try {
-    if (isset($_GET['action'])) {
-        $key = array_search($_GET['action'], $actions); 
-        if ($key < 5){
+
+if (isset($_GET['action'])) {
+    $key = array_search($_GET['action'], $actions); 
+    if ($key < 5){
                 $controller = new FrontController();
                 switch ($key) {
                     case 0:
@@ -48,9 +48,9 @@ try {
                     case 4:
                         $controller->report();
                         break;        
-                }
+                }        
 
-        }elseif ($key > 4){
+    }elseif ($key > 4){    
                 $controller = new BackController();
                 switch ($key) {
                     case 5:
@@ -94,12 +94,9 @@ try {
                         break;  
                 }
         }    
+}else {//si aucune action stipulée on affiche l'accueil du front
+    $controller = new frontController();
+    $controller->homePage();
     }
-    else {//si aucune action stipulée on affiche l'accueil du front
-        $controller = new frontController();
-        $controller->homePage();
-    }
-}
-catch(Exception $e) { 
-    echo 'Erreur : ' . $e->getMessage();
-}
+
+    

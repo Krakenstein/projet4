@@ -36,7 +36,8 @@ class FrontController{
             } 
         }else{
             $currentpage = 1;
-            } 
+            }
+
         $offset = ($currentpage - 1) * $nbByPage;
         $pagina = $this->episodeManager->PagineEpisodes($offset, $nbByPage);
         $this->view->render('front/episodes', 'frontend/templateFront', compact('episodesTot', 'pagina','nbByPage', 'offset', 'currentpage', 'totalpages'));   
@@ -56,32 +57,19 @@ class FrontController{
             $error = $request->get('er');
         }else $error = null;
 
-
-        if (null != ($request->get('currentpage')) && is_numeric($request->get('currentpage'))) {
-
+        if (($request->get('currentpage')) !== null && is_numeric($request->get('currentpage'))) {
             $currentpage = (int) $request->get('currentpage');
-            } else {
-
-                $currentpage = 1;
-             } 
-             
-
-             if ($currentpage > $totalpages) {
-
+            if ($currentpage > $totalpages) {
                 $currentpage = $totalpages;
-             } 
+            } 
+        }else{
+            $currentpage = 1;
+            }
 
-             if ($currentpage < 1) {
- 
-                $currentpage = 1;
-             } 
-
-             $offset = ($currentpage - 1) * $nbByPage;
-             $pagina = $this->episodeManager->PagineEpisodes($offset, $nbByPage);
-
-            $comments = $this->commentManager->findComments($pagina[0]->post_id);
-            $this->view->render('front/episodePage', 'frontend/templateFront', compact('comments', 'error', 'episodes', 'episodesTot', 'pagina','nbByPage', 'offset', 'currentpage', 'totalpages'));
-            
+        $offset = ($currentpage - 1) * $nbByPage;
+        $pagina = $this->episodeManager->PagineEpisodes($offset, $nbByPage);
+        $comments = $this->commentManager->findComments($pagina[0]->post_id);
+        $this->view->render('front/episodePage', 'frontend/templateFront', compact('comments', 'error', 'episodes', 'episodesTot', 'pagina','nbByPage', 'offset', 'currentpage', 'totalpages'));           
     }    
 
     /*public function episode():void //méthode pour récupérer un épisode publié en fonction de son id
@@ -131,14 +119,12 @@ class FrontController{
         if (isset($_GET['id']) && $_GET['id'] > 0) {
             if (!empty($_POST['author']) && !empty($_POST['comment'])) {
                 $affectedLines = $this->commentManager->postComment($episode->post_id, $episode->chapterNumber, $_POST['author'], $_POST['comment']);
-
                 if ($affectedLines === false) {
                     throw new Exception('Impossible d\'ajouter le commentaire !');
                 }else {
                     header('Location: index.php?action=episodePage&currentpage=' . $_GET['currentpage'] . '#headCom');
                     exit();
-                }
-        
+                }       
             }else {
                 $error = 'Veuillez remplir tous les champs';
                 header('Location: index.php?action=episodePage&currentpage=' . $_GET['currentpage'] . '&er=' . $error . '#makeComment');
@@ -149,7 +135,7 @@ class FrontController{
         }
     }
 
-    public function report()
+    public function report():void
     {
         if (isset($_GET['id']) && $_GET['id'] > 0) {
             if($_GET['rp'] < 24){
@@ -163,7 +149,7 @@ class FrontController{
         }
     }
 
-    public function homePage()//méthode pour démarrer une session lorsque on affiche la page d'accueil et récupérer le dernier épisode posté
+    public function homePage():void//méthode pour démarrer une session lorsque on affiche la page d'accueil et récupérer le dernier épisode posté
     {
         session_start();
 
@@ -179,7 +165,7 @@ class FrontController{
         
     }
 
-    public function connectionPage()//méthode pour afficher la page de connection
+    public function connectionPage():void//méthode pour afficher la page de connection
     {
         $this->view->render('front/connection', 'frontend/templateFrontAdmin');
     }

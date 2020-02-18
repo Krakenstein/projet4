@@ -55,7 +55,7 @@ class BackController{
               
     }*/
 
-    function admConnect()//méthode pour se connecter au back
+    function admConnect():void//méthode pour se connecter au back
     {  
         session_start();
 
@@ -65,8 +65,7 @@ class BackController{
                 if ((password_verify(($_POST['password']), $infos[2]) === true)){
                     $_SESSION['admConnected'] = true;
                     header('Location: index.php?action=episodes');
-                    exit();
-                
+                    exit();                
                 }else{
                     $error = 'Pseudo ou mot de passe incorrect';
                     $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
@@ -74,16 +73,14 @@ class BackController{
             }else{
                 $error = 'Pseudo ou mot de passe incorrect';
                 $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
-            }
-            
-            
+            }           
         }else{
             $error = 'Pseudo ou mot de passe oublié';
             $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
         }                
     }
 
-    function episodes()
+    function episodes():void //méthode pour afficher la page des épisodes paginés
     {        
         $sum = $this->commentManager->countReports();
         $countcoms = $this->commentManager->countComs();
@@ -114,7 +111,7 @@ class BackController{
 
     }
 
-    function reset()
+    function reset():void //méthode pour réinitialiser les informations de l'administrateur
     {
         $sum = $this->commentManager->countReports();
         $countcoms = $this->commentManager->countComs();
@@ -165,52 +162,7 @@ class BackController{
         }   
     }
 
-    /*function reset()
-    {
-        $sum = $this->commentManager->countReports();
-        $countcoms = $this->commentManager->countComs();
-        $hash = $this->usersManager->getHash();
-        
-        session_start();
-        
-        if (isset($_SESSION['admConnected'])){
-            if ((isset($_POST['pseudo']) && !empty($_POST['pseudo'])) && (isset($_POST['passOld']) && !empty($_POST['passOld'])) && (isset($_POST['pass']) && !empty($_POST['pass'])) && (isset($_POST['pass2']) && !empty($_POST['pass2']))) {
-                if (password_verify(($_POST['passOld']), $hash[0]) === true){
-                    if ($_POST['pass'] != $_POST['pass2']) {// on teste les deux mots de passe
-                        $error = 'Les 2 mots de passe sont différents';
-                        $message = null;
-                        $this->view->render('back/profil', 'backend/templateBack', compact('message', 'error', 'sum', 'countcoms'));
-                    }else{
-                        if (preg_match("((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,50})", $_POST['pass'])){
-                            $infos = $this->usersManager->resetInfos($_POST['pseudo'], password_hash($_POST['pass'], PASSWORD_DEFAULT));
-                            $_SESSION['admConnected'] = false;
-                            session_destroy();
-                            $error = 'Vos changements ont bien été pris en compte';
-                            $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
-                        }else{
-                            $error = 'Le nouveau mot de passe choisi n\'est pas valide';
-                            $message = null;
-                            $this->view->render('back/profil', 'backend/templateBack', compact('message', 'error', 'sum', 'countcoms'));
-                        }     
-                    }
-                }else{
-                    $error = 'Impossible de modifier les informations';
-                    $message = null;
-                    $this->view->render('back/profil', 'backend/templateBack', compact('message', 'error', 'sum', 'countcoms'));
-                }
-
-            }else{
-                $error = 'Au moins un des champs est vide';
-                $message = null;
-                $this->view->render('back/profil', 'backend/templateBack', compact('message', 'countcoms', 'error', 'sum'));
-            }
-        }else{         
-            $error = 'Vous devez vous connecter';
-            $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
-        }   
-    }*/
-
-    function createEpisode()//méthode pour afficher la page de création d'épisode
+    function createEpisode():void//méthode pour afficher la page de création d'épisode
     {
         session_start();
         $_SESSION['chapterNumber'] = null;
@@ -231,7 +183,7 @@ class BackController{
         }  
     }
 
-    function addEpisode()//méthode pour ajouter un épisode dans la bdd archivé ou publié
+    function addEpisode():void//méthode pour ajouter un épisode dans la bdd archivé ou publié
     {
         session_start();
         if(isset($_POST) && !empty($_POST))
@@ -242,12 +194,11 @@ class BackController{
         };
 
                 
-        if (isset($_SESSION['admConnected'])) { 
-        
+        if (isset($_SESSION['admConnected'])) {        
             if (isset($_POST['publish'])) {
                 if (!empty($_POST['chapterNumber']) && !empty($_POST['title'])) {
                     $message = 'Episode ' . $_POST['chapterNumber'] . ' créé et publié';
-                    $this->addPostedEpisode($_POST['chapterNumber'], $_POST['title'], $_POST['content']);
+                    $postedEpisode = $this->episodeManager->postEpisode($_POST['chapterNumber'], $_POST['title'], $_POST['content']);
                     header('Location: index.php?action=episodes&ms=' . $message . '');
                     exit(); 
                 }
@@ -261,7 +212,7 @@ class BackController{
             elseif (isset($_POST['save'])) {
                 if (!empty($_POST['chapterNumber']) && !empty($_POST['title'])) {
                     $message = 'Episode ' . $_POST['chapterNumber'] . ' créé et sauvegardé';
-                    $this->addSavedEpisode($_POST['chapterNumber'], $_POST['title'], $_POST['content']);
+                    $postedEpisode = $this->episodeManager->saveEpisode($_POST['chapterNumber'], $_POST['title'], $_POST['content']);
                     header('Location: index.php?action=episodes&ms=' . $message . '');
                     exit(); 
                 }
@@ -282,19 +233,7 @@ class BackController{
         }
     }
 
-    function addPostedEpisode(string $episodeNumber, string $title, string $content)//méthode pour ajouter un épisode publié à la bdd
-    {
-        $postedEpisode = $this->episodeManager->postEpisode($episodeNumber, $title, $content);
-
-    }
-
-    function addSavedEpisode(string $episodeNumber, string $title, string $content)//méthode pour ajouter un épisode archivé à la bdd
-    {
-        $postedEpisode = $this->episodeManager->saveEpisode($episodeNumber, $title, $content);
-
-    }
-
-    function episodeModications()//méthode pour modifier un épisode
+    function episodeModications():void//méthode pour modifier un épisode et le sauvegarder ou le republier à son ancienne date ou maintenant
     {
         session_start();
         if(isset($_POST) && !empty($_POST))
@@ -304,8 +243,7 @@ class BackController{
             $_SESSION['content'] = $_POST['nvcontent'];
         };
                 
-        if (isset($_SESSION['admConnected'])) {
-        
+        if (isset($_SESSION['admConnected'])) {        
             if (isset($_POST['publish'])) {
                 if (!empty($_POST['nvchapter']) && !empty($_POST['nvtitle'])) {
                     if(($_GET['dt']) != null){
@@ -335,15 +273,13 @@ class BackController{
                         $this->view->render('back/episodeBack', 'backend/templateBack', compact('countcoms', 'sum', 'error', 'episode', 'comments'));
                     }
                 
-            }
-            elseif (isset($_POST['save'])) {
+            }elseif (isset($_POST['save'])) {
                 if (!empty($_POST['nvchapter']) && !empty($_POST['nvtitle'])) {
                     $this->modifySavedEpisode($_GET['id'], $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
                     $message = 'Episode ' . $_POST['nvchapter'] . ' modifié et sauvegardé';
                     header('Location: index.php?action=episodes&ms=' . $message . '');
                     exit(); 
-                }
-                else {
+                }else {
                     $sum = $this->commentManager->countReports();
                     $countcoms = $this->commentManager->countComs();
                     $episode = $this->episodeManager->findEpisode($_GET['id']);
@@ -351,50 +287,46 @@ class BackController{
                     $error = 'Vous devez spécifier le titre et le numéro de l\'épisode';
                     $this->view->render('back/episodeBack', 'backend/templateBack', compact('countcoms', 'sum', 'error', 'episode', 'comments'));
                 }
-            }
-            elseif (isset($_POST['delete'])) {
+            }elseif (isset($_POST['delete'])) {
                 if (isset($_GET['id']) && $_GET['id'] > 0) {
                     $this->episodeDelete();
                     $message = 'Episode ' . $_POST['nvchapter'] . ' Supprimé';
                     header('Location: index.php?action=episodes&ms=' . $message . '');
                     exit(); 
+                }else {
+                    throw new Exception(' aucun identifiant envoyé !');
                 }
-                else {
-                    throw new Exception(' aucun identifiant de billet envoyé !');
-                }
+            }else {
+                throw new Exception('Erreur : aucun identifiant envoyé');
             }
-            else {
-                throw new Exception('Erreur : aucun identifiant de billet envoyé');
-            }
-        }
-        else {         
+        }else {         
             $error = 'Vous devez vous connecter';
             $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
         }
     }
 
-    function modifyPostedEpisode(string $post_id, string $nvchapter, string $nvtitle, string $nvcontent)//méthode pour modifier un épisode en le publiant
+    function modifyPostedEpisode(string $postId, string $nvchapter, string $nvtitle, string $nvcontent)//méthode pour modifier un épisode en le publiant
     {
 
         $postedModifiedEpisode = $this->episodeManager->postModifiedEpisode($_GET['id'], $nvchapter, $nvtitle, $nvcontent);
 
     }
 
-    function modifyPostedEpisodeSameDate(string $post_id, string $nvchapter, string $nvtitle, string $nvcontent)//méthode pour modifier un épisode en le publiant
+    function modifyPostedEpisodeSameDate(string $postId, string $nvchapter, string $nvtitle, string $nvcontent)//méthode pour modifier un épisode en le publiant
     {
 
         $postedModifiedEpisode = $this->episodeManager->postModifiedEpisodeSameDate($_GET['id'], $nvchapter, $nvtitle, $nvcontent, $_GET['dt']);
 
     }
 
-    function modifySavedEpisode(string $post_id, string $nvchapter, string $nvtitle, string $nvcontent)//méthode pour modifier un épisode en l'archivant
+    function modifySavedEpisode(string $postId, string $nvchapter, string $nvtitle, string $nvcontent)//méthode pour modifier un épisode en l'archivant
     {
 
         $savedModifiedEpisode = $this->episodeManager->saveModifiedEpisode($_GET['id'], $nvchapter, $nvtitle, $nvcontent);
 
     }
 
-    function modifyEpisode()//on affiche la page de modification d'un épisode dans le back avec ses commentaires
+    function modifyEpisode():void//on affiche la page de modification d'un épisode dans le back avec ses commentaires
     {
         $episode = $this->episodeManager->findEpisode($_GET['id']);
         $comments = $this->commentManager->findReportedComments($_GET['id']);
@@ -407,12 +339,13 @@ class BackController{
         $_SESSION['content'] = null;
                 
         if (isset($_SESSION['admConnected'])) { 
-            if (isset($_GET['id']) && $_GET['id'] > 0) {
+            if($episode === false){
+                echo 'coco';
+            }else{
+                if (isset($_GET['id']) && $_GET['id'] > 0) {
                 $this->view->render('back/episodeBack', 'backend/templateBack', compact('episode', 'comments', 'sum', 'countcoms'));
-            }
-            else {
-                throw new Exception('Aucun numéro dépisode envoyé');
-            }
+                } 
+            }            
         }
         else {         
             $error = 'Vous devez vous connecter';
@@ -420,7 +353,7 @@ class BackController{
         }     
     }
 
-    function comPage()//on affiche la page de gestion des commentaires
+    function comPage():void//on affiche la page de gestion des commentaires
     {
         $sum = $this->commentManager->countReports();
         $countcoms = $this->commentManager->countComs();
@@ -448,12 +381,12 @@ class BackController{
         }     
     }
 
-    function episodeDelete()//méthode pour supprimer un épisode
+    function episodeDelete():void//méthode pour supprimer un épisode
     {
         $this->episodeManager->deleteEpisode($_GET['id']);
     }
 
-    function commentDelete()//méthode pour supprimer un commentaire depuis la page d'un épisode
+    function commentDelete():void//méthode pour supprimer un commentaire depuis la page d'un épisode
     {
         $this->commentManager->deleteComment($_GET['id']);
         $episode = $this->episodeManager->findEpisode($_GET['postid']);
@@ -472,7 +405,7 @@ class BackController{
         }
     }
 
-    function comDelete()//méthode pour supprimer un commentaire depuis la page des commentaires
+    function comDelete():void//méthode pour supprimer un commentaire depuis la page des commentaires
     {   
         session_start();
 
@@ -488,7 +421,7 @@ class BackController{
         }
     }
 
-    function deleteR()//méthode pour supprimer les signalements d'un commentaire depuis la page des commentaires
+    function deleteR():void//méthode pour supprimer les signalements d'un commentaire depuis la page des commentaires
     {   
         session_start();
 
@@ -504,7 +437,7 @@ class BackController{
         }
     }
 
-    function profil()//méthode pour aller à la page profil
+    function profil():void//méthode pour aller à la page profil
     {
         session_start();
         
@@ -521,7 +454,7 @@ class BackController{
         }
     }
 
-    function disconnection()//méthode pour se déconnecter du back
+    function disconnection():void//méthode pour se déconnecter du back
     {
         session_start();
                 
