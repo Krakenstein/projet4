@@ -40,7 +40,7 @@ class FrontController{
 
         $offset = ($currentpage - 1) * $nbByPage;
         $pagina = $this->episodeManager->PagineEpisodes($offset, $nbByPage);
-        $this->view->render('front/episodes', 'frontend/templateFront', compact('episodesTot', 'pagina','nbByPage', 'offset', 'currentpage', 'totalpages'));   
+        $this->view->render('front/episodes', 'front/layout', compact('episodesTot', 'pagina','nbByPage', 'offset', 'currentpage', 'totalpages'));   
     }        
     
     public function episodePage():void //méthode pour récupérer un épisode publié 
@@ -69,7 +69,7 @@ class FrontController{
         $offset = ($currentpage - 1) * $nbByPage;
         $pagina = $this->episodeManager->PagineEpisodes($offset, $nbByPage);
         $comments = $this->commentManager->findComments($pagina[0]->post_id);
-        $this->view->render('front/episodePage', 'frontend/templateFront', compact('comments', 'error', 'episodesTot', 'pagina','nbByPage', 'offset', 'currentpage', 'totalpages'));           
+        $this->view->render('front/episodePage', 'front/layout', compact('comments', 'error', 'episodesTot', 'pagina','nbByPage', 'offset', 'currentpage', 'totalpages'));           
     }    
 
     /*public function episode():void //méthode pour récupérer un épisode publié en fonction de son id
@@ -97,11 +97,11 @@ class FrontController{
         }else $error = null;
 
         if ($episode === false) {
-            $view->render('front/episodeBlankView', 'frontend/templateFront');
+            $view->render('front/episodeBlankView', 'front/layout');
         }
         else {
             if (isset($_GET['id']) && $_GET['id'] > 0) {
-                $view->render('front/episode', 'frontend/templateFront', compact('currentpage', 'totalpages', 'episode', 'comments', 'error'));
+                $view->render('front/episode', 'front/layout', compact('currentpage', 'totalpages', 'episode', 'comments', 'error'));
             }
             else {
                 throw new Exception('Aucun numéro dépisode envoyé');
@@ -161,13 +161,13 @@ class FrontController{
         $lastEpisode = $this->episodeManager->findLastEpisode();
         $pagina = $this->episodeManager->PagineEpisodes($offset, $nbByPage);
 
-        $this->view->render('front/homePage', 'frontend/templateFront', compact('lastEpisode', 'pagina', 'totalpages', 'offset', 'nbByPage', 'episodesTot'));
+        $this->view->render('front/homePage', 'front/layout', compact('lastEpisode', 'pagina', 'totalpages', 'offset', 'nbByPage', 'episodesTot'));
         
     }
 
     public function connectionPage():void//méthode pour afficher la page de connection
     {
-        $this->view->render('front/connection', 'frontend/templateFrontAdmin');
+        $this->view->render('front/connection', 'front/layout');
     }
 }
 

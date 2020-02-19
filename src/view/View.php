@@ -12,7 +12,7 @@ class View{
         extract($variables);
         require($this->viewPath . $view . '.html.php');
         $content = ob_get_clean();
-        require($this->viewPath . 'templates/' . $template . '.php');
+        require($this->viewPath . $template . '.html.php');
     }
 
 }

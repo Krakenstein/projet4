@@ -102,7 +102,7 @@ class BackController{
                 } 
             $offset = ($currentpage - 1) * $nbByPage;
             $tablesJoin = $this->episodeManager->joinTables($offset, $nbByPage);
-            $this->view->render('back/homePageBack', 'backend/templateBack', compact('episodesPubTot', 'countcoms', 'sum', 'episodesTot', 'tablesJoin','nbByPage', 'offset', 'currentpage', 'totalpages'));                
+            $this->view->render('back/homePageBack', 'back/layout', compact('episodesPubTot', 'countcoms', 'sum', 'episodesTot', 'tablesJoin','nbByPage', 'offset', 'currentpage', 'totalpages'));                
         }
         else {         
             $error = 'Vous devez vous connecter';
@@ -111,7 +111,7 @@ class BackController{
 
     }
 
-    function reset():void //méthode pour réinitialiser les informations de l'administrateur
+    /*function reset():void //méthode pour réinitialiser les informations de l'administrateur
     {
         $sum = $this->commentManager->countReports();
         $countcoms = $this->commentManager->countComs();
@@ -127,7 +127,7 @@ class BackController{
                         if ($_POST['pass'] != $_POST['pass2']) {// on teste les deux mots de passe
                             $error = 'Les 2 mots de passe sont différents';
                             $message = null;
-                            $this->view->render('back/profil', 'backend/templateBack', compact('message', 'error', 'sum', 'countcoms'));
+                            $this->view->render('back/profil', 'back/layout', compact('message', 'error', 'sum', 'countcoms'));
                         }else{
                             if (preg_match("((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,50})", $_POST['pass'])){
                                 $infos = $this->usersManager->resetInfos($_POST['pseudo'], password_hash($_POST['pass'], PASSWORD_DEFAULT));
@@ -138,28 +138,68 @@ class BackController{
                             }else{
                                 $error = 'Le nouveau mot de passe choisi n\'est pas valide';
                                 $message = null;
-                                $this->view->render('back/profil', 'backend/templateBack', compact('message', 'error', 'sum', 'countcoms'));
+                                $this->view->render('back/profil', 'back/layout', compact('message', 'error', 'sum', 'countcoms'));
                             }     
                         }
                     }else{
                         $error = 'Impossible de modifier les informations';
                         $message = null;
-                        $this->view->render('back/profil', 'backend/templateBack', compact('message', 'error', 'sum', 'countcoms'));
+                        $this->view->render('back/profil', 'back/layout', compact('message', 'error', 'sum', 'countcoms'));
                     }
                 }else{
                     $error = 'Impossible de modifier les informations';
                     $message = null;
-                    $this->view->render('back/profil', 'backend/templateBack', compact('message', 'error', 'sum', 'countcoms'));
+                    $this->view->render('back/profil', 'back/layout', compact('message', 'error', 'sum', 'countcoms'));
                 }              
             }else{
                 $error = 'Au moins un des champs est vide';
                 $message = null;
-                $this->view->render('back/profil', 'backend/templateBack', compact('message', 'countcoms', 'error', 'sum'));
+                $this->view->render('back/profil', 'back/layout', compact('message', 'countcoms', 'error', 'sum'));
             }
         }else{         
             $error = 'Vous devez vous connecter';
             $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
         }   
+    }*/
+
+    function reset():void //méthode pour réinitialiser les informations de l'administrateur
+    {
+        $sum = $this->commentManager->countReports();
+        $countcoms = $this->commentManager->countComs();
+        //$infos = $this->usersManager->testInfos($_POST['pseudo']);
+        $message = null;
+        $isError = true;
+        session_start();
+        
+        if (!isset($_SESSION['admConnected'])){
+            $error = 'Vous devez vous connecter';
+            $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
+            exit();
+        }
+        $error = 'Au moins un des champs est vide';
+        if ((isset($_POST['pseudo']) && !empty($_POST['pseudo'])) && (isset($_POST['passOld']) && !empty($_POST['passOld'])) && (isset($_POST['pass']) && !empty($_POST['pass'])) && (isset($_POST['pass2']) && !empty($_POST['pass2']))) {
+            $infos = $this->usersManager->testInfos($_POST['pseudo']);
+            $error = 'Impossible de modifier les informations';
+            if (!empty($infos) && password_verify($_POST['passOld'], $infos[2]) === true){   
+                $error = 'Le nouveau mot de passe choisi n\'est pas valide';
+                if ($_POST['pass'] !== $_POST['pass2']) {// on teste les deux mots de passe
+                    $error = 'Les 2 mots de passe sont différents';                       
+                }
+                elseif (preg_match("((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,50})", $_POST['pass'])){
+                    //$infos = $this->usersManager->resetInfos($_POST['pseudo'], password_hash($_POST['pass'], PASSWORD_DEFAULT));
+                    $_SESSION['admConnected'] = false;
+                    session_destroy();
+                    $error = 'Vos changements ont bien été pris en compte';
+                    $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
+                    $isError = false;  
+                }                          
+            }              
+        }
+
+        if($isError){
+            $this->view->render('back/profil', 'back/layout', compact('message', 'error', 'sum', 'countcoms'));
+        }
+               
     }
 
     function createEpisode():void//méthode pour afficher la page de création d'épisode
@@ -175,7 +215,7 @@ class BackController{
         $error = null;
                 
         if (isset($_SESSION['admConnected'])) {               
-            $this->view->render('back/createEpisode', 'backend/templateBack', compact('countcoms', 'sum', 'error'));
+            $this->view->render('back/createEpisode', 'back/layout', compact('countcoms', 'sum', 'error'));
         }
         else {         
             $error = 'Vous devez vous connecter';
@@ -206,7 +246,7 @@ class BackController{
                     $sum = $this->commentManager->countReports();
                     $countcoms = $this->commentManager->countComs();
                     $error = 'Vous devez spécifier le numéro et le titre de l\'épisode';
-                    $this->view->render('back/createEpisode', 'backend/templateBack', compact('countcoms', 'sum', 'error'));
+                    $this->view->render('back/createEpisode', 'back/layout', compact('countcoms', 'sum', 'error'));
                 }
             }
             elseif (isset($_POST['save'])) {
@@ -220,7 +260,7 @@ class BackController{
                     $sum = $this->commentManager->countReports();
                     $countcoms = $this->commentManager->countComs();
                     $error = 'Vous devez spécifier le numéro et le titre de l\'épisode';
-                    $this->view->render('back/createEpisode', 'backend/templateBack', compact('countcoms', 'sum', 'error'));
+                    $this->view->render('back/createEpisode', 'back/layout', compact('countcoms', 'sum', 'error'));
                 }
             }
             else {
@@ -270,7 +310,7 @@ class BackController{
                         $episode = $this->episodeManager->findEpisode($_GET['id']);
                         $comments = $this->commentManager->findReportedComments($_GET['id']);
                         $error = 'Vous devez spécifier le titre et le numéro de l\'épisode';
-                        $this->view->render('back/episodeBack', 'backend/templateBack', compact('countcoms', 'sum', 'error', 'episode', 'comments'));
+                        $this->view->render('back/episodeBack', 'back/layout', compact('countcoms', 'sum', 'error', 'episode', 'comments'));
                     }
                 
             }elseif (isset($_POST['save'])) {
@@ -285,7 +325,7 @@ class BackController{
                     $episode = $this->episodeManager->findEpisode($_GET['id']);
                     $comments = $this->commentManager->findReportedComments($_GET['id']);
                     $error = 'Vous devez spécifier le titre et le numéro de l\'épisode';
-                    $this->view->render('back/episodeBack', 'backend/templateBack', compact('countcoms', 'sum', 'error', 'episode', 'comments'));
+                    $this->view->render('back/episodeBack', 'back/layout', compact('countcoms', 'sum', 'error', 'episode', 'comments'));
                 }
             }elseif (isset($_POST['delete'])) {
                 if (isset($_GET['id']) && $_GET['id'] > 0) {
@@ -343,7 +383,7 @@ class BackController{
                 echo 'coco';
             }else{
                 if (isset($_GET['id']) && $_GET['id'] > 0) {
-                $this->view->render('back/episodeBack', 'backend/templateBack', compact('episode', 'comments', 'sum', 'countcoms'));
+                $this->view->render('back/episodeBack', 'back/layout', compact('episode', 'comments', 'sum', 'countcoms'));
                 } 
             }            
         }
@@ -374,7 +414,7 @@ class BackController{
                 } 
             $offset = ($currentpage - 1) * $nbByPage;
             $allComs = $this->commentManager->findAllComments($offset, $nbByPage);
-            $this->view->render('back/commentsBack', 'backend/templateBack', compact('nbByPage', 'currentpage', 'offset', 'totalpages', 'countcoms', 'allComs', 'sum'));                          
+            $this->view->render('back/commentsBack', 'back/layout', compact('nbByPage', 'currentpage', 'offset', 'totalpages', 'countcoms', 'allComs', 'sum'));                          
         }else{         
             $error = 'Vous devez vous connecter';
             $this->view->render('front/connectionView', 'frontend/templateFront', compact('error'));
@@ -446,7 +486,7 @@ class BackController{
 
                 
         if (isset($_SESSION['admConnected'])) {               
-            $this->view->render('back/profil', 'backend/templateBack', compact('countcoms', 'sum'));
+            $this->view->render('back/profil', 'back/layout', compact('countcoms', 'sum'));
         }
         else {         
             $error = 'Vous devez vous connecter';

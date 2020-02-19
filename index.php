@@ -96,7 +96,9 @@ if (isset($_GET['action'])) {
         }    
 }else {//si aucune action stipulée on affiche l'accueil du front
     $controller = new frontController();
-    $controller->homePage();
+    $actions = 'homePage';
+    //$controller->homePage();
+    $controller->$actions();
     }
 
     
