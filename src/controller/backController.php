@@ -25,37 +25,7 @@ class BackController{
         $this->request = new Request();
     }
 
-    /*function admConnect()//méthode pour se connecter au back
-    {
-        $hash = $this->usersManager->getHash();
-        $pseudRegister = $this->usersManager->getPseudo();
-        
-        session_start();
-
-
-        if ((isset($_POST['nom']) && !empty($_POST['nom'])) && (isset($_POST['password']) && !empty($_POST['password']))) {
-            if (($_POST['nom']) === $pseudRegister[0]){
-                if (password_verify(($_POST['password']), $hash[0]) === true){
-                    $_SESSION['admConnected'] = true;
-                    header('Location: index.php?action=episodes');
-                    exit();
-                }else{
-                    $error = 'Pseudo ou mot de passe incorrect';
-                    $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
-                }
-            }else{
-                $error = 'Pseudo ou mot de passe incorrect';
-                $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
-            } 
-            
-        }else{
-            $error = 'Pseudo ou mot de passe oublié';
-            $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
-        }    
-              
-    }*/
-
-    function admConnect():void//méthode pour se connecter au back
+    /*function admConnect():void//méthode pour se connecter au back
     {  
         session_start();
 
@@ -68,16 +38,35 @@ class BackController{
                     exit();                
                 }else{
                     $error = 'Pseudo ou mot de passe incorrect';
-                    $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
+                    $this->view->render('front/connection', 'front/layout', compact('error'));
                 } 
             }else{
                 $error = 'Pseudo ou mot de passe incorrect';
-                $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
+                $this->view->render('front/connection', 'front/layout', compact('error'));
             }           
         }else{
             $error = 'Pseudo ou mot de passe oublié';
-            $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
+            $this->view->render('front/connection', 'front/layout', compact('error'));
         }                
+    }*/
+
+    function admConnect():void//méthode pour se connecter au back
+    {  
+        session_start();
+
+        $error = 'Pseudo ou mot de passe oublié';
+        if ((isset($_POST['nom']) && !empty($_POST['nom'])) && (isset($_POST['password']) && !empty($_POST['password']))) {
+            $infos = $this->usersManager->testInfos($_POST['nom']);
+            if(!empty($infos) && password_verify(($_POST['password']), $infos[2]) === true){                
+                $_SESSION['admConnected'] = true;
+                header('Location: index.php?action=episodes');
+                exit();                
+            }
+        }
+
+        {
+        $this->view->render('front/connection', 'front/layout', compact('error'));
+        }                       
     }
 
     function episodes():void //méthode pour afficher la page des épisodes paginés
@@ -106,61 +95,10 @@ class BackController{
         }
         else {         
             $error = 'Vous devez vous connecter';
-            $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
+            $this->view->render('front/connection', 'front/layout', compact('error'));
         } 
 
     }
-
-    /*function reset():void //méthode pour réinitialiser les informations de l'administrateur
-    {
-        $sum = $this->commentManager->countReports();
-        $countcoms = $this->commentManager->countComs();
-        $infos = $this->usersManager->testInfos($_POST['pseudo']);
-        
-        session_start();
-        
-        if (isset($_SESSION['admConnected'])){
-            if ((isset($_POST['pseudo']) && !empty($_POST['pseudo'])) && (isset($_POST['passOld']) && !empty($_POST['passOld'])) && (isset($_POST['pass']) && !empty($_POST['pass'])) && (isset($_POST['pass2']) && !empty($_POST['pass2']))) {
-                $infos = $this->usersManager->testInfos($_POST['pseudo']);
-                if (!empty($infos)){
-                    if (password_verify(($_POST['passOld']), $infos[2]) === true){
-                        if ($_POST['pass'] != $_POST['pass2']) {// on teste les deux mots de passe
-                            $error = 'Les 2 mots de passe sont différents';
-                            $message = null;
-                            $this->view->render('back/profil', 'back/layout', compact('message', 'error', 'sum', 'countcoms'));
-                        }else{
-                            if (preg_match("((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,50})", $_POST['pass'])){
-                                $infos = $this->usersManager->resetInfos($_POST['pseudo'], password_hash($_POST['pass'], PASSWORD_DEFAULT));
-                                $_SESSION['admConnected'] = false;
-                                session_destroy();
-                                $error = 'Vos changements ont bien été pris en compte';
-                                $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
-                            }else{
-                                $error = 'Le nouveau mot de passe choisi n\'est pas valide';
-                                $message = null;
-                                $this->view->render('back/profil', 'back/layout', compact('message', 'error', 'sum', 'countcoms'));
-                            }     
-                        }
-                    }else{
-                        $error = 'Impossible de modifier les informations';
-                        $message = null;
-                        $this->view->render('back/profil', 'back/layout', compact('message', 'error', 'sum', 'countcoms'));
-                    }
-                }else{
-                    $error = 'Impossible de modifier les informations';
-                    $message = null;
-                    $this->view->render('back/profil', 'back/layout', compact('message', 'error', 'sum', 'countcoms'));
-                }              
-            }else{
-                $error = 'Au moins un des champs est vide';
-                $message = null;
-                $this->view->render('back/profil', 'back/layout', compact('message', 'countcoms', 'error', 'sum'));
-            }
-        }else{         
-            $error = 'Vous devez vous connecter';
-            $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
-        }   
-    }*/
 
     function reset():void //méthode pour réinitialiser les informations de l'administrateur
     {
@@ -173,7 +111,7 @@ class BackController{
         
         if (!isset($_SESSION['admConnected'])){
             $error = 'Vous devez vous connecter';
-            $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
+            $this->view->render('front/connection', 'front/layout', compact('error'));
             exit();
         }
         $error = 'Au moins un des champs est vide';
@@ -186,11 +124,11 @@ class BackController{
                     $error = 'Les 2 mots de passe sont différents';                       
                 }
                 elseif (preg_match("((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,50})", $_POST['pass'])){
-                    //$infos = $this->usersManager->resetInfos($_POST['pseudo'], password_hash($_POST['pass'], PASSWORD_DEFAULT));
+                    $this->usersManager->resetInfos($_POST['pseudo'], password_hash($_POST['pass'], PASSWORD_DEFAULT));
                     $_SESSION['admConnected'] = false;
                     session_destroy();
                     $error = 'Vos changements ont bien été pris en compte';
-                    $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
+                    $this->view->render('front/connection', 'front/layout', compact('error'));
                     $isError = false;  
                 }                          
             }              
@@ -219,61 +157,48 @@ class BackController{
         }
         else {         
             $error = 'Vous devez vous connecter';
-            $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
+            $this->view->render('front/connection', 'front/layout', compact('error'));
         }  
     }
 
     function addEpisode():void//méthode pour ajouter un épisode dans la bdd archivé ou publié
     {
         session_start();
+
         if(isset($_POST) && !empty($_POST))
         {
             $_SESSION['chapterNumber'] = $_POST['chapterNumber'];
             $_SESSION['title'] = $_POST['title'];
             $_SESSION['content'] = $_POST['content'];
         };
-
-                
-        if (isset($_SESSION['admConnected'])) {        
-            if (isset($_POST['publish'])) {
-                if (!empty($_POST['chapterNumber']) && !empty($_POST['title'])) {
-                    $message = 'Episode ' . $_POST['chapterNumber'] . ' créé et publié';
-                    $postedEpisode = $this->episodeManager->postEpisode((int) $_POST['chapterNumber'], $_POST['title'], $_POST['content']);
-                    header('Location: index.php?action=episodes&ms=' . $message . '');
-                    exit(); 
-                }
-                else {
-                    $sum = $this->commentManager->countReports();
-                    $countcoms = $this->commentManager->countComs();
-                    $error = 'Vous devez spécifier le numéro et le titre de l\'épisode';
-                    $this->view->render('back/createEpisode', 'back/layout', compact('countcoms', 'sum', 'error'));
-                }
-            }
-            elseif (isset($_POST['save'])) {
-                if (!empty($_POST['chapterNumber']) && !empty($_POST['title'])) {
-                    $message = 'Episode ' . $_POST['chapterNumber'] . ' créé et sauvegardé';
-                    $postedEpisode = $this->episodeManager->saveEpisode((int) $_POST['chapterNumber'], $_POST['title'], $_POST['content']);
-                    header('Location: index.php?action=episodes&ms=' . $message . '');
-                    exit(); 
-                }
-                else {
-                    $sum = $this->commentManager->countReports();
-                    $countcoms = $this->commentManager->countComs();
-                    $error = 'Vous devez spécifier le numéro et le titre de l\'épisode';
-                    $this->view->render('back/createEpisode', 'back/layout', compact('countcoms', 'sum', 'error'));
-                }
-            }
-            else {
-                throw new Exception('Erreur : aucun identifiant de billet envoyé');
-            }
-        }
-        else {         
+      
+        if (!isset($_SESSION['admConnected'])){
             $error = 'Vous devez vous connecter';
-            $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
+            $this->view->render('front/connection', 'front/layout', compact('error'));
+            exit();
         }
+        if (isset($_POST['publish']) && !empty($_POST['chapterNumber']) && !empty($_POST['title'])) {          
+            $message = 'Episode ' . $_POST['chapterNumber'] . ' créé et publié';
+            $postedEpisode = $this->episodeManager->postEpisode((int) $_POST['chapterNumber'], $_POST['title'], $_POST['content']);
+            header('Location: index.php?action=episodes&ms=' . $message . '');
+            exit();             
+        }
+        elseif (isset($_POST['save']) && !empty($_POST['chapterNumber']) && !empty($_POST['title'])) {
+            $message = 'Episode ' . $_POST['chapterNumber'] . ' créé et sauvegardé';
+            $postedEpisode = $this->episodeManager->saveEpisode((int) $_POST['chapterNumber'], $_POST['title'], $_POST['content']);
+            header('Location: index.php?action=episodes&ms=' . $message . '');
+            exit(); 
+        }
+
+        {
+        $sum = $this->commentManager->countReports();
+        $countcoms = $this->commentManager->countComs();
+        $error = 'Vous devez spécifier le numéro et le titre de l\'épisode';
+        $this->view->render('back/createEpisode', 'back/layout', compact('countcoms', 'sum', 'error'));
+        }    
     }
 
-    function episodeModications():void//méthode pour modifier un épisode et le sauvegarder ou le republier à son ancienne date ou maintenant
+    /*function episodeModications():void//méthode pour modifier un épisode et le sauvegarder ou le republier à son ancienne date ou maintenant
     {
         session_start();
         if(isset($_POST) && !empty($_POST))
@@ -283,43 +208,32 @@ class BackController{
             $_SESSION['content'] = $_POST['nvcontent'];
         };
                 
-        if (isset($_SESSION['admConnected'])) {        
-            if (isset($_POST['publish'])) {
-                if (!empty($_POST['nvchapter']) && !empty($_POST['nvtitle'])) {
-                    if(($_GET['dt']) != null){
-                        if($_POST['dateChoice'] === 'oldDate'){
-                            $this->modifyPostedEpisodeSameDate((int) $_GET['id'], (int) $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
-                            $message = 'Episode ' . $_POST['nvchapter'] . ' modifié et republié à la même date';
-                            header('Location: index.php?action=episodes&ms=' . $message . '');
-                            exit(); 
-                        }else{
-                            $this->modifyPostedEpisode((int) $_GET['id'], (int) $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
-                            $message = 'Episode ' . $_POST['nvchapter'] . ' modifié et republié à la date de maintenant';
-                            header('Location: index.php?action=episodes&ms=' . $message . '');
-                            exit(); 
-                        }
-                    }else{
-                        $this->modifyPostedEpisode((int) $_GET['id'], (int) $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
-                        $message = 'Episode ' . $_POST['nvchapter'] . ' modifié et publié';
+        if (!isset($_SESSION['admConnected'])){
+            $error = 'Vous devez vous connecter';
+            $this->view->render('front/connection', 'front/layout', compact('error'));
+            exit();
+        }        
+        if (isset($_POST['publish'])) {
+            if (!empty($_POST['nvchapter']) && !empty($_POST['nvtitle'])) {
+                if(($_GET['dt']) != null){
+                    if($_POST['dateChoice'] === 'oldDate'){
+                        $this->modifyPostedEpisodeSameDate((int) $_GET['id'], (int) $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
+                        $message = 'Episode ' . $_POST['nvchapter'] . ' modifié et republié à la même date';
                         header('Location: index.php?action=episodes&ms=' . $message . '');
                         exit(); 
-                    }    
-                }else {
-                        $sum = $this->commentManager->countReports();
-                        $countcoms = $this->commentManager->countComs();
-                        $episode = $this->episodeManager->findEpisode($_GET['id']);
-                        $comments = $this->commentManager->findReportedComments($_GET['id']);
-                        $error = 'Vous devez spécifier le titre et le numéro de l\'épisode';
-                        $this->view->render('back/episodeBack', 'back/layout', compact('countcoms', 'sum', 'error', 'episode', 'comments'));
+                    }else{
+                        $this->modifyPostedEpisode((int) $_GET['id'], (int) $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
+                        $message = 'Episode ' . $_POST['nvchapter'] . ' modifié et republié à la date de maintenant';
+                        header('Location: index.php?action=episodes&ms=' . $message . '');
+                        exit(); 
                     }
-                
-            }elseif (isset($_POST['save'])) {
-                if (!empty($_POST['nvchapter']) && !empty($_POST['nvtitle'])) {
-                    $this->modifySavedEpisode((int) $_GET['id'], (int) $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
-                    $message = 'Episode ' . $_POST['nvchapter'] . ' modifié et sauvegardé';
+                }else{
+                    $this->modifyPostedEpisode((int) $_GET['id'], (int) $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
+                    $message = 'Episode ' . $_POST['nvchapter'] . ' modifié et publié';
                     header('Location: index.php?action=episodes&ms=' . $message . '');
                     exit(); 
-                }else {
+                }    
+            }else {
                     $sum = $this->commentManager->countReports();
                     $countcoms = $this->commentManager->countComs();
                     $episode = $this->episodeManager->findEpisode($_GET['id']);
@@ -327,25 +241,95 @@ class BackController{
                     $error = 'Vous devez spécifier le titre et le numéro de l\'épisode';
                     $this->view->render('back/episodeBack', 'back/layout', compact('countcoms', 'sum', 'error', 'episode', 'comments'));
                 }
-            }elseif (isset($_POST['delete'])) {
-                if (isset($_GET['id']) && $_GET['id'] > 0) {
-                    $this->episodeDelete();
-                    $message = 'Episode ' . $_POST['nvchapter'] . ' Supprimé';
-                    header('Location: index.php?action=episodes&ms=' . $message . '');
-                    exit(); 
-                }else {
-                    throw new Exception(' aucun identifiant envoyé !');
-                }
+            
+        }elseif (isset($_POST['save'])) {
+            if (!empty($_POST['nvchapter']) && !empty($_POST['nvtitle'])) {
+                $this->modifySavedEpisode((int) $_GET['id'], (int) $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
+                $message = 'Episode ' . $_POST['nvchapter'] . ' modifié et sauvegardé';
+                header('Location: index.php?action=episodes&ms=' . $message . '');
+                exit(); 
             }else {
-                throw new Exception('Erreur : aucun identifiant envoyé');
+                $sum = $this->commentManager->countReports();
+                $countcoms = $this->commentManager->countComs();
+                $episode = $this->episodeManager->findEpisode($_GET['id']);
+                $comments = $this->commentManager->findReportedComments($_GET['id']);
+                $error = 'Vous devez spécifier le titre et le numéro de l\'épisode';
+                $this->view->render('back/episodeBack', 'back/layout', compact('countcoms', 'sum', 'error', 'episode', 'comments'));
             }
-        }else {         
+        }elseif (isset($_POST['delete'])) {
+            if (isset($_GET['id']) && $_GET['id'] > 0) {
+                $this->episodeDelete();
+                $message = 'Episode ' . $_POST['nvchapter'] . ' Supprimé';
+                header('Location: index.php?action=episodes&ms=' . $message . '');
+                exit(); 
+            }else {
+                throw new Exception(' aucun identifiant envoyé !');
+            }
+        }else {
+            throw new Exception('Erreur : aucun identifiant envoyé');
+        }
+    }*/
+
+    function episodeModications():void//méthode pour modifier un épisode et le sauvegarder ou le republier à son ancienne date ou maintenant
+    {
+        session_start();
+
+        $isError = true;
+
+        if(isset($_POST) && !empty($_POST))
+        {
+            $_SESSION['chapterNumber'] = $_POST['nvchapter'];
+            $_SESSION['title'] = $_POST['nvtitle'];
+            $_SESSION['content'] = $_POST['nvcontent'];
+        };
+                
+        if (!isset($_SESSION['admConnected'])){
             $error = 'Vous devez vous connecter';
-            $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
+            $this->view->render('front/connection', 'front/layout', compact('error'));
+            exit();
+        }        
+        if (isset($_POST['publish']) && !empty($_POST['nvchapter']) && !empty($_POST['nvtitle'])) {           
+            if(empty($_GET['dt'])){
+                $this->episodeManager->postModifiedEpisode((int) $_GET['id'], (int) $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
+                $message = 'Episode ' . $_POST['nvchapter'] . ' modifié et publié';                 
+            }
+            elseif($_POST['dateChoice'] === 'oldDate'){
+                $this->episodeManager->postModifiedEpisodeSameDate((int) $_GET['id'], (int) $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
+                $message = 'Episode ' . $_POST['nvchapter'] . ' modifié et republié à la même date';                
+            }
+            elseif($_POST['dateChoice'] === 'newDate'){
+                $this->episodeManager->postModifiedEpisode((int) $_GET['id'], (int) $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
+                $message = 'Episode ' . $_POST['nvchapter'] . ' modifié et republié à la date de maintenant';                
+            }
+            $isError = false;
+        }              
+        elseif (isset($_POST['save']) && !empty($_POST['nvchapter']) && !empty($_POST['nvtitle'])) {
+                $this->episodeManager->saveModifiedEpisode((int) $_GET['id'], (int) $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
+                $message = 'Episode ' . $_POST['nvchapter'] . ' modifié et sauvegardé';
+                $isError = false; 
+        }
+        elseif (isset($_POST['delete']) && isset($_GET['id']) && $_GET['id'] > 0) {
+                $this->episodeDelete();
+                $message = 'Episode ' . $_POST['nvchapter'] . ' Supprimé';
+                $isError = false;
+        }
+        
+        if($isError === false){
+            header('Location: index.php?action=episodes&ms=' . $message . '');
+            exit();
+        }
+        
+        {
+            $sum = $this->commentManager->countReports();
+            $countcoms = $this->commentManager->countComs();
+            $episode = $this->episodeManager->findEpisode((int) $_GET['id']);
+            $comments = $this->commentManager->findReportedComments((int) $_GET['id']);
+            $error = 'Vous devez spécifier le titre et le numéro de l\'épisode';
+            $this->view->render('back/episodeBack', 'back/layout', compact('countcoms', 'sum', 'error', 'episode', 'comments'));
         }
     }
 
-    function modifyPostedEpisode(int $postId, int $nvchapter, string $nvtitle, string $nvcontent)//méthode pour modifier un épisode en le publiant
+    /*function modifyPostedEpisode(int $postId, int $nvchapter, string $nvtitle, string $nvcontent)//méthode pour modifier un épisode en le publiant
     {
 
         $postedModifiedEpisode = $this->episodeManager->postModifiedEpisode((int) $_GET['id'], (int) $nvchapter, $nvtitle, $nvcontent);
@@ -364,7 +348,7 @@ class BackController{
 
         $savedModifiedEpisode = $this->episodeManager->saveModifiedEpisode((int) $_GET['id'], (int) $nvchapter, $nvtitle, $nvcontent);
 
-    }
+    }*/
 
     function modifyEpisode():void//on affiche la page de modification d'un épisode dans le back avec ses commentaires
     {
@@ -389,7 +373,7 @@ class BackController{
         }
         else {         
             $error = 'Vous devez vous connecter';
-            $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
+            $this->view->render('front/connection', 'front/layout', compact('error'));
         }     
     }
 
@@ -417,7 +401,7 @@ class BackController{
             $this->view->render('back/commentsBack', 'back/layout', compact('nbByPage', 'currentpage', 'offset', 'totalpages', 'countcoms', 'allComs', 'sum'));                          
         }else{         
             $error = 'Vous devez vous connecter';
-            $this->view->render('front/connectionView', 'frontend/templateFront', compact('error'));
+            $this->view->render('front/connectionView', 'front/layout', compact('error'));
         }     
     }
 
@@ -441,7 +425,7 @@ class BackController{
         }
         else {         
             $error = 'Vous devez vous connecter';
-            $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
+            $this->view->render('front/connection', 'front/layout', compact('error'));
         }
     }
 
@@ -457,7 +441,7 @@ class BackController{
         }
         else {         
             $error = 'Vous devez vous connecter';
-            $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
+            $this->view->render('front/connection', 'front/layout', compact('error'));
         }
     }
 
@@ -473,7 +457,7 @@ class BackController{
         }
         else {         
             $error = 'Vous devez vous connecter';
-            $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
+            $this->view->render('front/connection', 'front/layout', compact('error'));
         }
     }
 
@@ -490,7 +474,7 @@ class BackController{
         }
         else {         
             $error = 'Vous devez vous connecter';
-            $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
+            $this->view->render('front/connection', 'front/layout', compact('error'));
         }
     }
 
@@ -506,7 +490,7 @@ class BackController{
         }
         else {
             $error = 'Vous devez vous connecter';
-            $this->view->render('front/connection', 'frontend/templateFront', compact('error'));
+            $this->view->render('front/connection', 'front/layout', compact('error'));
         }
     }
 }

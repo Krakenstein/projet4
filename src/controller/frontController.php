@@ -139,7 +139,7 @@ class FrontController{
     {
         if (isset($_GET['id']) && $_GET['id'] > 0) {
             if($_GET['rp'] < 24){
-                $numberComments = $this->commentManager->reports((int) $_GET['id']);
+                $this->commentManager->reports((int) $_GET['id']);
                 header('Location: index.php?action=episodePage&currentpage=' . ($_GET['currentpage']) . '#headCom');
             }
                 header('Location: index.php?action=episodePage&currentpage=' . ($_GET['currentpage']) . '#headCom');

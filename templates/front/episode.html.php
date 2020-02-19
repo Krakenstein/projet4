@@ -8,7 +8,7 @@
         <div class="backNext<?php if($totalpages < 2) echo 'Hidden'?>">
             <a href="index.php?action=episodePage&amp;currentpage=<?= $currentpage - 1?>&amp;#titre" class="<?php if($currentpage === 1) echo 'hidden'?>"><div class="left"></div>Episode précédent</a>
             <span class="currentPage"><?='Episode ' . $currentpage . '/' . $totalpages?></span>
-            <a href="index.php?action=episodePage&amp;currentpage=<?= $currentpage + 1?>&amp;#titre" class="<?php if($currentpage == $totalpages ) echo 'hidden' ?>">Episode suivant<div class="right"></div></a>
+            <a href="index.php?action=episodePage&amp;currentpage=<?= $currentpage + 1?>&amp;#titre" class="<?php if($currentpage === $totalpages ) echo 'hidden' ?>">Episode suivant<div class="right"></div></a>
         </div>
         <h2><?= $episode->title ?></h2>
         
@@ -17,7 +17,7 @@
         <div class="backNext<?php if($totalpages < 2) echo 'Hidden'?>">
             <a href="index.php?action=episodePage&amp;currentpage=<?= $currentpage - 1?>&amp;#titre" class="<?php if($currentpage === 1) echo 'hidden'?>"><div class="left"></div>Episode précédent</a>
             <span class="currentPage"><?='Episode ' . $currentpage . '/' . $totalpages?></span>
-            <a href="index.php?action=episodePage&amp;currentpage=<?= $currentpage + 1?>&amp;#titre" class="<?php if($currentpage == $totalpages ) echo 'hidden' ?>">Episode suivant<div class="right"></div></a>
+            <a href="index.php?action=episodePage&amp;currentpage=<?= $currentpage + 1?>&amp;#titre" class="<?php if($currentpage === $totalpages ) echo 'hidden' ?>">Episode suivant<div class="right"></div></a>
         </div>
     </section>
     <section class="comments">
