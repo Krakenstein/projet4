@@ -198,7 +198,7 @@ class BackController{
             if (isset($_POST['publish'])) {
                 if (!empty($_POST['chapterNumber']) && !empty($_POST['title'])) {
                     $message = 'Episode ' . $_POST['chapterNumber'] . ' créé et publié';
-                    $postedEpisode = $this->episodeManager->postEpisode($_POST['chapterNumber'], $_POST['title'], $_POST['content']);
+                    $postedEpisode = $this->episodeManager->postEpisode((int) $_POST['chapterNumber'], $_POST['title'], $_POST['content']);
                     header('Location: index.php?action=episodes&ms=' . $message . '');
                     exit(); 
                 }
@@ -212,7 +212,7 @@ class BackController{
             elseif (isset($_POST['save'])) {
                 if (!empty($_POST['chapterNumber']) && !empty($_POST['title'])) {
                     $message = 'Episode ' . $_POST['chapterNumber'] . ' créé et sauvegardé';
-                    $postedEpisode = $this->episodeManager->saveEpisode($_POST['chapterNumber'], $_POST['title'], $_POST['content']);
+                    $postedEpisode = $this->episodeManager->saveEpisode((int) $_POST['chapterNumber'], $_POST['title'], $_POST['content']);
                     header('Location: index.php?action=episodes&ms=' . $message . '');
                     exit(); 
                 }
@@ -248,18 +248,18 @@ class BackController{
                 if (!empty($_POST['nvchapter']) && !empty($_POST['nvtitle'])) {
                     if(($_GET['dt']) != null){
                         if($_POST['dateChoice'] === 'oldDate'){
-                            $this->modifyPostedEpisodeSameDate($_GET['id'], $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
+                            $this->modifyPostedEpisodeSameDate((int) $_GET['id'], (int) $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
                             $message = 'Episode ' . $_POST['nvchapter'] . ' modifié et republié à la même date';
                             header('Location: index.php?action=episodes&ms=' . $message . '');
                             exit(); 
                         }else{
-                            $this->modifyPostedEpisode($_GET['id'], $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
+                            $this->modifyPostedEpisode((int) $_GET['id'], (int) $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
                             $message = 'Episode ' . $_POST['nvchapter'] . ' modifié et republié à la date de maintenant';
                             header('Location: index.php?action=episodes&ms=' . $message . '');
                             exit(); 
                         }
                     }else{
-                        $this->modifyPostedEpisode($_GET['id'], $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
+                        $this->modifyPostedEpisode((int) $_GET['id'], (int) $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
                         $message = 'Episode ' . $_POST['nvchapter'] . ' modifié et publié';
                         header('Location: index.php?action=episodes&ms=' . $message . '');
                         exit(); 
@@ -275,7 +275,7 @@ class BackController{
                 
             }elseif (isset($_POST['save'])) {
                 if (!empty($_POST['nvchapter']) && !empty($_POST['nvtitle'])) {
-                    $this->modifySavedEpisode($_GET['id'], $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
+                    $this->modifySavedEpisode((int) $_GET['id'], (int) $_POST['nvchapter'], $_POST['nvtitle'], $_POST['nvcontent']);
                     $message = 'Episode ' . $_POST['nvchapter'] . ' modifié et sauvegardé';
                     header('Location: index.php?action=episodes&ms=' . $message . '');
                     exit(); 
@@ -305,31 +305,31 @@ class BackController{
         }
     }
 
-    function modifyPostedEpisode(string $postId, string $nvchapter, string $nvtitle, string $nvcontent)//méthode pour modifier un épisode en le publiant
+    function modifyPostedEpisode(int $postId, int $nvchapter, string $nvtitle, string $nvcontent)//méthode pour modifier un épisode en le publiant
     {
 
-        $postedModifiedEpisode = $this->episodeManager->postModifiedEpisode($_GET['id'], $nvchapter, $nvtitle, $nvcontent);
+        $postedModifiedEpisode = $this->episodeManager->postModifiedEpisode((int) $_GET['id'], (int) $nvchapter, $nvtitle, $nvcontent);
 
     }
 
-    function modifyPostedEpisodeSameDate(string $postId, string $nvchapter, string $nvtitle, string $nvcontent)//méthode pour modifier un épisode en le publiant
+    function modifyPostedEpisodeSameDate(int $postId, int $nvchapter, string $nvtitle, string $nvcontent)//méthode pour modifier un épisode en le publiant
     {
 
-        $postedModifiedEpisode = $this->episodeManager->postModifiedEpisodeSameDate($_GET['id'], $nvchapter, $nvtitle, $nvcontent, $_GET['dt']);
+        $postedModifiedEpisode = $this->episodeManager->postModifiedEpisodeSameDate((int) $_GET['id'], (int) $nvchapter, $nvtitle, $nvcontent, $_GET['dt']);
 
     }
 
-    function modifySavedEpisode(string $postId, string $nvchapter, string $nvtitle, string $nvcontent)//méthode pour modifier un épisode en l'archivant
+    function modifySavedEpisode(int $postId, int $nvchapter, string $nvtitle, string $nvcontent)//méthode pour modifier un épisode en l'archivant
     {
 
-        $savedModifiedEpisode = $this->episodeManager->saveModifiedEpisode($_GET['id'], $nvchapter, $nvtitle, $nvcontent);
+        $savedModifiedEpisode = $this->episodeManager->saveModifiedEpisode((int) $_GET['id'], (int) $nvchapter, $nvtitle, $nvcontent);
 
     }
 
     function modifyEpisode():void//on affiche la page de modification d'un épisode dans le back avec ses commentaires
     {
-        $episode = $this->episodeManager->findEpisode($_GET['id']);
-        $comments = $this->commentManager->findReportedComments($_GET['id']);
+        $episode = $this->episodeManager->findEpisode((int) $_GET['id']);
+        $comments = $this->commentManager->findReportedComments((int) $_GET['id']);
         $sum = $this->commentManager->countReports();
         $countcoms = $this->commentManager->countComs();
         
@@ -383,14 +383,14 @@ class BackController{
 
     function episodeDelete():void//méthode pour supprimer un épisode
     {
-        $this->episodeManager->deleteEpisode($_GET['id']);
+        $this->episodeManager->deleteEpisode((int) $_GET['id']);
     }
 
     function commentDelete():void//méthode pour supprimer un commentaire depuis la page d'un épisode
     {
-        $this->commentManager->deleteComment($_GET['id']);
-        $episode = $this->episodeManager->findEpisode($_GET['postid']);
-        $comments = $this->commentManager->findReportedComments($_GET['postid']);
+        $this->commentManager->deleteComment((int) $_GET['id']);
+        $episode = $this->episodeManager->findEpisode((int) $_GET['postid']);
+        $comments = $this->commentManager->findReportedComments((int) $_GET['postid']);
         $sum = $this->commentManager->countReports();
 
         session_start();
@@ -411,7 +411,7 @@ class BackController{
 
         if (isset($_SESSION['admConnected'])) { 
             
-            $this->commentManager->deleteComment($_GET['id']);
+            $this->commentManager->deleteComment((int) $_GET['id']);
             header('Location: index.php?action=commentsPage');
             exit();
         }
@@ -427,7 +427,7 @@ class BackController{
 
         if (isset($_SESSION['admConnected'])) { 
             
-            $this->commentManager->deleteReports($_GET['id']);
+            $this->commentManager->deleteReports((int) $_GET['id']);
             header('Location: index.php?action=commentsPage');
             exit();
         }
