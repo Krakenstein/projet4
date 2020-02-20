@@ -34,7 +34,7 @@
         </div>
         <?php endforeach; ?>
 
-        <form id="makeComment" action="index.php?action=addComment&amp;currentpage=<?= $currentpage ?>&amp;nb=<?= $pagina[0]->chapterNumber ?>&amp;id=<?= $pagina[0]->post_id ?>" method="post">
+        <form id="makeComment" action="index.php?action=newCom&amp;currentpage=<?= $currentpage ?>&amp;nb=<?= $pagina[0]->chapterNumber ?>&amp;id=<?= $pagina[0]->post_id ?>" method="post">
             <h2>Laissez moi un commentaire</h2>
             <input title="author" class="champ" type="text" name="author" id="author" placeholder=" Votre pseudo" size="15"/>
             <label id="labelAuthor" for="author"><?php if(isset($error)) echo $error ?></label>

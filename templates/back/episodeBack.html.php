@@ -1,7 +1,7 @@
 <?php $title = 'Gestion d\'épisode'; ?>
 
         <section id="content">
-            <form id="modification" action="index.php?action=modifiedEpisode&amp;id=<?= $episode->post_id ?>&amp;dt=<?= $episode->publiDate ?>" method="post">
+            <form id="modification" action="index.php?action=episodeModications&amp;id=<?= $episode->post_id ?>&amp;dt=<?= $episode->publiDate ?>" method="post">
                 <h3>Gestion de l'épisode</h3>
                 <input title="chapterNumber" class="champ" type="text" name="nvchapter" id="number" value="<?php if (isset($_SESSION['chapterNumber'])) echo $_SESSION['chapterNumber']; else echo $episode->chapterNumber; ?>" size="5" />
                 <label id="labelChapterNumber" for="chapterNumber"></label>
@@ -29,7 +29,7 @@
                 <span><?= $com->commentDate ?></span><span>par <b><?= htmlspecialchars($com->author) ?></b></span>
                 <p class="content"><?= htmlspecialchars($com->comment) ?></p>
                 <h3>Nombre de signalements: <?= $com->report ?></h3>
-                <a href="index.php?action=deleteComEpisode&amp;id=<?= $com->id ?>&amp;postid=<?= $com->post_id ?>&amp;chpt=<?= $com->episodeNumber ?>" class="boutonRouge">supprimer</a>
+                <a href="index.php?action=commentDelete&amp;id=<?= $com->id ?>&amp;postid=<?= $com->post_id ?>&amp;chpt=<?= $com->episodeNumber ?>" class="boutonRouge">supprimer</a>
             </div>
         <?php endforeach; ?>
         </section>

@@ -23,8 +23,8 @@
     <div id="main">
         <nav>
             <a class="btn<?php if(!empty($_GET['action']) && $_GET['action'] === 'episodes') echo (' active') ?>" href="index.php?action=episodes">Episodes</a>
-            <a class="btnCom<?php if(($countcoms[0])  < 1) echo 'Blue'?><?php if(($sum[0]) > 0) echo 'Red'?><?php if(!empty($_GET['action']) && $_GET['action'] === 'commentsPage') echo ('Active') ?>" href="index.php?action=commentsPage">Commentaires</a>
-            <a class="btn<?php if(!empty($_GET['action']) && $_GET['action'] === 'profil') echo (' active') ?>" href="index.php?action=profil">Profil</a>
+            <a class="btnCom<?php if(($countcoms[0])  < 1) echo 'Blue'?><?php if(($sum[0]) > 0) echo 'Red'?><?php if(!empty($_GET['action']) && $_GET['action'] === 'comPage') echo ('Active') ?>" href="index.php?action=comPage">Commentaires</a>
+            <a class="btn<?php if(!empty($_GET['action']) && $_GET['action'] === 'profil' || $_GET['action'] ==='reset') echo (' active') ?>" href="index.php?action=profil">Profil</a>
             <a class="btn<?php if(!empty($_GET['action']) && $_GET['action'] === 'disconnection') echo (' active') ?>" href="index.php?action=disconnection">Déconnection</a>
         </nav>
         <?= $content ?>

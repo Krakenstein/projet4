@@ -1,34 +1,62 @@
 <?php
-require('vendor/autoload.php');// test nouvel ordi
+require('vendor/autoload.php');
 
 use Projet4\Controller\frontController;
 use Projet4\Controller\backController;
 use Projet4\Tools\Request;
 
-$actions = 
+$actionFront = 
 [
-    0 =>'listEpisodes',
-    1 =>'connection',
-    2 =>'episodePage',
-    3 =>'addComment',
-    4 =>'report',
-    5 =>'admConnect',
-    6 =>'episodes',
-    7 =>'createEpisode',
-    8 =>'resetAdmin',
-    9 =>'profil',
-    10 =>'deleteComEpisode',
-    11 =>'deleteCom',
-    12 =>'deleteRep',
-    13 =>'commentsPage',
-    14 =>'modifyEpisode',
-    15 =>'addEpisode',
-    16 =>'modifiedEpisode',
-    17 =>'disconnection'
+    'listEpisodes',
+    'connectionPage',
+    'episodePage',
+    'newCom',
+    'report',
+    'previous',
+    'next'
 ];
 
+$actionBack =
+[
+    'admConnect',
+    'episodes',
+    'createEpisode',
+    'reset',
+    'profil',
+    'commentDelete',
+    'comDelete',
+    'deleteR',
+    'comPage',
+    'modifyEpisode',
+    'addEpisode',
+    'episodeModications',
+    'disconnection'
+];
 
-if (isset($_GET['action'])) {
+if (isset($_GET['action'])){
+    $key = array_search($_GET['action'], $actionFront);
+    $methode = $actionFront[$key]; 
+    if ($methode === $_GET['action']){
+        $controller = new FrontController();
+        $controller->$methode();
+        exit();
+    }
+    $key = array_search($_GET['action'], $actionBack);
+    $methode = $actionBack[$key]; 
+    if ($methode === $_GET['action']){
+        $controller = new BackController();
+        $controller->$methode();
+        exit();
+    }
+}
+{
+    $controller = new FrontController();
+    $controller->homePage();
+}
+
+
+
+/*if (isset($_GET['action'])) {
     $key = array_search($_GET['action'], $actions); 
     if ($key < 5){
                 $controller = new FrontController();
@@ -99,6 +127,6 @@ if (isset($_GET['action'])) {
     $actions = 'homePage';
     //$controller->homePage();
     $controller->$actions();
-    }
+    }*/
 
     

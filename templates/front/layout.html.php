@@ -22,6 +22,6 @@
     </body>
 
     <footer id="foot">
-            <a class="btn<?php if(!empty($_GET['action']) && $_GET['action'] === 'connection') echo (' active') ?>" href="index.php?action=connection">Administrateur</a>
+            <a class="btn<?php if(!empty($_GET['action']) && $_GET['action'] === 'connectionPage') echo (' active') ?>" href="index.php?action=connectionPage">Administrateur</a>
     </footer>
 </html>

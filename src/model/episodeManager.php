@@ -32,7 +32,7 @@ class EpisodeManager
         return $req->fetch();
     }
 
-    public function PagineEpisodes(int $offset, int $nbByPage):array//requête pour récupérer les épisodes publiés en fonction de la pagination
+    public function pagineEpisodes(int $offset, int $nbByPage):array//requête pour récupérer les épisodes publiés en fonction de la pagination
     {
         $this->bdd->setAttribute(PDO::ATTR_EMULATE_PREPARES, FALSE);
         $req = $this->bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'Le %d/%m/%Y\') AS date FROM posts WHERE stat = 1 ORDER BY chapterNumber, publiDate  LIMIT :offset, :limitation  ');
@@ -71,29 +71,35 @@ class EpisodeManager
         return $req->fetch(PDO::FETCH_OBJ);
     }
 
-    public function findPostedEpisode($postId):object//requête pour récupérer un épisode publié en fonction de son id
+    public function findPostedEpisodeWithComs(int $postId):array//requête pour récupérer un épisode publié en fonction de son id
     {
-        $req = $this->bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'Le %d/%m/%Y à %Hh %imin %ss\') AS date, publiDate FROM posts WHERE post_id = :idPost AND stat = 1');
+        $req = $this->bdd->prepare('SELECT id, author, comment, commentDate, report, posts.post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'Le %d/%m/%Y à %Hh %imin %ss\') AS date, publiDate 
+        FROM posts
+        LEFT JOIN comments ON posts.post_id = comments.post_id 
+        
+        WHERE posts.post_id = :idPost AND stat = 1
+        ORDER BY comments.commentDate DESC');
+        
         $req->execute(array(
-            'idPost' => $postId));
-        return $req->fetch(PDO::FETCH_OBJ);
+            'idPost' => (int) $postId));
+        return $req->fetchALL(PDO::FETCH_OBJ);
     }
 
-    /*public function previousEpisode($chapterNumber, $publidate)
+    public function previousEpisode($chapterNumber)
     {
-        $req = $this->bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'Le %d/%m/%Y\') AS date, publiDate FROM posts WHERE chapterNumber < ? AND publiDate < ? AND stat = 1 ORDER BY chapterNumber, publiDate DESC LIMIT 1;');
-        $req->execute(array($chapterNumber));
-        $previousEp = $req->fetch(PDO::FETCH_OBJ);
-        return $previousEp;
+        $req = $this->bdd->prepare('SELECT post_id FROM posts WHERE chapterNumber < :numChap AND stat = 1 ORDER BY chapterNumber DESC, publiDate DESC LIMIT 1;');
+        $req->execute(array(
+            'numChap' => (int) $chapterNumber));
+        return $req->fetch();
     }
 
-    public function nextEpisode($chapterNumber, $publiDate)
+    public function nextEpisode($chapterNumber)
     {
-        $req = $this->bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'Le %d/%m/%Y\') AS date, publiDate FROM posts WHERE chapterNumber > ? AND publiDate < ? AND stat = 1 ORDER BY chapterNumber, publiDate LIMIT 1;');
-        $req->execute(array($chapterNumber));
-        $nextEp = $req->fetch(PDO::FETCH_OBJ);
-        return $nextEp;
-    }*/
+        $req = $this->bdd->prepare('SELECT post_id FROM posts WHERE chapterNumber > :numChap AND stat = 1 ORDER BY chapterNumber LIMIT 1;');
+        $req->execute(array(
+            'numChap' => (int) $chapterNumber));
+        return $req->fetch();
+    }
 
     public function postEpisode(int $chapterNumber, string $title, string $content):bool//requête pour rajouter un épisode publié dans la bdd
     {

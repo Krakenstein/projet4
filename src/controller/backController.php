@@ -436,7 +436,7 @@ class BackController{
         if (isset($_SESSION['admConnected'])) { 
             
             $this->commentManager->deleteComment((int) $_GET['id']);
-            header('Location: index.php?action=commentsPage');
+            header('Location: index.php?action=comPage');
             exit();
         }
         else {         
@@ -452,7 +452,7 @@ class BackController{
         if (isset($_SESSION['admConnected'])) { 
             
             $this->commentManager->deleteReports((int) $_GET['id']);
-            header('Location: index.php?action=commentsPage');
+            header('Location: index.php?action=comPage');
             exit();
         }
         else {         

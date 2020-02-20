@@ -39,11 +39,51 @@ class FrontController{
             }
 
         $offset = ($currentpage - 1) * $nbByPage;
-        $pagina = $this->episodeManager->PagineEpisodes($offset, $nbByPage);
+        $pagina = $this->episodeManager->pagineEpisodes($offset, $nbByPage);
         $this->view->render('front/episodes', 'front/layout', compact('episodesTot', 'pagina','nbByPage', 'offset', 'currentpage', 'totalpages'));   
     }        
     
-    public function episodePage():void //méthode pour récupérer un épisode publié 
+    public function episodePage():void //méthode pour récupérer un épisode publié
+    {
+        $request = new Request();
+        
+        $episode = $this->episodeManager->findPostedEpisodeWithComs((int) $_GET['id']);
+        $episodesTot = $this->episodeManager->countEpisodesPub();
+
+        $currentpage = $_GET['currentpage'];
+        $totalpages = $episodesTot[0];
+
+        if (null != ($request->get('er'))){
+            $error = $request->get('er');
+        }else $error = null;
+
+        if ($episode === false) {
+            echo ('coco');
+        }
+        else {
+            if (isset($_GET['id']) && $_GET['id'] > 0) {
+                $this->view->render('front/episode', 'front/layout', compact('episodesTot', 'currentpage', 'totalpages', 'episode', 'error'));
+            }
+            else {
+                echo ('bof');
+            }
+        }
+    } 
+
+    public function previous():void //méthode pour récupérer un épisode publié
+    {
+        $previous = $this->episodeManager->previousEpisode($_GET['chapter']);
+        header('Location: index.php?action=episodePage&currentpage=' . (int) $_GET['currentpage'] . '&id=' . (int) $previous[0] . '#title');
+        exit();
+    }
+
+    public function next():void //méthode pour récupérer un épisode publié
+    {
+        $previous = $this->episodeManager->nextEpisode($_GET['chapter']);
+        header('Location: index.php?action=episodePage&currentpage=' . (int) $_GET['currentpage'] . '&id=' . (int) $previous[0] . '#title');
+        exit();
+    }
+    /*public function episodePage():void //méthode pour récupérer un épisode publié 
     {
         //$episodes = $this->episodeManager->findEpisodes();
         $episodesTot = $this->episodeManager->countEpisodesPub();
@@ -67,12 +107,12 @@ class FrontController{
             }
 
         $offset = ($currentpage - 1) * $nbByPage;
-        $pagina = $this->episodeManager->PagineEpisodes($offset, $nbByPage);
+        $pagina = $this->episodeManager->pagineEpisodes($offset, $nbByPage);
         $comments = $this->commentManager->findComments($pagina[0]->post_id);
         $this->view->render('front/episodePage', 'front/layout', compact('comments', 'error', 'episodesTot', 'pagina','nbByPage', 'offset', 'currentpage', 'totalpages'));           
     }    
 
-    /*public function episode():void //méthode pour récupérer un épisode publié en fonction de son id
+    public function episode():void //méthode pour récupérer un épisode publié en fonction de son id
     {
         $episodeManager = new episodeManager();
         $commentManager = new commentManager();
@@ -113,21 +153,21 @@ class FrontController{
     {
         $request = new Request();
 
-        $episode = $this->episodeManager->findPostedEpisode((int) $_GET['id']);
-        $comments = $this->commentManager->findComments((int) $_GET['id']);
+        $episode = $this->episodeManager->findPostedEpisodeWithComs((int) $_GET['id']);
+        
         
         if (isset($_GET['id']) && $_GET['id'] > 0) {
             if (!empty($_POST['author']) && !empty($_POST['comment'])) {
-                $affectedLines = $this->commentManager->postComment((int) $episode->post_id, (int) $episode->chapterNumber, $_POST['author'], $_POST['comment']);
+                $affectedLines = $this->commentManager->postComment((int) $episode[0]->post_id, (int) $episode[0]->chapterNumber, $_POST['author'], $_POST['comment']);
                 if ($affectedLines === false) {
                     throw new Exception('Impossible d\'ajouter le commentaire !');
                 }else {
-                    header('Location: index.php?action=episodePage&currentpage=' . $_GET['currentpage'] . '#headCom');
+                    header('Location: index.php?action=episodePage&currentpage=' . (int) $_GET['currentpage'] . '&id=' . (int) $_GET['id'] . '#headCom');
                     exit();
                 }       
             }else {
                 $error = 'Veuillez remplir tous les champs';
-                header('Location: index.php?action=episodePage&currentpage=' . $_GET['currentpage'] . '&er=' . $error . '#makeComment');
+                header('Location: index.php?action=episodePage&currentpage=' . (int) $_GET['currentpage'] . '&id=' . (int) $_GET['id'] . '&er=' . $error . '#makeComment');
                 exit();
             }
         }else {
@@ -139,10 +179,10 @@ class FrontController{
     {
         if (isset($_GET['id']) && $_GET['id'] > 0) {
             if($_GET['rp'] < 24){
-                $this->commentManager->reports((int) $_GET['id']);
-                header('Location: index.php?action=episodePage&currentpage=' . ($_GET['currentpage']) . '#headCom');
+                $this->commentManager->reports((int) $_GET['comId']);
+                header('Location: index.php?action=episodePage&currentpage=' .(int) $_GET['currentpage'] . '&id=' .(int) ($_GET['id']) . '#headCom');
             }
-                header('Location: index.php?action=episodePage&currentpage=' . ($_GET['currentpage']) . '#headCom');
+                header('Location: index.php?action=episodePage&currentpage=' .(int) $_GET['currentpage'] . '&id=' .(int) ($_GET['id']) . '#headCom');
         }
         else {
             throw new Exception('Erreur : aucun identifiant de commentaire envoyé');
@@ -159,7 +199,7 @@ class FrontController{
         $totalpages = $episodesTot;
 
         $lastEpisode = $this->episodeManager->findLastEpisode();
-        $pagina = $this->episodeManager->PagineEpisodes($offset, $nbByPage);
+        $pagina = $this->episodeManager->pagineEpisodes($offset, $nbByPage);
 
         $this->view->render('front/homePage', 'front/layout', compact('lastEpisode', 'pagina', 'totalpages', 'offset', 'nbByPage', 'episodesTot'));
         
