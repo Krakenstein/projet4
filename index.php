@@ -5,6 +5,8 @@ use Projet4\Controller\frontController;
 use Projet4\Controller\backController;
 use Projet4\Tools\Request;
 
+$request = new Request();
+
 $actionFront = 
 [
     'listEpisodes',
@@ -12,8 +14,7 @@ $actionFront =
     'episodePage',
     'newCom',
     'report',
-    'previous',
-    'next'
+    'previousNext',
 ];
 
 $actionBack =
@@ -33,17 +34,17 @@ $actionBack =
     'disconnection'
 ];
 
-if (isset($_GET['action'])){
-    $key = array_search($_GET['action'], $actionFront);
+if (($request->get('action')) !== null){
+    $key = array_search($request->get('action'), $actionFront);
     $methode = $actionFront[$key]; 
-    if ($methode === $_GET['action']){
+    if ($methode === $request->get('action')){
         $controller = new FrontController();
         $controller->$methode();
         exit();
     }
-    $key = array_search($_GET['action'], $actionBack);
+    $key = array_search($request->get('action'), $actionBack);
     $methode = $actionBack[$key]; 
-    if ($methode === $_GET['action']){
+    if ($methode === $request->get('action')){
         $controller = new BackController();
         $controller->$methode();
         exit();
@@ -56,8 +57,8 @@ if (isset($_GET['action'])){
 
 
 
-/*if (isset($_GET['action'])) {
-    $key = array_search($_GET['action'], $actions); 
+/*if (isset($request->get('action'))) {
+    $key = array_search($request->get('action'), $actions); 
     if ($key < 5){
                 $controller = new FrontController();
                 switch ($key) {

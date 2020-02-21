@@ -10,11 +10,11 @@
     <?php else: ?>
         <h1 id="titre">Billet simple pour l'Alaska</h1>
         <h2>Liste des épisodes</h2>
-            <div class="backNext<?php if($totalpages < 2) echo 'Hidden'?>">
+        <div class="backNext<?php if($totalpages < 2) echo 'Hidden'?>">
             <a href="index.php?action=listEpisodes&amp;currentpage=<?= $currentpage - 1?>&amp;#titre" class="<?php if($currentpage === 1) echo 'hidden'?>"><div class="left"></div>Page précédente</a>
             <span class="currentPage"><?='Page ' . $currentpage . '/' . $totalpages?></span>
             <a href="index.php?action=listEpisodes&amp;currentpage=<?= $currentpage + 1?>&amp;#titre" class="<?php if($currentpage === $totalpages ) echo 'hidden' ?>">Page suivante<div class="right"></div></a>
-            </div>
+        </div>
    
         <?php foreach($pagina as $episode): ?>
         <a href="index.php?action=episodePage&amp;id=<?= $episode->post_id ?>&amp;currentpage=<?= (array_search($episode->post_id, array_column($pagina, 'post_id')) + ($nbByPage * ($currentpage - 1))) + 1 ?>" class="episodeListe">

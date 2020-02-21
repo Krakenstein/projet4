@@ -85,21 +85,31 @@ class EpisodeManager
         return $req->fetchALL(PDO::FETCH_OBJ);
     }
 
-    public function previousEpisode($chapterNumber)
+    public function previousNextEpisode($offset)
     {
-        $req = $this->bdd->prepare('SELECT post_id FROM posts WHERE chapterNumber < :numChap AND stat = 1 ORDER BY chapterNumber DESC, publiDate DESC LIMIT 1;');
-        $req->execute(array(
-            'numChap' => (int) $chapterNumber));
+        $this->bdd->setAttribute(PDO::ATTR_EMULATE_PREPARES, FALSE);
+        $req = $this->bdd->prepare('SELECT post_id FROM posts WHERE stat = 1 ORDER BY chapterNumber , publiDate  LIMIT :offset, 1  ');
+        $req->execute(['offset' => (int) $offset ]);
         return $req->fetch();
     }
 
-    public function nextEpisode($chapterNumber)
+    /*public function previousEpisode($chapterNumber, $publiDate)
     {
-        $req = $this->bdd->prepare('SELECT post_id FROM posts WHERE chapterNumber > :numChap AND stat = 1 ORDER BY chapterNumber LIMIT 1;');
+        $req = $this->bdd->prepare('SELECT post_id FROM posts WHERE (chapterNumber <= :numChap AND publiDate != :datePubli) AND stat = 1 ORDER BY chapterNumber DESC, publiDate DESC LIMIT 1;');
         $req->execute(array(
-            'numChap' => (int) $chapterNumber));
+            'numChap' => (int) $chapterNumber,
+            'datePubli' => $publiDate));
         return $req->fetch();
     }
+
+    public function nextEpisode($chapterNumber, $publiDate)
+    {
+        $req = $this->bdd->prepare('SELECT post_id FROM posts WHERE (chapterNumber >= :numChap AND publiDate != :datePubli) AND stat = 1 ORDER BY chapterNumber, publiDate LIMIT 1;');
+        $req->execute(array(
+            'numChap' => (int) $chapterNumber,
+            'datePubli' => $publiDate));
+        return $req->fetch();
+    }*/
 
     public function postEpisode(int $chapterNumber, string $title, string $content):bool//requête pour rajouter un épisode publié dans la bdd
     {
