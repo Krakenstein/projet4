@@ -28,31 +28,6 @@ class BackController{
         
     }
 
-    /*function admConnect():void//méthode pour se connecter au back
-    {  
-        session_start();
-
-        if ((isset($this->request->post('nom')) && !empty($this->request->post('nom'))) && (isset($this->request->post('password')) && !empty($this->request->post('password')))) {
-            $infos = $this->usersManager->testInfos($this->request->post('nom'));
-            if(!empty($infos)){
-                if ((password_verify(($this->request->post('password')), $infos[2]) === true)){
-                    $_SESSION['admConnected'] = true;
-                    header('Location: index.php?action=episodes');
-                    exit();                
-                }else{
-                    $error = 'Pseudo ou mot de passe incorrect';
-                    $this->view->render('front/connection', 'front/layout', compact('error'));
-                } 
-            }else{
-                $error = 'Pseudo ou mot de passe incorrect';
-                $this->view->render('front/connection', 'front/layout', compact('error'));
-            }           
-        }else{
-            $error = 'Pseudo ou mot de passe oublié';
-            $this->view->render('front/connection', 'front/layout', compact('error'));
-        }                
-    }*/
-
     function admConnect():void//méthode pour se connecter au back
     {  
         session_start();
@@ -98,7 +73,7 @@ class BackController{
         }
 
         $offset = ($currentpage - 1) * $nbByPage;
-        $tablesJoin = $this->episodeManager->joinTables((int) $offset, (int) $nbByPage);
+        $tablesJoin = $this->episodeManager->listBackEpisodes((int) $offset, (int) $nbByPage);
         $this->view->render('back/homePageBack', 'back/layout', compact('episodesPubTot', 'countcoms', 'sum', 'episodesTot', 'tablesJoin','nbByPage', 'offset', 'currentpage', 'totalpages'));                
     }
 
@@ -106,7 +81,6 @@ class BackController{
     {
         $sum = $this->commentManager->countReports();
         $countcoms = $this->commentManager->countComs();
-        //$infos = $this->usersManager->testInfos($this->request->post('pseudo'));
         $message = null;
         $isError = true;
         session_start();
@@ -200,78 +174,6 @@ class BackController{
         }    
     }
 
-    /*function episodeModications():void//méthode pour modifier un épisode et le sauvegarder ou le republier à son ancienne date ou maintenant
-    {
-        session_start();
-        if(isset($this->request->post) && !empty($this->request->post))
-        {
-            $_SESSION('chapterNumber') = $this->request->post('nvchapter');
-            $_SESSION('title') = $this->request->post('nvtitle');
-            $_SESSION('content') = $this->request->post('nvcontent');
-        };
-                
-        if (!isset($_SESSION['admConnected'])){
-            $error = 'Vous devez vous connecter';
-            $this->view->render('front/connection', 'front/layout', compact('error'));
-            exit();
-        }        
-        if (isset($this->request->post('publish'))) {
-            if (!empty($this->request->post('nvchapter')) && !empty($this->request->post('nvtitle'))) {
-                if(($this->request->get('dt')) != null){
-                    if($this->request->post('dateChoice') === 'oldDate'){
-                        $this->modifyPostedEpisodeSameDate((int) $this->request->get('id'), (int) $this->request->post('nvchapter'), $this->request->post('nvtitle'), $this->request->post('nvcontent'));
-                        $message = 'Episode ' . $this->request->post('nvchapter') . ' modifié et republié à la même date';
-                        header('Location: index.php?action=episodes&ms=' . $message . '');
-                        exit(); 
-                    }else{
-                        $this->modifyPostedEpisode((int) $this->request->get('id'), (int) $this->request->post('nvchapter'), $this->request->post('nvtitle'), $this->request->post('nvcontent'));
-                        $message = 'Episode ' . $this->request->post('nvchapter') . ' modifié et republié à la date de maintenant';
-                        header('Location: index.php?action=episodes&ms=' . $message . '');
-                        exit(); 
-                    }
-                }else{
-                    $this->modifyPostedEpisode((int) $this->request->get('id'), (int) $this->request->post('nvchapter'), $this->request->post('nvtitle'), $this->request->post('nvcontent'));
-                    $message = 'Episode ' . $this->request->post('nvchapter') . ' modifié et publié';
-                    header('Location: index.php?action=episodes&ms=' . $message . '');
-                    exit(); 
-                }    
-            }else {
-                    $sum = $this->commentManager->countReports();
-                    $countcoms = $this->commentManager->countComs();
-                    $episode = $this->episodeManager->findEpisode($this->request->get('id'));
-                    $comments = $this->commentManager->findReportedComments($this->request->get('id'));
-                    $error = 'Vous devez spécifier le titre et le numéro de l\'épisode';
-                    $this->view->render('back/episodeBack', 'back/layout', compact('countcoms', 'sum', 'error', 'episode', 'comments'));
-                }
-            
-        }elseif (isset($this->request->post('save'))) {
-            if (!empty($this->request->post('nvchapter')) && !empty($this->request->post('nvtitle'))) {
-                $this->modifySavedEpisode((int) $this->request->get('id'), (int) $this->request->post('nvchapter'), $this->request->post('nvtitle'), $this->request->post('nvcontent'));
-                $message = 'Episode ' . $this->request->post('nvchapter') . ' modifié et sauvegardé';
-                header('Location: index.php?action=episodes&ms=' . $message . '');
-                exit(); 
-            }else {
-                $sum = $this->commentManager->countReports();
-                $countcoms = $this->commentManager->countComs();
-                $episode = $this->episodeManager->findEpisode($this->request->get('id'));
-                $comments = $this->commentManager->findReportedComments($this->request->get('id'));
-                $error = 'Vous devez spécifier le titre et le numéro de l\'épisode';
-                $this->view->render('back/episodeBack', 'back/layout', compact('countcoms', 'sum', 'error', 'episode', 'comments'));
-            }
-        }elseif (isset($this->request->post('delete'))) {
-            if (isset($this->request->get('id')) && $this->request->get('id') > 0) {
-                $this->episodeDelete();
-                $message = 'Episode ' . $this->request->post('nvchapter') . ' Supprimé';
-                header('Location: index.php?action=episodes&ms=' . $message . '');
-                exit(); 
-            }else {
-                throw new Exception(' aucun identifiant envoyé !');
-            }
-        }else {
-            throw new Exception('Erreur : aucun identifiant envoyé');
-        }
-    }*/
-
     function episodeModications():void//méthode pour modifier un épisode et le sauvegarder ou le republier à son ancienne date ou maintenant
     {
         session_start();
@@ -283,7 +185,7 @@ class BackController{
             $_SESSION['nvchapter'] = $this->request->post('nvchapter');
             $_SESSION['nvtitle'] = $this->request->post('nvtitle');
             $_SESSION['content'] = $this->request->post('nvcontent');
-        };
+        }
                 
         if (!isset($_SESSION['admConnected'])){
             $error = 'Vous devez vous connecter';
@@ -331,27 +233,6 @@ class BackController{
         }
     }
 
-    /*function modifyPostedEpisode(int $postId, int $nvchapter, string $nvtitle, string $nvcontent)//méthode pour modifier un épisode en le publiant
-    {
-
-        $postedModifiedEpisode = $this->episodeManager->postModifiedEpisode((int) $this->request->get('id'), (int) $nvchapter, $nvtitle, $nvcontent);
-
-    }
-
-    function modifyPostedEpisodeSameDate(int $postId, int $nvchapter, string $nvtitle, string $nvcontent)//méthode pour modifier un épisode en le publiant
-    {
-
-        $postedModifiedEpisode = $this->episodeManager->postModifiedEpisodeSameDate((int) $this->request->get('id'), (int) $nvchapter, $nvtitle, $nvcontent, $this->request->get('dt'));
-
-    }
-
-    function modifySavedEpisode(int $postId, int $nvchapter, string $nvtitle, string $nvcontent)//méthode pour modifier un épisode en l'archivant
-    {
-
-        $savedModifiedEpisode = $this->episodeManager->saveModifiedEpisode((int) $this->request->get('id'), (int) $nvchapter, $nvtitle, $nvcontent);
-
-    }*/
-
     function modifyEpisode():void//on affiche la page de modification d'un épisode dans le back avec ses commentaires
     {
         $episode = $this->episodeManager->findEpisode((int) $this->request->get('id'));
@@ -368,14 +249,10 @@ class BackController{
             $error = 'Vous devez vous connecter';
             $this->view->render('front/connection', 'front/layout', compact('error'));
             exit();
-        }  
-        if($episode === false){
-            echo 'coco';
-        }else{
-            if (($this->request->get('id')) !== null && $this->request->get('id') > 0) {
-            $this->view->render('back/episodeBack', 'back/layout', compact('episode', 'comments', 'sum', 'countcoms'));
-            } 
-        }            
+        }        
+        if (($this->request->get('id')) !== null && $this->request->get('id') > 0) {
+        $this->view->render('back/episodeBack', 'back/layout', compact('episode', 'comments', 'sum', 'countcoms'));
+        }              
     }
 
     function comPage():void//on affiche la page de gestion des commentaires
@@ -452,7 +329,7 @@ class BackController{
         exit();
     }
 
-    function profil():void//méthode pour aller à la page profil
+    function profil():void//méthode pour afficher la page profil
     {
         session_start();
         

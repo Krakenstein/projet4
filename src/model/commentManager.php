@@ -26,14 +26,6 @@ class CommentManager
                         'offset' => (int) $offset ]);
         return $req->fetchALL(PDO::FETCH_OBJ);
     }
-    
-    public function findComments(int $postId):array//requête pour récupérer les commentaires associés à un épisode en fonction de son id
-    {
-        $req = $this->bdd->prepare('SELECT id, post_id, episodeNumber, author, comment, DATE_FORMAT(commentDate, \'Le %d/%m/%Y à %Hh %imin %ss\') AS commentDate, report FROM comments WHERE post_id = :idPost ORDER BY commentDate DESC');
-        $req->execute(array(
-            'idPost' => (int) $postId));
-        return $req->fetchALL(PDO::FETCH_OBJ);
-    }
 
     public function findReportedComments(int $postId):array//requête pour récupérer les commentaires par ordre décroissant de signalement associés à un épisode en fonction de id
     {
