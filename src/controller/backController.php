@@ -7,7 +7,7 @@ use Projet4\Model\CommentManager;
 use Projet4\Model\UsersManager;
 use Projet4\View\View;
 use Projet4\Tools\Request;
-
+use Projet4\Tools\Session;
 
 class BackController{
 
@@ -16,6 +16,7 @@ class BackController{
     private $usersManager;
     private $view;
     private $request;
+    private $session;
     
    
     public function __construct()
@@ -25,13 +26,12 @@ class BackController{
         $this->usersManager = new UsersManager();
         $this->view = new View();
         $this->request = new Request();
+        $this->session = new Session();
         
     }
 
     function admConnect():void//méthode pour se connecter au back
-    {  
-        session_start();
-
+    {       
         $error = 'Pseudo ou mot de passe oublié';
         if ((($this->request->post('nom')) !== null && !empty($this->request->post('nom'))) && (($this->request->post('password')) !== null && !empty($this->request->post('password')))) {
             $infos = $this->usersManager->testInfos($this->request->post('nom'));
@@ -55,15 +55,9 @@ class BackController{
         $episodesPubTot = $this->episodeManager->countEpisodesPub();
         $nbByPage = 5;
         $totalpages = (int) ceil($episodesTot[0]/$nbByPage);
-
-        session_start();
-
-        if (!isset($_SESSION['admConnected'])){
-            $error = 'Vous devez vous connecter';
-            $this->view->render('front/connection', 'front/layout', compact('error'));
-            exit();
-        }
-
+ 
+        $this->session->sessionVerify();
+        
         $currentpage = 1;
         if (($this->request->get('currentpage')) !== null && ($this->request->get('currentpage')) !== '0' &&is_numeric($this->request->get('currentpage'))) {
             $currentpage = (int) $this->request->get('currentpage');
@@ -83,13 +77,9 @@ class BackController{
         $countcoms = $this->commentManager->countComs();
         $message = null;
         $isError = true;
-        session_start();
         
-        if (!isset($_SESSION['admConnected'])){
-            $error = 'Vous devez vous connecter';
-            $this->view->render('front/connection', 'front/layout', compact('error'));
-            exit();
-        }
+        $this->session->sessionVerify();
+
         $error = 'Au moins un des champs est vide';
         if ((($this->request->post('pseudo')) !== null && !empty($this->request->post('pseudo'))) && (($this->request->post('passOld')) !== null && !empty($this->request->post('passOld'))) && (($this->request->post('pass')) !== null && !empty($this->request->post('pass'))) && (($this->request->post('pass2')) !== null && !empty($this->request->post('pass2')))) {
             $infos = $this->usersManager->testInfos($this->request->post('pseudo'));
@@ -118,7 +108,7 @@ class BackController{
 
     function createEpisode():void//méthode pour afficher la page de création d'épisode
     {
-        session_start();
+        
         $_SESSION['chapterNumber'] = null;
         $_SESSION['title'] = null;
         $_SESSION['content'] = null;
@@ -128,31 +118,24 @@ class BackController{
         $countcoms = $this->commentManager->countComs();
         $error = null;
                 
-        if (!isset($_SESSION['admConnected'])){
-            $error = 'Vous devez vous connecter';
-            $this->view->render('front/connection', 'front/layout', compact('error'));
-            exit();
-        }                 
+        $this->session->sessionVerify();  
+
         $this->view->render('back/createEpisode', 'back/layout', compact('countcoms', 'sum', 'error'));
         
     }
 
     function addEpisode():void//méthode pour ajouter un épisode dans la bdd archivé ou publié
     {
-        session_start();
-
-        if(($this->request->post) !== null && !empty($this->request->post))
+        
+        if(!empty($this->request->post('nvchapter')) || !empty($this->request->post('nvtitle')) || !empty($this->request->post('content')))
         {
             $_SESSION['chapterNumber'] = $this->request->post('chapterNumber');
             $_SESSION['title'] = $this->request->post('title');
             $_SESSION['content'] = $this->request->post('content');
         };
       
-        if (!isset($_SESSION['admConnected'])){
-            $error = 'Vous devez vous connecter';
-            $this->view->render('front/connection', 'front/layout', compact('error'));
-            exit();
-        }
+        $this->session->sessionVerify();
+
         if (($this->request->post('publish')) !== null && !empty($this->request->post('chapterNumber')) && !empty($this->request->post('title'))) {          
             $message = 'Episode ' . $this->request->post('chapterNumber') . ' créé et publié';
             $postedEpisode = $this->episodeManager->postEpisode((int) $this->request->post('chapterNumber'), $this->request->post('title'), $this->request->post('content'));
@@ -176,44 +159,40 @@ class BackController{
 
     function episodeModications():void//méthode pour modifier un épisode et le sauvegarder ou le republier à son ancienne date ou maintenant
     {
-        session_start();
-
+        
         $isError = true;
 
-        if(($this->request->post) !== null && !empty($this->request->post))
+        if(!empty($this->request->post('nvchapter')) || !empty($this->request->post('nvtitle')) || !empty($this->request->post('nvcontent')))
         {
             $_SESSION['nvchapter'] = $this->request->post('nvchapter');
             $_SESSION['nvtitle'] = $this->request->post('nvtitle');
             $_SESSION['content'] = $this->request->post('nvcontent');
         }
                 
-        if (!isset($_SESSION['admConnected'])){
-            $error = 'Vous devez vous connecter';
-            $this->view->render('front/connection', 'front/layout', compact('error'));
-            exit();
-        }        
+        $this->session->sessionVerify();
+
         if (($this->request->post('publish')) !== null && !empty($this->request->post('nvchapter')) && !empty($this->request->post('nvtitle'))) {           
             if(empty($this->request->get('dt'))){
-                $this->episodeManager->postModifiedEpisode((int) $this->request->get('id'), (int) $this->request->post('nvchapter'), $this->request->post('nvtitle'), $this->request->post('nvcontent'));
+                $this->episodeManager->postModifiedEpisode((int) $this->request->get('postId'), (int) $this->request->post('nvchapter'), $this->request->post('nvtitle'), $this->request->post('nvcontent'));
                 $message = 'Episode ' . $this->request->post('nvchapter') . ' modifié et publié';                 
             }
             elseif($this->request->post('dateChoice') === 'oldDate'){
-                $this->episodeManager->postModifiedEpisodeSameDate((int) $this->request->get('id'), (int) $this->request->post('nvchapter'), $this->request->post('nvtitle'), $this->request->post('nvcontent'));
+                $this->episodeManager->postModifiedEpisodeSameDate((int) $this->request->get('postId'), (int) $this->request->post('nvchapter'), $this->request->post('nvtitle'), $this->request->post('nvcontent'));
                 $message = 'Episode ' . $this->request->post('nvchapter') . ' modifié et republié à la même date';                
             }
             elseif($this->request->post('dateChoice') === 'newDate'){
-                $this->episodeManager->postModifiedEpisode((int) $this->request->get('id'), (int) $this->request->post('nvchapter'), $this->request->post('nvtitle'), $this->request->post('nvcontent'));
+                $this->episodeManager->postModifiedEpisode((int) $this->request->get('postId'), (int) $this->request->post('nvchapter'), $this->request->post('nvtitle'), $this->request->post('nvcontent'));
                 $message = 'Episode ' . $this->request->post('nvchapter') . ' modifié et republié à la date de maintenant';                
             }
             $isError = false;
         }              
         elseif (($this->request->post('save')) !== null && !empty($this->request->post('nvchapter')) && !empty($this->request->post('nvtitle'))) {
-            $this->episodeManager->saveModifiedEpisode((int) $this->request->get('id'), (int) $this->request->post('nvchapter'), $this->request->post('nvtitle'), $this->request->post('nvcontent'));
+            $this->episodeManager->saveModifiedEpisode((int) $this->request->get('postId'), (int) $this->request->post('nvchapter'), $this->request->post('nvtitle'), $this->request->post('nvcontent'));
             $message = 'Episode ' . $this->request->post('nvchapter') . ' modifié et sauvegardé';
             $isError = false; 
         }
-        elseif (($this->request->post('delete')) !== null && ($this->request->get('id')) !== null && $this->request->get('id') > 0) {
-            $this->episodeManager->deleteEpisode((int) $this->request->get('id'));
+        elseif (($this->request->post('delete')) !== null && ($this->request->get('postId')) !== null && $this->request->get('postId') > 0) {
+            $this->episodeManager->deleteEpisode((int) $this->request->get('postId'));
             $message = 'Episode ' . $this->request->post('nvchapter') . ' Supprimé';
             $isError = false;
         }
@@ -236,22 +215,17 @@ class BackController{
     function modifyEpisode():void//on affiche la page de modification d'un épisode dans le back avec ses commentaires
     {
         $episode = $this->episodeManager->findEpisode((int) $this->request->get('id'));
-        $comments = $this->commentManager->findReportedComments((int) $this->request->get('id'));
         $sum = $this->commentManager->countReports();
         $countcoms = $this->commentManager->countComs();
         
-        session_start();
         $_SESSION['chapterNumber'] = null;
         $_SESSION['title'] = null;
         $_SESSION['content'] = null;
                 
-        if (!isset($_SESSION['admConnected'])){
-            $error = 'Vous devez vous connecter';
-            $this->view->render('front/connection', 'front/layout', compact('error'));
-            exit();
-        }        
+        $this->session->sessionVerify();
+
         if (($this->request->get('id')) !== null && $this->request->get('id') > 0) {
-        $this->view->render('back/episodeBack', 'back/layout', compact('episode', 'comments', 'sum', 'countcoms'));
+        $this->view->render('back/episodeBack', 'back/layout', compact('episode', 'sum', 'countcoms'));
         }              
     }
 
@@ -262,14 +236,9 @@ class BackController{
 
         $nbByPage = 5;
         $totalpages = (int) ceil($countcoms[0]/$nbByPage);
+     
+        $this->session->sessionVerify();
 
-        session_start();
-                
-        if (!isset($_SESSION['admConnected'])){
-            $error = 'Vous devez vous connecter';
-            $this->view->render('front/connection', 'front/layout', compact('error'));
-            exit();
-        }
         $currentpage = 1;
         if (($this->request->get('currentpage')) !== null && ($this->request->get('currentpage')) !== '0' &&is_numeric($this->request->get('currentpage'))) {
             $currentpage = (int) $this->request->get('currentpage');
@@ -289,27 +258,17 @@ class BackController{
         $episode = $this->episodeManager->findEpisode((int) $this->request->get('postid'));
         $comments = $this->commentManager->findReportedComments((int) $this->request->get('postid'));
         $sum = $this->commentManager->countReports();
-
-        session_start();
                 
-        if (!isset($_SESSION['admConnected'])){
-            $error = 'Vous devez vous connecter';
-            $this->view->render('front/connection', 'front/layout', compact('error'));
-            exit();
-        }              
-        header('Location: index.php?action=modifyEpisode&id='. $this->request->get('postid') );
+        $this->session->sessionVerify();
+
+        header('Location: index.php?action=modifyEpisode&id='. $this->request->get('postid') .'#headCom' );
         exit();
     }
 
     function comDelete():void//méthode pour supprimer un commentaire depuis la page des commentaires
     {   
-        session_start();
+        $this->session->sessionVerify();
 
-        if (!isset($_SESSION['admConnected'])){
-            $error = 'Vous devez vous connecter';
-            $this->view->render('front/connection', 'front/layout', compact('error'));
-            exit();
-        }   
         $this->commentManager->deleteComment((int) $this->request->get('id'));
         header('Location: index.php?action=comPage');
         exit();
@@ -317,45 +276,33 @@ class BackController{
 
     function deleteR():void//méthode pour supprimer les signalements d'un commentaire depuis la page des commentaires
     {   
-        session_start();
+        $this->session->sessionVerify();
 
-        if (!isset($_SESSION['admConnected'])){
-            $error = 'Vous devez vous connecter';
-            $this->view->render('front/connection', 'front/layout', compact('error'));
-            exit();
-        }            
         $this->commentManager->deleteReports((int) $this->request->get('id'));
         header('Location: index.php?action=comPage');
         exit();
     }
 
     function profil():void//méthode pour afficher la page profil
-    {
-        session_start();
-        
+    { 
         $sum = $this->commentManager->countReports();
         $countcoms = $this->commentManager->countComs();
 
                 
-        if (!isset($_SESSION['admConnected'])){
-            $error = 'Vous devez vous connecter';
-            $this->view->render('front/connection', 'front/layout', compact('error'));
-            exit();
-        }               
+        $this->session->sessionVerify();
+
         $this->view->render('back/profil', 'back/layout', compact('countcoms', 'sum'));
     }
 
     function disconnection():void//méthode pour se déconnecter du back
-    {
-        session_start();
-                
-        if (!isset($_SESSION['admConnected'])){
-            $error = 'Vous devez vous connecter';
-            $this->view->render('front/connection', 'front/layout', compact('error'));
-            exit();
-        }
-        $_SESSION['admConnected'] = false;
+    {       
+        $this->session->sessionVerify();
+        
+        //$_SESSION['admConnected'] = false;
+        //$_SESSION = array();
+        session_unset();
         session_destroy();
+        session_write_close();
         header('Location: index.php?');
         exit();
     }

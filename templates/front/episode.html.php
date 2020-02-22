@@ -38,8 +38,8 @@
             <p class="content"><?= htmlspecialchars($com->comment) ?></p>
             <a href="index.php?action=report&amp;currentpage=<?= $currentpage ?>&amp;comId=<?= $com->id ?>&amp;rp=<?= $com->report ?>&amp;id=<?= $com->post_id ?>" type="submit" class="<?php if(($com->report) < 24) {echo 'reporting';} else {echo 'reported';}?>"><?php if(($com->report) > 0 && ($com->report)< 24) {echo 'Signalé ',  $com->report, ' fois';} if(($com->report) > 23) {echo 'Maximum de signalements atteint';} if(($com->report) < 1) {echo 'Signaler';}?></a>
         </div>
-    <?php endforeach; ?>
-        <?php endif; ?>
+        <?php endforeach; ?>
+    <?php endif; ?>
         <form id="makeComment" action="index.php?action=newCom&amp;currentpage=<?= $currentpage ?>&amp;nb=<?= $episode[0]->chapterNumber ?>&amp;id=<?= $episode[0]->post_id ?>" method="post">
             <h2>Laissez moi un commentaire</h2>
             <input title="author" class="champ" type="text" name="author" id="author" placeholder=" Votre pseudo" size="15"/>

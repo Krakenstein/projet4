@@ -7,8 +7,6 @@ class Request
 {
   private $_post;
   private $_get;
-  private $_session;
-
 
   public function __construct()
   {

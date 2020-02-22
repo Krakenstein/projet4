@@ -112,22 +112,19 @@ class FrontController{
                 $this->commentManager->reports((int) $this->request->get('comId'));
             }
             header('Location: index.php?action=episodePage&currentpage=' .(int) $this->request->get('currentpage') . '&id=' .(int) ($this->request->get('id')) . '#headCom');
-        }
-        else {
-            throw new Exception('Erreur : aucun identifiant de commentaire envoyé');
+            exit();
         }
     }
 
     public function homePage():void//méthode pour démarrer une session lorsque on affiche la page d'accueil et récupérer le dernier épisode posté
     {
-        session_start();
-
         $episodesTot = $this->episodeManager->countEpisodesPub();
         $nbByPage = (int) $episodesTot[0];
         $offset = (int) 0;
         $totalpages = $episodesTot;
 
         $lastEpisode = $this->episodeManager->findLastEpisode();
+        
         $pagina = $this->episodeManager->pagineEpisodes( (int) $offset, (int) $nbByPage);
 
         $this->view->render('front/homePage', 'front/layout', compact('lastEpisode', 'pagina', 'totalpages', 'offset', 'nbByPage', 'episodesTot'));
