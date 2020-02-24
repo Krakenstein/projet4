@@ -157,8 +157,7 @@ class BackController{
     }
 
     function episodeModications():void//méthode pour modifier un épisode et le sauvegarder ou le republier à son ancienne date ou maintenant
-    {
-        
+    {  
         $isError = true;
 
         if(!empty($this->request->post('nvchapter')) || !empty($this->request->post('nvtitle')) || !empty($this->request->post('nvcontent')))
@@ -170,46 +169,42 @@ class BackController{
                 
         $this->session->sessionVerify();
 
-        
-        if (($this->request->post('publish')) !== null && !empty($this->request->post('nvchapter')) && !empty($this->request->post('nvtitle'))) {           
-            if(empty($this->request->get('dt'))){
-                $this->episodeManager->postModifiedEpisode((int) $this->request->get('postId'), (int) $this->request->post('nvchapter'), $this->request->post('nvtitle'), $this->request->post('nvcontent'));
-                $message = 'Episode ' . $this->request->post('nvchapter') . ' modifié et publié';                 
+        if ($this->request->post('csrf') !== null && $this->request->post('csrf') === $_SESSION["token"]){
+            if (($this->request->post('publish')) !== null && !empty($this->request->post('nvchapter')) && !empty($this->request->post('nvtitle'))) {           
+                if(empty($this->request->get('dt'))){
+                    $this->episodeManager->postModifiedEpisode((int) $this->request->get('postId'), (int) $this->request->post('nvchapter'), $this->request->post('nvtitle'), $this->request->post('nvcontent'));
+                    $message = 'Episode ' . $this->request->post('nvchapter') . ' modifié et publié';                 
+                }
+                elseif($this->request->post('dateChoice') === 'oldDate'){
+                    $this->episodeManager->postModifiedEpisodeSameDate((int) $this->request->get('postId'), (int) $this->request->post('nvchapter'), $this->request->post('nvtitle'), $this->request->post('nvcontent'));
+                    $message = 'Episode ' . $this->request->post('nvchapter') . ' modifié et republié à la même date';                
+                }
+                elseif($this->request->post('dateChoice') === 'newDate'){
+                    $this->episodeManager->postModifiedEpisode((int) $this->request->get('postId'), (int) $this->request->post('nvchapter'), $this->request->post('nvtitle'), $this->request->post('nvcontent'));
+                    $message = 'Episode ' . $this->request->post('nvchapter') . ' modifié et republié à la date de maintenant';                
+                }
+                $isError = false;
+            }              
+            elseif (($this->request->post('save')) !== null && !empty($this->request->post('nvchapter')) && !empty($this->request->post('nvtitle'))) {
+                $this->episodeManager->saveModifiedEpisode((int) $this->request->get('postId'), (int) $this->request->post('nvchapter'), $this->request->post('nvtitle'), $this->request->post('nvcontent'));
+                $message = 'Episode ' . $this->request->post('nvchapter') . ' modifié et sauvegardé';
+                $isError = false; 
             }
-            elseif($this->request->post('dateChoice') === 'oldDate'){
-                $this->episodeManager->postModifiedEpisodeSameDate((int) $this->request->get('postId'), (int) $this->request->post('nvchapter'), $this->request->post('nvtitle'), $this->request->post('nvcontent'));
-                $message = 'Episode ' . $this->request->post('nvchapter') . ' modifié et republié à la même date';                
+            elseif (($this->request->post('delete')) !== null && ($this->request->get('postId')) !== null && $this->request->get('postId') > 0) {
+                $this->episodeManager->deleteEpisode((int) $this->request->get('postId'));
+                $message = 'Episode ' . $this->request->post('nvchapter') . ' Supprimé';
+                $isError = false;
             }
-            elseif($this->request->post('dateChoice') === 'newDate'){
-                $this->episodeManager->postModifiedEpisode((int) $this->request->get('postId'), (int) $this->request->post('nvchapter'), $this->request->post('nvtitle'), $this->request->post('nvcontent'));
-                $message = 'Episode ' . $this->request->post('nvchapter') . ' modifié et republié à la date de maintenant';                
-            }
-            $isError = false;
-        }              
-        elseif (($this->request->post('save')) !== null && !empty($this->request->post('nvchapter')) && !empty($this->request->post('nvtitle'))) {
-            $this->episodeManager->saveModifiedEpisode((int) $this->request->get('postId'), (int) $this->request->post('nvchapter'), $this->request->post('nvtitle'), $this->request->post('nvcontent'));
-            $message = 'Episode ' . $this->request->post('nvchapter') . ' modifié et sauvegardé';
-            $isError = false; 
-        }
-        elseif (($this->request->post('delete')) !== null && ($this->request->get('postId')) !== null && $this->request->get('postId') > 0) {
-            $this->episodeManager->deleteEpisode((int) $this->request->get('postId'));
-            $message = 'Episode ' . $this->request->post('nvchapter') . ' Supprimé';
-            $isError = false;
-        }
-        
+        }  
         if($isError === false){
             header('Location: index.php?action=episodes&ms=' . $message . '');
             exit();
-        }
-        
-        {
-            $sum = $this->commentManager->countReports();
-            $countcoms = $this->commentManager->countComs();
-            $episode = $this->episodeManager->findEpisode((int) $this->request->get('id'));
-            //$comments = $this->commentManager->findReportedComments((int) $this->request->get('id'));
-            $error = 'Vous devez spécifier le titre et le numéro de l\'épisode';
-            $this->view->render('back/episodeBack', 'back/layout', compact('countcoms', 'sum', 'error', 'episode'));
-        }
+        }      
+        $sum = $this->commentManager->countReports();
+        $countcoms = $this->commentManager->countComs();
+        $episode = $this->episodeManager->findEpisode((int) $this->request->get('postId'));
+        $error = 'Vous devez spécifier le titre et le numéro de l\'épisode';
+        $this->view->render('back/episodeBack', 'back/layout', compact('countcoms', 'sum', 'error', 'episode'));      
     }
 
     function modifyEpisode():void//on affiche la page de modification d'un épisode dans le back avec ses commentaires
