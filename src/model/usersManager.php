@@ -17,7 +17,7 @@ class UsersManager
         $this->bdd = $this->dataBase->dbConnect();
     }
     
-    public function resetInfos($pseudo, $pass)//requête pour choisir son pseudo et son mot de passe en tant qu'admin
+    public function resetInfos(string $pseudo, string $pass):bool//requête pour choisir son pseudo et son mot de passe en tant qu'admin
     {
         $req = $this->bdd->prepare('UPDATE users set pseudo = :newPseudo, pass = :newPass WHERE id = 1');
         return $req->execute(array(
@@ -25,7 +25,7 @@ class UsersManager
         'newPass' => $pass));
     }
 
-    public function testInfos($pseudo)//requête pour tester les infos lors d'une tentative de connection
+    public function testInfos(string $pseudo):array//requête pour tester les infos lors d'une tentative de connection
     {
         $req = $this->bdd->prepare('SELECT id, pseudo, pass FROM users WHERE pseudo = :testPseudo');
         $req->execute([

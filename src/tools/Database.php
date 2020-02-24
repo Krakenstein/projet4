@@ -20,9 +20,10 @@ class Database {
         $this->db_host = $db_host;
     }
 
-    public function dbConnect(){
+    public function dbConnect():PDO
+    {
         if($this->bdd === null){
-            $bdd = new PDO('mysql:host=localhost;dbname=blogbdd;charset=utf8', 'root', '');
+            $bdd = new PDO('mysql:host=localhost;dbname=blogbdd;charset=utf8', $this->db_user, $this->db_pass);
             $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
             $this->bdd = $bdd;
         }

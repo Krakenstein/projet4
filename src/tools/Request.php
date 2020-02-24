@@ -14,12 +14,12 @@ class Request
     $this->_get = $_GET;
   }
 
-  public function post($key = null, $default = null)
+  public function post(string $key = null, $default = null)
   {
       return $this->checkGlobal($this->_post, $key, $default);
   }
 
-  public function get($key = null, $default = null)
+  public function get(string $key = null, $default = null)
   {
       return $this->checkGlobal($this->_get, $key, $default);
   }

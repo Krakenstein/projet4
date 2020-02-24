@@ -45,21 +45,21 @@ class CommentManager
             'com' => $comment));
     }
 
-    public function reports(int $id)//requête pour ajouter 1 au signalement d'un commentaire 
+    public function reports(int $id):bool//requête pour ajouter 1 au signalement d'un commentaire 
     {
         $req = $this->bdd->prepare('UPDATE comments SET report = report + 1  WHERE id = :comId ');
         return $req->execute(array(
             'comId' => (int) $id));
     }
 
-    public function deleteReports(int $id)//requête pour supprimmer les signalements d'un commentaire 
+    public function deleteReports(int $id):bool//requête pour supprimmer les signalements d'un commentaire 
     {
         $req = $this->bdd->prepare('UPDATE comments SET report = 0  WHERE id = :comId ');
         return $req->execute(array(
             'comId' => (int) $id));
     }
 
-    public function deleteComment(int $id)//requête pour supprimer un commentaire d'un épisode en fonction de son id
+    public function deleteComment(int $id):void//requête pour supprimer un commentaire d'un épisode en fonction de son id
     {
         $req = $this->bdd->prepare('DELETE FROM comments WHERE id = :comId ');
         $req->execute(array(

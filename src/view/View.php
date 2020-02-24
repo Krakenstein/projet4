@@ -7,7 +7,7 @@ class View{
 
     protected $viewPath = 'templates/';
 
-    public function render($view, $template, $variables = []){ // méthode pour afficher le rendu des views
+    public function render(string $view, string $template, array $variables = []):string{ // méthode pour afficher le rendu des views
         ob_start();
         extract($variables);
         require($this->viewPath . $view . '.html.php');
