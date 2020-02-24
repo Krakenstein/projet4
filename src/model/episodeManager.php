@@ -62,7 +62,7 @@ class EpisodeManager
         return $req->fetchALL(PDO::FETCH_OBJ);
     }
 
-    public function findPostedEpisodeWithComs(int $postId):array//requête pour récupérer un épisode publié en fonction de son id avec ses commentaires
+    public function findPostedEpisode(int $postId):array//requête pour récupérer un épisode publié en fonction de son id avec ses commentaires
     {
         $req = $this->bdd->prepare('SELECT id, author, comment, commentDate, report, posts.post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'Le %d/%m/%Y à %Hh %imin %ss\') AS date, publiDate 
         FROM posts

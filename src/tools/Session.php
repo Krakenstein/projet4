@@ -5,8 +5,6 @@ namespace Projet4\Tools;
 
 use Projet4\View\View;
 
-session_start();
-
 class Session
 {
     

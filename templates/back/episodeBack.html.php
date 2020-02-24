@@ -6,6 +6,7 @@
         <?php else: ?>
             <form id="modification" action="index.php?action=episodeModications&amp;postId=<?= $episode[0]->post_id ?>&amp;dt=<?= $episode[0]->publiDate ?>" method="post">
                 <h3>Gestion de l'épisode</h3>
+                <input type="hidden" name="csrf" value="<?php echo $_SESSION["token"]; ?>">
                 <input title="chapterNumber" class="champ" type="text" name="nvchapter" id="number" value="<?php if (isset($_SESSION['chapterNumber'])) echo $_SESSION['chapterNumber']; else echo $episode[0]->chapterNumber; ?>" size="5" />
                 <label id="labelChapterNumber" for="chapterNumber"></label>
                 <h3>Statut: <?php if(($episode[0]->stat) === 1) echo 'publié'?><?php if(($episode[0]->stat) === 0) echo 'Sauvegardé'?></h3>

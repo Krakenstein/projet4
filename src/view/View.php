@@ -1,13 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace projet4\view ;
+namespace projet4\View ;
 
 class View{
 
-    protected $viewPath = 'templates/';
+    protected $viewPath = '../templates/';
 
-    public function render(string $view, string $template, array $variables = []):string{ // méthode pour afficher le rendu des views
+    public function render(string $view, string $template, array $variables = [])// méthode pour afficher le rendu des views
+    { 
         ob_start();
         extract($variables);
         require($this->viewPath . $view . '.html.php');

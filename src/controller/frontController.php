@@ -7,6 +7,7 @@ use Projet4\Model\EpisodeManager;
 use Projet4\Model\CommentManager;
 use Projet4\View\View;
 use Projet4\Tools\Request;
+use Projet4\Tools\NoCsrf;
 
 
 class FrontController{
@@ -15,6 +16,7 @@ class FrontController{
     private $commentManager;
     private $view;
     private $request;
+    private $noCsrf;
    
     public function __construct()
     {
@@ -22,6 +24,7 @@ class FrontController{
         $this->commentManager = new CommentManager();
         $this->view = new View();
         $this->request = new Request();
+        $this->noCsrf = new NoCsrf();
     }
        
     public function listEpisodes():void //méthode pour afficher la liste paginée des épisodes publiés
@@ -45,8 +48,9 @@ class FrontController{
     
     public function episodePage():void //méthode pour afficher un épisode publié en fonction de son id avec ses commentaires
     {
-        $episode = $this->episodeManager->findPostedEpisodeWithComs((int) $this->request->get('id'));
+        $episode = $this->episodeManager->findPostedEpisode((int) $this->request->get('id'));
         $episodesTot = $this->episodeManager->countEpisodesPub();
+        $this->noCsrf->createToken();
 
         $totalpages = (int) $episodesTot[0];
 
@@ -84,14 +88,17 @@ class FrontController{
 
     public function newCom():void //méthode pour afficher un nouveau commentaire sur la page d'un épisode
     {
-        $episode = $this->episodeManager->findPostedEpisodeWithComs((int) $this->request->get('id'));
+        $episode = $this->episodeManager->findPostedEpisode((int) $this->request->get('id'));
         
-        if (($this->request->get('id')) !== null && $this->request->get('id') > 0) {
+        
+        if ($this->request->get('id') !== null && $this->request->get('id') > 0 
+        && $this->request->post('csrf') !== null && $this->request->post('csrf') === $_SESSION["token"]) {
             if (!empty($this->request->post('author')) && !empty($this->request->post('comment'))) {
-                $affectedLines = $this->commentManager->postComment((int) $episode[0]->post_id, (int) $episode[0]->chapterNumber, $this->request->post('author'), $this->request->post('comment'));
-                if ($affectedLines === false) {
-                    throw new Exception('Impossible d\'ajouter le commentaire !');
+                if (empty($episode)) {
+                    header('Location: index.php?action=episodePage&currentpage=' . (int) $this->request->get('currentpage') . '&id=' . (int) $this->request->get('id') . '#headCom');
+                    exit();
                 }else {
+                    $affectedLines = $this->commentManager->postComment((int) $episode[0]->post_id, (int) $episode[0]->chapterNumber, $this->request->post('author'), $this->request->post('comment'));
                     header('Location: index.php?action=episodePage&currentpage=' . (int) $this->request->get('currentpage') . '&id=' . (int) $this->request->get('id') . '#headCom');
                     exit();
                 }       
@@ -101,8 +108,10 @@ class FrontController{
                 exit();
             }
         }else {
-            throw new Exception('Erreur : aucun identifiant de billet envoyé');
+            header('Location: index.php?action=episodePage&currentpage=' . (int) $this->request->get('currentpage') . '&id=' . (int) $this->request->get('id') . '#headCom');
+            exit();
         }
+        
     }
 
     public function report():void //méthode pour afficher un signalement de plus à un commentaire de la page d'un épisode
@@ -133,6 +142,7 @@ class FrontController{
 
     public function connectionPage():void//méthode pour afficher la page de connection
     {
+        $this->noCsrf->createToken();
         $this->view->render('front/connection', 'front/layout');
     }
 }

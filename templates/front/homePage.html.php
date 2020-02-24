@@ -1,7 +1,7 @@
 <?php $title = 'Billet simple pour l\'Alaska'; ?>
 
         <header>
-            <img id="imgHeader" src="public/images/header.jpg" alt="old man by mari lezhava"/>
+            <img id="imgHeader" src="images/header.jpg" alt="old man by mari lezhava"/>
             <h1 id="titre">Billet simple pour l'Alaska</h1>
             <h3 id="slogan">"Un feuilleton numérique et littéraire de Jean Forteroche"</h3>
         </header>

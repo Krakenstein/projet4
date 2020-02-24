@@ -8,6 +8,7 @@ use Projet4\Model\UsersManager;
 use Projet4\View\View;
 use Projet4\Tools\Request;
 use Projet4\Tools\Session;
+use Projet4\Tools\NoCsrf;
 
 class BackController{
 
@@ -17,7 +18,7 @@ class BackController{
     private $view;
     private $request;
     private $session;
-    
+    private $noCsrf;
    
     public function __construct()
     {
@@ -27,24 +28,24 @@ class BackController{
         $this->view = new View();
         $this->request = new Request();
         $this->session = new Session();
-        
+        $this->noCsrf = new NoCsrf();
     }
 
     function admConnect():void//méthode pour se connecter au back
     {       
         $error = 'Pseudo ou mot de passe oublié';
-        if ((($this->request->post('nom')) !== null && !empty($this->request->post('nom'))) && (($this->request->post('password')) !== null && !empty($this->request->post('password')))) {
-            $infos = $this->usersManager->testInfos($this->request->post('nom'));
-            if(!empty($infos) && password_verify(($this->request->post('password')), $infos[2]) === true){                
-                $_SESSION['admConnected'] = true;
-                header('Location: index.php?action=episodes');
-                exit();                
+        if ($this->request->post('csrf') !== null && $this->request->post('csrf') === $_SESSION["token"]){
+            if ((($this->request->post('nom')) !== null && !empty($this->request->post('nom'))) && (($this->request->post('password')) !== null && !empty($this->request->post('password')))) {
+                $infos = $this->usersManager->testInfos($this->request->post('nom'));
+                if(!empty($infos) && password_verify(($this->request->post('password')), $infos[2]) === true){                
+                    $_SESSION['admConnected'] = true;
+                    header('Location: index.php?action=episodes');
+                    exit();                
+                }
             }
         }
-
-        {
-        $this->view->render('front/connection', 'front/layout', compact('error'));
-        }                       
+              
+        $this->view->render('front/connection', 'front/layout', compact('error'));                         
     }
 
     function episodes():void //méthode pour afficher la page des épisodes paginés
@@ -113,13 +114,12 @@ class BackController{
         $_SESSION['title'] = null;
         $_SESSION['content'] = null;
         
-
         $sum = $this->commentManager->countReports();
         $countcoms = $this->commentManager->countComs();
         $error = null;
                 
         $this->session->sessionVerify();  
-
+        $this->noCsrf->createToken();
         $this->view->render('back/createEpisode', 'back/layout', compact('countcoms', 'sum', 'error'));
         
     }
@@ -136,25 +136,24 @@ class BackController{
       
         $this->session->sessionVerify();
 
-        if (($this->request->post('publish')) !== null && !empty($this->request->post('chapterNumber')) && !empty($this->request->post('title'))) {          
-            $message = 'Episode ' . $this->request->post('chapterNumber') . ' créé et publié';
-            $postedEpisode = $this->episodeManager->postEpisode((int) $this->request->post('chapterNumber'), $this->request->post('title'), $this->request->post('content'));
-            header('Location: index.php?action=episodes&ms=' . $message . '');
-            exit();             
+        if ($this->request->post('csrf') !== null && $this->request->post('csrf') === $_SESSION["token"]){
+            if (($this->request->post('publish')) !== null && !empty($this->request->post('chapterNumber')) && !empty($this->request->post('title'))) {          
+                $message = 'Episode ' . $this->request->post('chapterNumber') . ' créé et publié';
+                $this->episodeManager->postEpisode((int) $this->request->post('chapterNumber'), $this->request->post('title'), $this->request->post('content'));
+                header('Location: index.php?action=episodes&ms=' . $message . '');
+                exit();             
+            }
+            elseif (($this->request->post('save')) !== null && !empty($this->request->post('chapterNumber')) && !empty($this->request->post('title'))) {
+                $message = 'Episode ' . $this->request->post('chapterNumber') . ' créé et sauvegardé';
+                $this->episodeManager->saveEpisode((int) $this->request->post('chapterNumber'), $this->request->post('title'), $this->request->post('content'));
+                header('Location: index.php?action=episodes&ms=' . $message . '');
+                exit(); 
+            }
         }
-        elseif (($this->request->post('save')) !== null && !empty($this->request->post('chapterNumber')) && !empty($this->request->post('title'))) {
-            $message = 'Episode ' . $this->request->post('chapterNumber') . ' créé et sauvegardé';
-            $postedEpisode = $this->episodeManager->saveEpisode((int) $this->request->post('chapterNumber'), $this->request->post('title'), $this->request->post('content'));
-            header('Location: index.php?action=episodes&ms=' . $message . '');
-            exit(); 
-        }
-
-        {
         $sum = $this->commentManager->countReports();
         $countcoms = $this->commentManager->countComs();
         $error = 'Vous devez spécifier le numéro et le titre de l\'épisode';
-        $this->view->render('back/createEpisode', 'back/layout', compact('countcoms', 'sum', 'error'));
-        }    
+        $this->view->render('back/createEpisode', 'back/layout', compact('countcoms', 'sum', 'error'));  
     }
 
     function episodeModications():void//méthode pour modifier un épisode et le sauvegarder ou le republier à son ancienne date ou maintenant
@@ -171,6 +170,7 @@ class BackController{
                 
         $this->session->sessionVerify();
 
+        
         if (($this->request->post('publish')) !== null && !empty($this->request->post('nvchapter')) && !empty($this->request->post('nvtitle'))) {           
             if(empty($this->request->get('dt'))){
                 $this->episodeManager->postModifiedEpisode((int) $this->request->get('postId'), (int) $this->request->post('nvchapter'), $this->request->post('nvtitle'), $this->request->post('nvcontent'));
@@ -206,9 +206,9 @@ class BackController{
             $sum = $this->commentManager->countReports();
             $countcoms = $this->commentManager->countComs();
             $episode = $this->episodeManager->findEpisode((int) $this->request->get('id'));
-            $comments = $this->commentManager->findReportedComments((int) $this->request->get('id'));
+            //$comments = $this->commentManager->findReportedComments((int) $this->request->get('id'));
             $error = 'Vous devez spécifier le titre et le numéro de l\'épisode';
-            $this->view->render('back/episodeBack', 'back/layout', compact('countcoms', 'sum', 'error', 'episode', 'comments'));
+            $this->view->render('back/episodeBack', 'back/layout', compact('countcoms', 'sum', 'error', 'episode'));
         }
     }
 
@@ -224,9 +224,8 @@ class BackController{
                 
         $this->session->sessionVerify();
 
-        if (($this->request->get('id')) !== null && $this->request->get('id') > 0) {
         $this->view->render('back/episodeBack', 'back/layout', compact('episode', 'sum', 'countcoms'));
-        }              
+                      
     }
 
     function comPage():void//on affiche la page de gestion des commentaires
@@ -299,7 +298,7 @@ class BackController{
         $this->session->sessionVerify();
         
         //$_SESSION['admConnected'] = false;
-        //$_SESSION = array();
+        $_SESSION = array();
         session_unset();
         session_destroy();
         session_write_close();

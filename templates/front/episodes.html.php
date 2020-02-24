@@ -1,7 +1,7 @@
 <?php $title = 'Episodes'; ?>
 
     <header>
-        <img id="imgHeader" src="public/images/headerEpisodes.jpg" alt="forest by Daniel H. Tong"/>
+        <img id="imgHeader" src="images/headerEpisodes.jpg" alt="forest by Daniel H. Tong"/>
     </header>
     <section>
     <?php if (empty($pagina)): ?>
