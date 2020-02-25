@@ -28,7 +28,7 @@ class Request
   {
     if ($key) {
       if (isset($global[$key])) {
-        return $global[$key];
+        return htmlspecialchars($global[$key]);
       } else {
         return $default ?: null;
       }
