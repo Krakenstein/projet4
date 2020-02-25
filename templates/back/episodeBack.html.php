@@ -6,8 +6,8 @@
         <?php else: ?>
             <form id="modification" action="index.php?action=episodeModications&amp;postId=<?= $episode[0]->post_id ?>&amp;dt=<?= $episode[0]->publiDate ?>" method="post">
                 <h3>Gestion de l'épisode</h3>
-                <input type="hidden" name="csrf" value="<?php echo $_SESSION["token"]; ?>">
-                <input title="chapterNumber" class="champ" type="text" name="nvchapter" id="number" value="<?php if (isset($_SESSION['chapterNumber'])) echo $_SESSION['chapterNumber']; else echo $episode[0]->chapterNumber; ?>" size="5" />
+                <input type="hidden" name="csrf" value="<?php echo $token ?>">
+                <input title="chapterNumber" class="champ" type="text" name="nvchapter" id="number" value="<?php if ($chapterNumber !== null) echo $chapterNumber; else echo $episode[0]->chapterNumber; ?>" size="5" />
                 <label id="labelChapterNumber" for="chapterNumber"></label>
                 <h3>Statut: <?php if(($episode[0]->stat) === 1) echo 'publié'?><?php if(($episode[0]->stat) === 0) echo 'Sauvegardé'?></h3>
                 <h3><?php if(($episode[0]->publiDate) != null) echo 'Publié ' . $episode[0]->publiDate ?></h3>
@@ -15,9 +15,9 @@
                     <option value="oldDate">Garder cette date de publication</option>
                     <option value="newDate">Republier à la date de maintenant</option>
                 </select>
-                <h3>Titre de l'épisode</h3><input title="title" class="champ" type="text" name="nvtitle" id="titre" value="<?php if (isset($_SESSION['title'])) echo $_SESSION['title']; else echo $episode[0]->title; ?>" size="45"/>
+                <h3>Titre de l'épisode</h3><input title="title" class="champ" type="text" name="nvtitle" id="titre" value="<?php if ($titleEp !== null) echo $titleEp; else echo $episode[0]->title; ?>" size="45"/>
                 <label id="labelTitle" for="title"><?php if(isset($error)) echo $error ?></label>
-                <textarea title="content" name="nvcontent" id="episode[0]" cols="150" rows="50"><?php if (isset($_SESSION['content'])) echo $_SESSION['content']; else echo $episode[0]->content; ?></textarea>
+                <textarea title="content" name="nvcontent" id="episode[0]" cols="150" rows="50"><?php if ($content !== null) echo $content; else echo $episode[0]->content; ?></textarea>
                     <label id="labelepisode[0]" for="content"></label>
                 <div id="btnAction">
                     <input type="submit" class="bouton" name="save" value="Sauvegarder">
@@ -32,7 +32,7 @@
                 <span><?= $com->commentDate ?></span><span>par <b><?= htmlspecialchars($com->author) ?></b></span>
                 <p class="content"><?= htmlspecialchars($com->comment) ?></p>
                 <h3>Nombre de signalements: <?= $com->report ?></h3>
-                <a href="index.php?action=commentDelete&amp;id=<?= $com->id ?>&amp;postid=<?= $com->post_id ?>&amp;chpt=<?= $com->episodeNumber ?>" class="boutonRouge">supprimer</a>
+                <a href="index.php?action=commentDelete&amp;id=<?= $com->id ?>&amp;postid=<?= $com->post_id ?>&amp;chpt=<?= $com->chapterNumber ?>" class="boutonRouge">supprimer</a>
             </div>
             <?php endforeach; ?>
             <?php endif; ?>

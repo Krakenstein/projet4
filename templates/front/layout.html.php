@@ -1,3 +1,8 @@
+<?php
+use Projet4\Tools\Request;
+$request = new Request();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,8 +17,8 @@
     <nav class="navigation-bar">
         <a href="#foot" id="signature"><h2>Jean Forteroche</h2></a>
         <div id="navbar_accueil">
-            <a class="btn<?php if(empty($_GET['action'])) echo (' active') ?>" href="index.php">Accueil</a>
-            <a class="btn<?php if(!empty($_GET['action']) && $_GET['action'] === 'listEpisodes') echo (' active') ?>" href="index.php?action=listEpisodes">Episodes</a>
+            <a class="btn<?php if(empty($request->get('action'))) echo (' active') ?>" href="index.php">Accueil</a>
+            <a class="btn<?php if(!empty($request->get('action')) && $request->get('action') === 'listEpisodes') echo (' active') ?>" href="index.php?action=listEpisodes">Episodes</a>
         </div>
     </nav>
 
@@ -22,6 +27,6 @@
     </body>
 
     <footer id="foot">
-            <a class="btn<?php if(!empty($_GET['action']) && $_GET['action'] === 'connectionPage') echo (' active') ?>" href="index.php?action=connectionPage">Administrateur</a>
+            <a class="btn<?php if(!empty($request->get('action')) && $request->get('action') === 'connectionPage') echo (' active') ?>" href="index.php?action=connectionPage">Administrateur</a>
     </footer>
 </html>

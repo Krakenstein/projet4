@@ -1,3 +1,8 @@
+<?php
+use Projet4\Tools\Request;
+$request = new Request();
+?>
+
 <?php $title = 'Liste des épisodes'; ?>
 
         <section id="content">
@@ -10,8 +15,8 @@
                 <h3>Nombre total d'épisodes: <?=$episodesTot[0]?></h3>
                 <h3>Episodes publiés: <?=$episodesPubTot[0]?></h3>
             </div>
-            <?php if(isset($_GET['ms'])): ?>
-            <h3 id="message"><?= htmlspecialchars($_GET['ms']) ?></h3>
+            <?php if(!empty($request->get('ms'))): ?>
+            <h3 id="message"><?= htmlspecialchars($request->get('ms')) ?></h3>
             <?php endif; ?>
             <a href="index.php?action=createEpisode" class="boutonVert">Créer un nouvel épisode</a>
             <div class="table">

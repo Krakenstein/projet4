@@ -1,3 +1,8 @@
+<?php
+use Projet4\Tools\Request;
+$request = new Request();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -22,10 +27,10 @@
     </header>
     <div id="main">
         <nav>
-            <a class="btn<?php if(!empty($_GET['action']) && $_GET['action'] === 'episodes') echo (' active') ?>" href="index.php?action=episodes">Episodes</a>
-            <a class="btnCom<?php if(($countcoms[0])  < 1) echo 'Blue'?><?php if(($sum[0]) > 0) echo 'Red'?><?php if(!empty($_GET['action']) && $_GET['action'] === 'comPage') echo ('Active') ?>" href="index.php?action=comPage">Commentaires</a>
-            <a class="btn<?php if(!empty($_GET['action']) && $_GET['action'] === 'profil' || $_GET['action'] ==='reset') echo (' active') ?>" href="index.php?action=profil">Profil</a>
-            <a class="btn<?php if(!empty($_GET['action']) && $_GET['action'] === 'disconnection') echo (' active') ?>" href="index.php?action=disconnection">Déconnection</a>
+            <a class="btn<?php if(!empty($request->get('action')) && $request->get('action') === 'episodes') echo (' active') ?>" href="index.php?action=episodes">Episodes</a>
+            <a class="btnCom<?php if(($countcoms[0])  < 1) echo 'Blue'?><?php if(($sum[0]) > 0) echo 'Red'?><?php if(!empty($request->get('action')) && $request->get('action') === 'comPage') echo ('Active') ?>" href="index.php?action=comPage">Commentaires</a>
+            <a class="btn<?php if(!empty($request->get('action')) && $request->get('action') === 'profil' || $request->get('action') ==='reset') echo (' active') ?>" href="index.php?action=profil">Profil</a>
+            <a class="btn<?php if(!empty($request->get('action')) && $request->get('action') === 'disconnection') echo (' active') ?>" href="index.php?action=disconnection">Déconnection</a>
         </nav>
         <?= $content ?>
     </body>

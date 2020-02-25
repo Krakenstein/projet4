@@ -8,6 +8,7 @@ use Projet4\Model\CommentManager;
 use Projet4\View\View;
 use Projet4\Tools\Request;
 use Projet4\Tools\NoCsrf;
+use Projet4\Tools\Session;
 
 
 class FrontController{
@@ -17,6 +18,7 @@ class FrontController{
     private $view;
     private $request;
     private $noCsrf;
+    private $session;
    
     public function __construct()
     {
@@ -25,6 +27,7 @@ class FrontController{
         $this->view = new View();
         $this->request = new Request();
         $this->noCsrf = new NoCsrf();
+        $this->session = new Session();
     }
        
     public function listEpisodes():void //méthode pour afficher la liste paginée des épisodes publiés
@@ -50,7 +53,7 @@ class FrontController{
     {
         $episode = $this->episodeManager->findPostedEpisode((int) $this->request->get('id'));
         $episodesTot = $this->episodeManager->countEpisodesPub();
-        $this->noCsrf->createToken();
+        $token = $this->noCsrf->createToken();
 
         $totalpages = (int) $episodesTot[0];
 
@@ -66,7 +69,7 @@ class FrontController{
             } 
         }
 
-        $this->view->render('front/episode', 'front/layout', compact('episodesTot', 'currentpage', 'totalpages', 'episode', 'error'));     
+        $this->view->render('front/episode', 'front/layout', compact('episodesTot', 'currentpage', 'totalpages', 'episode', 'error', 'token'));     
     } 
 
     public function previousNext():void //méthode pour afficher l'épisode suivant ou précédent
@@ -92,13 +95,13 @@ class FrontController{
         
         
         if ($this->request->get('id') !== null && $this->request->get('id') > 0 
-        && $this->request->post('csrf') !== null && $this->request->post('csrf') === $_SESSION["token"]) {
+        && $this->request->post('csrf') !== null && $this->request->post('csrf') === $this->session->getSessionData("token")) {
             if (!empty($this->request->post('author')) && !empty($this->request->post('comment'))) {
                 if (empty($episode)) {
                     header('Location: index.php?action=episodePage&currentpage=' . (int) $this->request->get('currentpage') . '&id=' . (int) $this->request->get('id') . '#headCom');
                     exit();
                 }else {
-                    $affectedLines = $this->commentManager->postComment((int) $episode[0]->post_id, (int) $episode[0]->chapterNumber, $this->request->post('author'), $this->request->post('comment'));
+                    $affectedLines = $this->commentManager->postComment((int) $episode[0]->post_id, $this->request->post('author'), $this->request->post('comment'));
                     header('Location: index.php?action=episodePage&currentpage=' . (int) $this->request->get('currentpage') . '&id=' . (int) $this->request->get('id') . '#headCom');
                     exit();
                 }       
@@ -125,7 +128,7 @@ class FrontController{
         }
     }
 
-    public function homePage():void//méthode pour démarrer une session lorsque on affiche la page d'accueil et récupérer le dernier épisode posté
+    public function homePage():void//méthode pour afficher la page d'accueil et récupérer le dernier épisode posté
     {
         $episodesTot = $this->episodeManager->countEpisodesPub();
         $nbByPage = (int) $episodesTot[0];
@@ -142,8 +145,8 @@ class FrontController{
 
     public function connectionPage():void//méthode pour afficher la page de connection
     {
-        $this->noCsrf->createToken();
-        $this->view->render('front/connection', 'front/layout');
+        $token = $this->noCsrf->createToken();
+        $this->view->render('front/connection', 'front/layout', compact('token'));
     }
 }
 

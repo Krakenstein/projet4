@@ -50,7 +50,7 @@ class EpisodeManager
 
     public function findEpisode(int $postId):array//requête pour récupérer un épisode en fonction de son id avec ses commentaires
     {
-        $req = $this->bdd->prepare('SELECT id, author, comment,episodeNumber, commentDate, report, posts.post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'Le %d/%m/%Y à %Hh %imin %ss\') AS date, publiDate 
+        $req = $this->bdd->prepare('SELECT id, author, comment, commentDate, report, posts.post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'Le %d/%m/%Y à %Hh %imin %ss\') AS date, publiDate 
         FROM posts
         LEFT JOIN comments ON posts.post_id = comments.post_id 
         

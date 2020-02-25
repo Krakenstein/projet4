@@ -3,43 +3,24 @@ declare(strict_types=1);
 
 namespace Projet4\Tools;
 
-use Projet4\View\View;
-
 class Session
 {
-    
-    private $view;
     private $_session;
    
-    public function __construct()
-    {
-        $this->view = new View();
-        $this->_session = $_SESSION;
-    }
-    
+
     public function sessionVerify()
     {                   
-        if (($this->session('admConnected') === null)){
-            $error = 'Vous devez vous connecter';
-            $this->view->render('front/connection', 'front/layout', compact('error'));
+        if (empty($_SESSION['admConnected'])){
+            header('Location: index.php');
             exit();
         }
     }
 
-    public function session($key = null, $default = null)
-    {
-        return $this->checkGlobal($this->_session, $key, $default);
+    public function setSessionData( $session_name , $data ){
+        $_SESSION[$session_name] = $data;
     }
-
-    private function checkGlobal($global, $key = null, $default = null)
-    {
-        if ($key) {
-        if (isset($global[$key])) {
-            return $global[$key];
-        } else {
-            return $default ?: null;
-        }
-        }
-        return $global;
+    
+    public function getSessionData( $session_name ){
+        return $_SESSION[$session_name];
     }
 }

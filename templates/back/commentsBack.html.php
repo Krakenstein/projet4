@@ -15,7 +15,7 @@
             </div>
             <?php foreach($allComs as $com): ?>
             <div class="comment">
-                <span><b>Commentaire de l'épisode <?= $com->episodeNumber ?></b></span>
+                <span><b>Commentaire de l'épisode <?= $com->chapterNumber ?></b></span>
                 <span>Posté <?= $com->commentDate ?></span><span>par <b><?= htmlspecialchars($com->author) ?></b></span>
                 <p class="content"><?= htmlspecialchars($com->comment) ?></p>
                 <h3>Nombre de signalements: <?= $com->report ?></h3>
