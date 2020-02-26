@@ -27,8 +27,8 @@
                 {
                     $espace = strpos($episode->content,' ', 500); 
                     $extr = substr($episode->content,0,$espace).'...';
-                    echo strip_tags($extr);
-                }else{echo strip_tags($episode->content);}
+                    echo strip_tags(htmlspecialchars_decode($extr));
+                }else{echo strip_tags(htmlspecialchars_decode($episode->content));}
                 ?>
             
             </div>

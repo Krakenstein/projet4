@@ -14,17 +14,17 @@ class Request
     $this->_get = $_GET;
   }
 
-  public function post(string $key = null, $default = null)
+  public function post(string $key = null, ?string $default = null): ?string
   {
       return $this->checkGlobal($this->_post, $key, $default);
   }
 
-  public function get(string $key = null, $default = null)
+  public function get(string $key = null, ?string $default = null): ?string
   {
       return $this->checkGlobal($this->_get, $key, $default);
   }
 
-  private function checkGlobal($global, $key = null, $default = null)
+  private function checkGlobal(array $global, string $key = null, ?string $default = null): ?string
   {
     if ($key) {
       if (isset($global[$key])) {

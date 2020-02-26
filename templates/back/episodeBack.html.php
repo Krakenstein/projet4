@@ -10,7 +10,7 @@
                 <input title="chapterNumber" class="champ" type="text" name="nvchapter" id="number" value="<?php if ($chapterNumber !== null) echo $chapterNumber; else echo $episode[0]->chapterNumber; ?>" size="5" />
                 <label id="labelChapterNumber" for="chapterNumber"></label>
                 <h3>Statut: <?php if(($episode[0]->stat) === 1) echo 'publié'?><?php if(($episode[0]->stat) === 0) echo 'Sauvegardé'?></h3>
-                <h3><?php if(($episode[0]->publiDate) != null) echo 'Publié ' . $episode[0]->publiDate ?></h3>
+                <h3><?php if(($episode[0]->publiDate) != null) echo 'Publié ' . $episode[0]->date ?></h3>
                 <select id="dateChoice<?php if(($episode[0]->publiDate) === null) echo 'Hidden' ?>" name="dateChoice">
                     <option value="oldDate">Garder cette date de publication</option>
                     <option value="newDate">Republier à la date de maintenant</option>
@@ -32,7 +32,10 @@
                 <span><?= $com->commentDate ?></span><span>par <b><?= htmlspecialchars($com->author) ?></b></span>
                 <p class="content"><?= htmlspecialchars($com->comment) ?></p>
                 <h3>Nombre de signalements: <?= $com->report ?></h3>
-                <a href="index.php?action=commentDelete&amp;id=<?= $com->id ?>&amp;postid=<?= $com->post_id ?>&amp;chpt=<?= $com->chapterNumber ?>" class="boutonRouge">supprimer</a>
+                <div id="btnAction">
+                    <a href="index.php?action=commentDelete&amp;id=<?= $com->id ?>&amp;postid=<?= $com->post_id ?>&amp;chpt=<?= $com->chapterNumber ?>" class="boutonRouge">supprimer</a>
+                    <a href="index.php?action=deleteReportsFromEp&amp;id=<?= $com->id ?>&amp;postid=<?= $com->post_id ?>" class="bouton">Retirer les signalements</a>
+                </div>
             </div>
             <?php endforeach; ?>
             <?php endif; ?>

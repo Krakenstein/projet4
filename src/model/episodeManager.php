@@ -41,11 +41,11 @@ class EpisodeManager
         return $req->fetchALL(PDO::FETCH_OBJ);
     }
 
-    public function findLastEpisode()//requête pour récupérer le dernier épisode publié par date de publication
+    public function findLastEpisode():array//requête pour récupérer le dernier épisode publié par date de publication
     {
         $req = $this->bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'Le %d/%m/%Y\') AS date FROM posts WHERE stat = 1 ORDER BY publiDate DESC ');
         $req->execute();
-        return $req->fetch(PDO::FETCH_OBJ);
+        return $req->fetchALL(PDO::FETCH_OBJ);
     }
 
     public function findEpisode(int $postId):array//requête pour récupérer un épisode en fonction de son id avec ses commentaires
@@ -63,7 +63,7 @@ class EpisodeManager
 
     public function findPostedEpisode(int $postId):array//requête pour récupérer un épisode publié en fonction de son id avec ses commentaires
     {
-        $req = $this->bdd->prepare('SELECT id, author, comment, commentDate, report, posts.post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'Le %d/%m/%Y à %Hh %imin %ss\') AS date, publiDate 
+        $req = $this->bdd->prepare('SELECT id, author, comment, DATE_FORMAT(commentDate, \'Le %d/%m/%Y à %Hh %imin\') AS commentDate, report, posts.post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'Le %d/%m/%Y\') AS date, publiDate 
         FROM posts
         LEFT JOIN comments ON posts.post_id = comments.post_id 
         

@@ -5,6 +5,7 @@
             <h3><em>Votre mot de passe doit avoir un nombre de caractère compris entre 8 et 50.</em></h3>
             <h3><em>Il doit comporter au moins une minuscule, une majuscule, un caractère spécial et un chiffre.</em></h3>
             <form id="formProfil" action="index.php?action=reset" method="post">
+                <input type="hidden" name="csrf" value="<?php echo $token ?>">
                 <h3>pseudo</h3>
                 <input title="pseudo" class="champ" type="text" name="pseudo" id="pseudo" placeholder="" size="25"/>
                 <label id="labelPseudo" for="pseudo"></label>

@@ -8,7 +8,7 @@ class Session
     private $_session;
    
 
-    public function sessionVerify()
+    public function sessionVerify():void
     {                   
         if (empty($_SESSION['admConnected'])){
             header('Location: index.php');
@@ -16,11 +16,13 @@ class Session
         }
     }
 
-    public function setSessionData( $session_name , $data ){
+    public function setSessionData(string $session_name ,  ?string $data ):void
+    {
         $_SESSION[$session_name] = $data;
     }
     
-    public function getSessionData( $session_name ){
+    public function getSessionData(string $session_name ): ?string
+    {
         return $_SESSION[$session_name];
     }
 }

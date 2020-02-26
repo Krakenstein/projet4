@@ -13,7 +13,8 @@ class Database {
     private $db_host;
     private $bdd;
 
-    public function __construct($db_name = 'blogbdd', $db_user = 'root', $db_pass = '', $db_host = 'localhost'){
+    public function __construct($db_name = 'blogbdd', $db_user = 'root', $db_pass = '', $db_host = 'localhost')
+    {
         $this->db_name = $db_name;
         $this->db_user = $db_user;
         $this->db_pass = $db_pass;

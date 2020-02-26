@@ -7,7 +7,7 @@ class View{
 
     protected $viewPath = '../templates/';
 
-    public function render(string $view, string $template, array $variables = [])// méthode pour afficher le rendu des views
+    public function render(string $view, string $template, array $variables = []):void// méthode pour afficher le rendu des views
     { 
         ob_start();
         extract($variables);

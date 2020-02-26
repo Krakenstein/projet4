@@ -38,7 +38,7 @@ class BackController{
             if ((($this->request->post('nom')) !== null && !empty($this->request->post('nom'))) && (($this->request->post('password')) !== null && !empty($this->request->post('password')))) {
                 $infos = $this->usersManager->testInfos($this->request->post('nom'));
                 if(!empty($infos) && password_verify(($this->request->post('password')), $infos[2]) === true){                
-                    $this->session->setSessionData('admConnected', true);
+                    $this->session->setSessionData('admConnected', '1');
                     header('Location: index.php?action=episodes');
                     exit();                
                 }
@@ -81,29 +81,40 @@ class BackController{
         
         $this->session->sessionVerify();
 
-        $error = 'Au moins un des champs est vide';
-        if ((($this->request->post('pseudo')) !== null && !empty($this->request->post('pseudo'))) && (($this->request->post('passOld')) !== null && !empty($this->request->post('passOld'))) && (($this->request->post('pass')) !== null && !empty($this->request->post('pass'))) && (($this->request->post('pass2')) !== null && !empty($this->request->post('pass2')))) {
-            $infos = $this->usersManager->testInfos($this->request->post('pseudo'));
-            $error = 'Impossible de modifier les informations';
-            if (!empty($infos) && password_verify($this->request->post('passOld'), $infos[2]) === true){   
-                $error = 'Le nouveau mot de passe choisi n\'est pas valide';
-                if ($this->request->post('pass') !== $this->request->post('pass2')) {// on teste les deux mots de passe
-                    $error = 'Les 2 mots de passe sont différents';                       
-                }
-                elseif (preg_match("((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,50})", $this->request->post('pass'))){
-                    $this->usersManager->resetInfos($this->request->post('pseudo'), password_hash($this->request->post('pass'), PASSWORD_DEFAULT));
-                    session_destroy();
-                    $error = 'Vos changements ont bien été pris en compte';
-                    $this->view->render('front/connection', 'front/layout', compact('error'));
-                    $isError = false;  
-                }                          
-            }              
+        $error = 'Une erreure est survenue';
+        if ($this->request->post('csrf') !== null && $this->request->post('csrf') === $this->session->getSessionData("token"))
+        {
+            $error = 'Au moins un des champs est vide';
+            if ((($this->request->post('pseudo')) !== null && !empty($this->request->post('pseudo'))) 
+            && (($this->request->post('passOld')) !== null && !empty($this->request->post('passOld'))) 
+            && (($this->request->post('pass')) !== null && !empty($this->request->post('pass'))) 
+            && (($this->request->post('pass2')) !== null && !empty($this->request->post('pass2')))) 
+            {
+                $infos = $this->usersManager->testInfos($this->request->post('pseudo'));
+                $error = 'Impossible de modifier les informations';
+                if (!empty($infos) && password_verify($this->request->post('passOld'), $infos[2]) === true)
+                {   
+                    $error = 'Le nouveau mot de passe choisi n\'est pas valide';
+                    if ($this->request->post('pass') !== $this->request->post('pass2')) {// on teste les deux mots de passe
+                        $error = 'Les 2 mots de passe sont différents';                       
+                    }
+                    elseif (preg_match("((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,50})", $this->request->post('pass')))
+                    {
+                        $this->usersManager->resetInfos($this->request->post('pseudo'), password_hash($this->request->post('pass'), PASSWORD_DEFAULT));
+                        session_destroy();
+                        session_start();
+                        $token = $this->noCsrf->createToken(); 
+                        $error = 'Vos changements ont bien été pris en compte';
+                        $this->view->render('front/connection', 'front/layout', compact('error', 'token'));
+                        $isError = false;  
+                    }                          
+                }              
+            }
         }
-
         if($isError){
-            $this->view->render('back/profil', 'back/layout', compact('message', 'error', 'sum', 'countcoms'));
-        }
-               
+            $token = $this->noCsrf->createToken();
+            $this->view->render('back/profil', 'back/layout', compact('message', 'error', 'sum', 'countcoms', 'token'));
+        }             
     }
 
     function createEpisode():void//méthode pour afficher la page de création d'épisode
@@ -272,6 +283,15 @@ class BackController{
         header('Location: index.php?action=modifyEpisode&id='. $this->request->get('postid') .'#headCom' );
         exit();
     }
+    
+    function deleteReportsFromEp():void//méthode pour supprimer les signalements d'un commentaire depuis la page d'un épisode
+    {   
+        $this->session->sessionVerify();
+
+        $this->commentManager->deleteReports((int) $this->request->get('id'));
+        header('Location: index.php?action=modifyEpisode&id='. $this->request->get('postid') .'#headCom' );
+        exit();
+    }
 
     function comDelete():void//méthode pour supprimer un commentaire depuis la page des commentaires
     {   
@@ -298,8 +318,9 @@ class BackController{
 
                 
         $this->session->sessionVerify();
+        $token = $this->noCsrf->createToken();
 
-        $this->view->render('back/profil', 'back/layout', compact('countcoms', 'sum'));
+        $this->view->render('back/profil', 'back/layout', compact('countcoms', 'sum', 'token'));
     }
 
     function disconnection():void//méthode pour se déconnecter du back

@@ -29,7 +29,22 @@ class FrontController{
         $this->noCsrf = new NoCsrf();
         $this->session = new Session();
     }
-       
+         
+    public function homePage():void//méthode pour afficher la page d'accueil et récupérer le dernier épisode posté
+    {
+        $episodesTot = $this->episodeManager->countEpisodesPub();
+        $nbByPage = (int) $episodesTot[0];
+        $offset = (int) 0;
+        $totalpages = $episodesTot;
+
+        $lastEpisode = $this->episodeManager->findLastEpisode();
+        
+        $pagina = $this->episodeManager->pagineEpisodes( (int) $offset, (int) $nbByPage);
+
+        $this->view->render('front/homePage', 'front/layout', compact('lastEpisode', 'pagina', 'totalpages', 'offset', 'nbByPage', 'episodesTot'));
+        
+    }
+    
     public function listEpisodes():void //méthode pour afficher la liste paginée des épisodes publiés
     {        
         $episodesTot = $this->episodeManager->countEpisodesPub();
@@ -126,21 +141,6 @@ class FrontController{
             header('Location: index.php?action=episodePage&currentpage=' .(int) $this->request->get('currentpage') . '&id=' .(int) ($this->request->get('id')) . '#headCom');
             exit();
         }
-    }
-
-    public function homePage():void//méthode pour afficher la page d'accueil et récupérer le dernier épisode posté
-    {
-        $episodesTot = $this->episodeManager->countEpisodesPub();
-        $nbByPage = (int) $episodesTot[0];
-        $offset = (int) 0;
-        $totalpages = $episodesTot;
-
-        $lastEpisode = $this->episodeManager->findLastEpisode();
-        
-        $pagina = $this->episodeManager->pagineEpisodes( (int) $offset, (int) $nbByPage);
-
-        $this->view->render('front/homePage', 'front/layout', compact('lastEpisode', 'pagina', 'totalpages', 'offset', 'nbByPage', 'episodesTot'));
-        
     }
 
     public function connectionPage():void//méthode pour afficher la page de connection
