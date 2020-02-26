@@ -35,18 +35,18 @@
         <?php foreach($episode as $com): ?>
         <div class="comment">
             <span><?= $com->commentDate ?></span><span>par <b><?= htmlspecialchars($com->author) ?></b></span>
-            <p class="content"><?= htmlspecialchars($com->comment) ?></p>
+            <p class="content"><?= wordwrap(htmlspecialchars($com->comment) , 30 , ' ' , true ) ?></p>
             <a href="index.php?action=report&amp;currentpage=<?= $currentpage ?>&amp;comId=<?= $com->id ?>&amp;rp=<?= $com->report ?>&amp;id=<?= $com->post_id ?>" type="submit" class="<?php if(($com->report) < 24) {echo 'reporting';} else {echo 'reported';}?>"><?php if(($com->report) > 0 && ($com->report)< 24) {echo 'Signalé ',  $com->report, ' fois';} if(($com->report) > 23) {echo 'Maximum de signalements atteint';} if(($com->report) < 1) {echo 'Signaler';}?></a>
         </div>
         <?php endforeach; ?>
     <?php endif; ?>
-        <form id="makeComment" action="index.php?action=newCom&amp;currentpage=<?= $currentpage ?>&amp;id=<?= $episode[0]->post_id ?>" method="post">
+        <form id="makeComment" action="index.php?action=newCom&amp;currentpage=<?= $currentpage ?>&amp;id=<?= $episode[0]->post_id ?>#makeComment" method="post">
             <h2>Laissez moi un commentaire</h2>
             <input type="hidden" name="csrf" value="<?php echo $token ?>">
-            <input title="author" class="champ" type="text" name="author" id="author" placeholder=" Votre pseudo" value="<?php echo $author ?> size="15"/>
+            <input title="author" class="champ" type="text" name="author" id="author" placeholder="Votre pseudo" value="<?php echo $pseudo ?>" size="15"/>
             <label id="labelAuthor" for="author"><?php echo $error ?></label>
             <p>Votre commentaire</p>
-            <textarea title="comment" name="comment" id="comment" cols="40" rows="5"></textarea>
+            <textarea title="comment" name="comment" id="comment" cols="40" rows="5"><?php echo $comment ?></textarea>
             <label id="labelComment" for="comment"></label>
             <input type="submit" class="bouton" value="envoyer">
         </form>
