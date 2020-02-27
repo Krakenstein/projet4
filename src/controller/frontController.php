@@ -52,7 +52,7 @@ class FrontController{
         $totalpages = (int) ceil($episodesTot[0]/$nbByPage);
 
         $currentpage = 1;
-        if (($this->request->get('currentpage')) !== null && ($this->request->get('currentpage')) !== '0' &&is_numeric($this->request->get('currentpage'))) {
+        if (($this->request->get('currentpage')) !== null && ($this->request->get('currentpage')) > '0' &&is_numeric($this->request->get('currentpage'))) {
             $currentpage = (int) $this->request->get('currentpage');
             if ($currentpage > $totalpages) {
                 $currentpage = $totalpages;
@@ -74,6 +74,7 @@ class FrontController{
         $episode = $this->episodeManager->findPostedEpisode((int) $this->request->get('id'));
         $episodesTot = $this->episodeManager->countEpisodesPub();
         $token = $this->noCsrf->createToken();
+        $pagina = $this->episodeManager->pagineEpisodes( 0, (int) $episodesTot[0]);
 
         $totalpages = (int) $episodesTot[0];
 
@@ -81,31 +82,45 @@ class FrontController{
             $error = $this->request->get('er');
         }else $error = null;
    
-        $currentpage = 1;
-        if (($this->request->get('currentpage')) !== null && ($this->request->get('currentpage')) !== '0' &&is_numeric($this->request->get('currentpage'))) {
-            $currentpage = (int) $this->request->get('currentpage');
-            if ($currentpage > $totalpages) {
-                $currentpage = $totalpages;
-            } 
+        if (!empty($episode)){
+            $currentpage = array_search($episode[0]->post_id, array_column($pagina, 'post_id')) + 1;
+            $this->view->render('front/episode', 'front/layout', compact('pagina', 'pseudo', 'comment', 'episodesTot', 'currentpage', 'totalpages', 'episode', 'error', 'token')); 
+            exit();
         }
-
-        $this->view->render('front/episode', 'front/layout', compact('pseudo', 'comment', 'episodesTot', 'currentpage', 'totalpages', 'episode', 'error', 'token'));     
+        $this->view->render('front/episode', 'front/layout'); 
+    
     } 
 
-    public function previousNext():void //méthode pour afficher l'épisode suivant ou précédent
+    public function previous():void //méthode pour afficher l'épisode précédent
     {       
         $episodesTot = $this->episodeManager->countEpisodesPub();
         $totalpages = (int) $episodesTot[0];
-        
-        $currentpage = $this->request->get('currentpage');
-        if ($currentpage < 1){
-            $currentpage = 1;
-        }elseif ($currentpage > $totalpages) {
-            $currentpage = $totalpages;
+        $episode = $this->episodeManager->findPostedEpisode((int) $this->request->get('id'));
+        $pagina = $this->episodeManager->pagineEpisodes( 0, (int) $episodesTot[0]);
+
+        if((array_search($episode[0]->post_id, array_column($pagina, 'post_id')) - 1) >= 0){
+            $previous = $this->episodeManager->previousNextEpisode(array_search($episode[0]->post_id, array_column($pagina, 'post_id')) - 1);
+            header('Location: index.php?action=episodePage&id=' . (int) $previous[0] . '#title');
+            exit();
         }
-        $offset = $currentpage - 1;
-        $previous = $this->episodeManager->previousNextEpisode($offset);
-        header('Location: index.php?action=episodePage&currentpage=' . (int) $this->request->get('currentpage') . '&id=' . (int) $previous[0] . '#title');
+        header('Location: index.php?action=episodePage&id=' . $this->request->get('id') . '#title');
+        exit();
+       
+    }
+
+    public function next():void //méthode pour afficher l'épisode précédent
+    {       
+        $episodesTot = $this->episodeManager->countEpisodesPub();
+        $totalpages = (int) $episodesTot[0];
+        $episode = $this->episodeManager->findPostedEpisode((int) $this->request->get('id'));
+        $pagina = $this->episodeManager->pagineEpisodes( 0, (int) $episodesTot[0]);
+
+        if((array_search($episode[0]->post_id, array_column($pagina, 'post_id')) - 1) < ($episodesTot[0] - 2)){
+            $previous = $this->episodeManager->previousNextEpisode(array_search($episode[0]->post_id, array_column($pagina, 'post_id')) + 1);
+            header('Location: index.php?action=episodePage&id=' . (int) $previous[0] . '#title');
+            exit();
+        }
+        header('Location: index.php?action=episodePage&id=' . $this->request->get('id') . '#title');
         exit();
     }
 

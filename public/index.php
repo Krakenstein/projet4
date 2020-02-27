@@ -16,7 +16,8 @@ $actionFront =
     'episodePage',
     'newCom',
     'report',
-    'previousNext',
+    'previous',
+    'next'
 ];
 
 $actionBack =

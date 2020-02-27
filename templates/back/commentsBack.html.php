@@ -17,7 +17,7 @@
             <div class="comment">
                 <span><b>Commentaire de l'épisode <?= $com->chapterNumber ?></b></span>
                 <span>Posté <?= $com->commentDate ?></span><span>par <b><?= htmlspecialchars($com->author) ?></b></span>
-                <p class="content"><?= htmlspecialchars($com->comment) ?></p>
+                <p class="content"><?= wordwrap(htmlspecialchars($com->comment) , 30 , ' ' , true ) ?></p>
                 <h3>Nombre de signalements: <?= $com->report ?></h3>
                 <div id="btnAction">
                     <a href="index.php?action=comDelete&amp;id=<?= $com->id ?>" class="boutonRouge">Supprimer le commentaire</a>

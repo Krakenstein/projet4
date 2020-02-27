@@ -14,18 +14,16 @@
         <h3>Publié <?= $episode[0]->date ?></h3>
         <a class="anchor" href="#fin">Aller à la fin de l'épisode</a>
         <div class="backNext<?php if($totalpages < 2) echo 'Hidden'?>">
-            <a href="index.php?action=previousNext&amp;currentpage=<?= $currentpage - 1?>&amp;chapter=<?= $episode[0]->chapterNumber?>&amp;date=<?= $episode[0]->publiDate?>" class="<?php if($currentpage < 2) echo 'hidden'?>"><div class="left"></div>Episode précédent</a>
+            <a href="index.php?action=previous&amp;id=<?= $episode[0]->post_id ?>" class="<?php if($currentpage < 2) echo 'hidden'?>"><div class="left"></div>Episode précédent</a>
             <span class="currentPage"><?='Page ' . $currentpage . '/' . $totalpages?></span>
-            <a href="index.php?action=previousNext&amp;currentpage=<?= $currentpage + 1?>&amp;chapter=<?= $episode[0]->chapterNumber?>&amp;date=<?= $episode[0]->publiDate?>" class="<?php if($currentpage === $totalpages ) echo 'hidden' ?>">Episode suivant<div class="right"></div></a>
+            <a href="index.php?action=next&amp;id=<?= $episode[0]->post_id ?>" class="<?php if($currentpage === $totalpages ) echo 'hidden' ?>">Episode suivant<div class="right"></div></a>
         </div>
         <h2><?= $episode[0]->title ?></h2>
-
         <div id="chapitre"><?= htmlspecialchars_decode($episode[0]->content) ?></div>
-        
         <div class="backNext<?php if($totalpages < 2) echo 'Hidden'?>">
-            <a href="index.php?action=previousNext&amp;currentpage=<?= $currentpage - 1?>&amp;chapter=<?= $episode[0]->chapterNumber?>&amp;date=<?= $episode[0]->publiDate?>" class="<?php if($currentpage < 2) echo 'hidden'?>"><div class="left"></div>Episode précédent</a>
+            <a href="index.php?action=previous&amp;id=<?= $episode[0]->post_id ?>" class="<?php if($currentpage < 2) echo 'hidden'?>"><div class="left"></div>Episode précédent</a>
             <span class="currentPage"><?='Page ' . $currentpage . '/' . $totalpages?></span>
-            <a href="index.php?action=previousNext&amp;currentpage=<?= $currentpage + 1?>&amp;chapter=<?= $episode[0]->chapterNumber?>&amp;date=<?= $episode[0]->publiDate?>" class="<?php if($currentpage === $totalpages ) echo 'hidden' ?>">Episode suivant<div class="right"></div></a>
+            <a href="index.php?action=next&amp;id=<?= $episode[0]->post_id ?>" class="<?php if($currentpage === $totalpages ) echo 'hidden' ?>">Episode suivant<div class="right"></div></a>
         </div>
         <a class="anchor" id="fin" href="#titre">Revenir au début de l'épisode</a>
     </section>
@@ -40,7 +38,7 @@
         </div>
         <?php endforeach; ?>
     <?php endif; ?>
-        <form id="makeComment" action="index.php?action=newCom&amp;currentpage=<?= $currentpage ?>&amp;id=<?= $episode[0]->post_id ?>#makeComment" method="post">
+        <form id="makeComment" action="index.php?action=newCom&amp;id=<?= $episode[0]->post_id ?>#makeComment" method="post">
             <h2>Laissez moi un commentaire</h2>
             <input type="hidden" name="csrf" value="<?php echo $token ?>">
             <input title="author" class="champ" type="text" name="author" id="author" placeholder="Votre pseudo" value="<?php echo $pseudo ?>" size="15"/>

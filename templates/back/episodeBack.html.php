@@ -30,7 +30,7 @@
             <?php foreach($episode as $com): ?>
             <div class="comment">
                 <span><?= $com->commentDate ?></span><span>par <b><?= htmlspecialchars($com->author) ?></b></span>
-                <p class="content"><?= htmlspecialchars($com->comment) ?></p>
+                <p class="content"><?= wordwrap(htmlspecialchars($com->comment) , 30 , ' ' , true ) ?></p>
                 <h3>Nombre de signalements: <?= $com->report ?></h3>
                 <div id="btnAction">
                     <a href="index.php?action=commentDelete&amp;id=<?= $com->id ?>&amp;postid=<?= $com->post_id ?>&amp;chpt=<?= $com->chapterNumber ?>" class="boutonRouge">supprimer</a>
