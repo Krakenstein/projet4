@@ -14,16 +14,16 @@
         <h3>Publié <?= $episode[0]->date ?></h3>
         <a class="anchor" href="#fin">Aller à la fin de l'épisode</a>
         <div class="backNext<?php if($totalpages < 2) echo 'Hidden'?>">
-            <a href="index.php?action=previous&amp;id=<?= $episode[0]->post_id ?>" class="<?php if($currentpage < 2) echo 'hidden'?>"><div class="left"></div>Episode précédent</a>
+            <a href="index.php?action=previous&amp;id=<?= $episode[0]->post_id ?>" class="<?php if($currentpage < 2) echo 'hidden'?>"><div class="left"></div>Page précédente</a>
             <span class="currentPage"><?='Page ' . $currentpage . '/' . $totalpages?></span>
-            <a href="index.php?action=next&amp;id=<?= $episode[0]->post_id ?>" class="<?php if($currentpage === $totalpages ) echo 'hidden' ?>">Episode suivant<div class="right"></div></a>
+            <a href="index.php?action=next&amp;id=<?= $episode[0]->post_id ?>" class="<?php if($currentpage === $totalpages ) echo 'hidden' ?>">Page suivante<div class="right"></div></a>
         </div>
         <h2><?= $episode[0]->title ?></h2>
         <div id="chapitre"><?= htmlspecialchars_decode($episode[0]->content) ?></div>
         <div class="backNext<?php if($totalpages < 2) echo 'Hidden'?>">
-            <a href="index.php?action=previous&amp;id=<?= $episode[0]->post_id ?>" class="<?php if($currentpage < 2) echo 'hidden'?>"><div class="left"></div>Episode précédent</a>
+            <a href="index.php?action=previous&amp;id=<?= $episode[0]->post_id ?>" class="<?php if($currentpage < 2) echo 'hidden'?>"><div class="left"></div>Page précédente</a>
             <span class="currentPage"><?='Page ' . $currentpage . '/' . $totalpages?></span>
-            <a href="index.php?action=next&amp;id=<?= $episode[0]->post_id ?>" class="<?php if($currentpage === $totalpages ) echo 'hidden' ?>">Episode suivant<div class="right"></div></a>
+            <a href="index.php?action=next&amp;id=<?= $episode[0]->post_id ?>" class="<?php if($currentpage === $totalpages ) echo 'hidden' ?>">Page suivante<div class="right"></div></a>
         </div>
         <a class="anchor" id="fin" href="#titre">Revenir au début de l'épisode</a>
     </section>

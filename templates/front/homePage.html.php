@@ -8,7 +8,7 @@
         <?php if (!empty($lastEpisode)): ?>
         <section>
             <h2>Dernier épisode mis en ligne</h2>
-            <h3>Episode n°<?= $lastEpisode[0]->chapterNumber ?> publié le <?= $lastEpisode[0]->date ?></h3>
+            <h3>Episode n°<?= $lastEpisode[0]->chapterNumber ?> publié <?= $lastEpisode[0]->date ?></h3>
             <a class="anchor" href="index.php?action=episodePage&amp;id=<?= $lastEpisode[0]->post_id ?>">Aller sur la page de l'épisode</a>
             <h2><?= $lastEpisode[0]->title?></h2>    
             <div id="chapitre"><?= htmlspecialchars_decode($lastEpisode[0]->content) ?></div>
