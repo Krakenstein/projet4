@@ -8,11 +8,22 @@
         <?php if (!empty($lastEpisode)): ?>
         <section>
             <h2>Dernier épisode mis en ligne</h2>
-            <h3>Episode n°<?= $lastEpisode[0]->chapterNumber ?> publié <?= $lastEpisode[0]->date ?></h3>
-            <a class="anchor" href="index.php?action=episodePage&amp;id=<?= $lastEpisode[0]->post_id ?>">Aller sur la page de l'épisode</a>
-            <h2><?= $lastEpisode[0]->title?></h2>    
-            <div id="chapitre"><?= htmlspecialchars_decode($lastEpisode[0]->content) ?></div>
-            <a class="anchor" href="index.php?action=episodePage&amp;id=<?= $lastEpisode[0]->post_id ?>">Aller sur la page de l'épisode</a>
+            <a href="index.php?action=episodePage&amp;id=<?= $lastEpisode[0]->post_id ?>" class="episodeListe">
+                <p><i><?= $lastEpisode[0]->date ?></i></p>
+                <span>Episode n°<?= $lastEpisode[0]->chapterNumber ?></span>
+                <span class="episodeTitle"><?= $lastEpisode[0]->title ?></span>
+                <div class="extrait">
+                    <?php 
+                    if (strlen($lastEpisode[0]->content) > 2000)
+                    {
+                        $espace = strpos($lastEpisode[0]->content,' ', 2000); 
+                        $extr = substr($lastEpisode[0]->content,0,$espace).'...';
+                        echo strip_tags(htmlspecialchars_decode($extr));
+                    }else{echo strip_tags(htmlspecialchars_decode($lastEpisode[0]->content));}
+                    ?>        
+                </div>
+                <button class="read">Lire la suite</button>
+            </a>
             <a class="anchor" href="#navbar_accueil">Retourner en haut de la page</a>
         </section>
         <?php endif; ?>

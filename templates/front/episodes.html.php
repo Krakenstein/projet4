@@ -23,9 +23,9 @@
             <span class="episodeTitle"><?= $episode->title ?></span>
             <div class="extrait">
                 <?php 
-                if (strlen($episode->content) > 500)
+                if (strlen($episode->content) > 2000)
                 {
-                    $espace = strpos($episode->content,' ', 500); 
+                    $espace = strpos($episode->content,' ', 2000); 
                     $extr = substr($episode->content,0,$espace).'...';
                     echo strip_tags(htmlspecialchars_decode($extr));
                 }else{echo strip_tags(htmlspecialchars_decode($episode->content));}
@@ -39,6 +39,6 @@
             <a href="index.php?action=listEpisodes&amp;currentpage=<?= $currentpage - 1?>&amp;#titre" class="<?php if($currentpage === 1) echo 'hidden'?>"><div class="left"></div>Page précédente</a>
             <span class="currentPage"><?='Page ' . $currentpage . '/' . $totalpages?></span>
             <a href="index.php?action=listEpisodes&amp;currentpage=<?= $currentpage + 1?>&amp;#titre" class="<?php if($currentpage === $totalpages ) echo 'hidden' ?>">Page suivante<div class="right"></div></a>
-            </div>
+        </div>
     <?php endif; ?>
     </section>

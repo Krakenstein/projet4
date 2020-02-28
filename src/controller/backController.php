@@ -117,6 +117,19 @@ class BackController{
                 header('Location: index.php?action=episodes&ms=' . $message . '');
                 exit(); 
             }
+        }if(empty($this->request->post('chapterNumber')) && empty($this->request->post('title')) && empty($this->request->post('content'))){
+            $this->session->setSessionData('chapterNumber', null);
+            $chapterNumber = $this->session->getSessionData("chapterNumber");
+            $this->session->setSessionData('title', null);
+            $titleEp = $this->session->getSessionData("title");
+            $this->session->setSessionData('content', null);
+            $content = $this->session->getSessionData("content");
+            $sum = $this->commentManager->countReports();
+            $countcoms = $this->commentManager->countComs();
+            $token = $this->noCsrf->createToken();
+            $error = 'Vous devez spécifier le numéro et le titre de l\'épisode';
+            $this->view->render('back/createEpisode', 'back/layout', compact('countcoms', 'sum', 'error', 'token', 'chapterNumber', 'titleEp', 'content')); 
+            exit();
         }
         $sum = $this->commentManager->countReports();
         $countcoms = $this->commentManager->countComs();
@@ -148,16 +161,13 @@ class BackController{
     {  
         $isError = true;
 
-        if(!empty($this->request->post('nvchapter')) || !empty($this->request->post('nvtitle')) || !empty($this->request->post('nvcontent')))
-        {
-            $this->session->setSessionData('chapterNumber', $this->request->post('nvchapter'));
-            $chapterNumber = $this->session->getSessionData("chapterNumber");
-            $this->session->setSessionData('title', $this->request->post('nvtitle'));
-            $titleEp = $this->session->getSessionData("title");
-            $this->session->setSessionData('content', $this->request->post('nvcontent'));
-            $content = $this->session->getSessionData("content");
-        }
-                
+        $this->session->setSessionData('chapterNumber', $this->request->post('nvchapter'));
+        $chapterNumber = $this->session->getSessionData("chapterNumber");
+        $this->session->setSessionData('title', $this->request->post('nvtitle'));
+        $titleEp = $this->session->getSessionData("title");
+        $this->session->setSessionData('content', $this->request->post('nvcontent'));
+        $content = $this->session->getSessionData("content");
+     
         $this->session->sessionVerify();
 
         if ($this->request->post('csrf') !== null && $this->request->post('csrf') === $this->session->getSessionData("token")){
@@ -190,7 +200,7 @@ class BackController{
         if($isError === false){
             header('Location: index.php?action=episodes&ms=' . $message . '');
             exit();
-        }      
+        }  
         $sum = $this->commentManager->countReports();
         $countcoms = $this->commentManager->countComs();
         $token = $this->noCsrf->createToken();

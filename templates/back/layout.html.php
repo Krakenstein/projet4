@@ -20,12 +20,11 @@ $request = new Request();
     </head>
 
     <body>
-    <header>
-        <h2>Billet simple pour l'Alaska</h2>
-        <h2>Interface administrateur</h2>
-        <h2>Jean Forteroche</h2>
-    </header>
-    <div id="main">
+        <header>
+            <h2>Billet simple pour l'Alaska</h2>
+            <h2>Interface administrateur</h2>
+            <h2>Jean Forteroche</h2>
+        </header>
         <nav>
             <a class="btn<?php if(!empty($request->get('action')) && $request->get('action') === 'episodes') echo (' active') ?>" href="index.php?action=episodes">Episodes</a>
             <a class="btnCom<?php if(($countcoms[0])  < 1) echo 'Blue'?><?php if(($sum[0]) > 0) echo 'Red'?><?php if(!empty($request->get('action')) && $request->get('action') === 'comPage') echo ('Active') ?>" href="index.php?action=comPage">Commentaires</a>
