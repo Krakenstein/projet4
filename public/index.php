@@ -1,8 +1,8 @@
 <?php
 require('../vendor/autoload.php');
 
-use Projet4\Controller\frontController;
-use Projet4\Controller\backController;
+use Projet4\Controller\FrontController;
+use Projet4\Controller\BackController;
 use Projet4\Tools\Request;
 
 session_start();
