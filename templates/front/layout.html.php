@@ -14,20 +14,21 @@ $request = new Request();
         <link rel="stylesheet" href="css/style.css" />
         <title><?= $title ?></title>
     </head>
-
-    <nav class="navigation-bar">
-        <a href="#foot" id="signature"><h2>Jean Forteroche</h2></a>
-        <div id="navbar_accueil">
-            <a class="btn<?php if(empty($request->get('action'))) echo (' active') ?>" href="index.php">Accueil</a>
-            <a class="btn<?php if(!empty($request->get('action')) && $request->get('action') === 'listEpisodes') echo (' active') ?>" href="index.php?action=listEpisodes">Episodes</a>
-        </div>
-    </nav>
-
     <body>
-        <?= $content ?>
-    </body>
+        <nav class="navigation-bar">
+            <a href="#foot" id="signature"><h2>Jean Forteroche</h2></a>
+            <div id="navbar_accueil">
+                <a class="btn<?php if(empty($request->get('action'))) echo (' active') ?>" href="index.php">Accueil</a>
+                <a class="btn<?php if(!empty($request->get('action')) && $request->get('action') === 'listEpisodes') echo (' active') ?>" href="index.php?action=listEpisodes">Episodes</a>
+            </div>
+        </nav>
 
-    <footer id="foot">
-            <a class="btn<?php if(!empty($request->get('action')) && $request->get('action') === 'connectionPage') echo (' active') ?>" href="index.php?action=connectionPage">Administrateur</a>
-    </footer>
+        
+        <?= $content ?>
+        
+
+        <footer id="foot">
+                <a class="btn<?php if(!empty($request->get('action')) && $request->get('action') === 'connectionPage') echo (' active') ?>" href="index.php?action=connectionPage">Administrateur</a>
+        </footer>
+    </body>
 </html>

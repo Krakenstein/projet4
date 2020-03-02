@@ -22,7 +22,7 @@
                     }else{echo strip_tags(htmlspecialchars_decode($lastEpisode[0]->content));}
                     ?>        
                 </div>
-                <button class="read">Lire la suite</button>
+                <div class="read">Lire la suite</div>
             </a>
             <a class="anchor" href="#navbar_accueil">Retourner en haut de la page</a>
         </section>

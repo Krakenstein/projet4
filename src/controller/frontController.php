@@ -136,36 +136,52 @@ class FrontController{
             $comment = $this->session->getSessionData("comment");
         }
         
-        if ($this->request->get('id') !== null && $this->request->get('id') > 0 
-        && $this->request->post('csrf') !== null && $this->request->post('csrf') === $this->session->getSessionData("token")) {
-            if (!empty($this->request->post('author')) && !empty($this->request->post('comment'))) {
-                if (empty($episode)) {
-                    header('Location: index.php?action=episodePage&currentpage=' . (int) $this->request->get('currentpage') . '&id=' . (int) $this->request->get('id') . '#headCom');
-                    exit();
+        if($this->request->post('csrf') !== null && $this->request->post('csrf') === $this->session->getSessionData("token")){
+            if ($this->request->get('id') !== null && $this->request->get('id') > 0 ) {
+                if (!empty($this->request->post('author')) && !empty($this->request->post('comment'))) {
+                    if (empty($episode)) {
+                        header('Location: index.php?action=episodePage&currentpage=' . (int) $this->request->get('currentpage') . '&id=' . (int) $this->request->get('id') . '#headCom');
+                        exit();
+                    }else {
+                        $this->commentManager->postComment((int) $episode[0]->post_id, $this->request->post('author'), $this->request->post('comment'));
+                        header('Location: index.php?action=episodePage&currentpage=' . (int) $this->request->get('currentpage') . '&id=' . (int) $this->request->get('id') . '#headCom');
+                        exit();
+                    }       
                 }else {
-                    $this->commentManager->postComment((int) $episode[0]->post_id, $this->request->post('author'), $this->request->post('comment'));
-                    header('Location: index.php?action=episodePage&currentpage=' . (int) $this->request->get('currentpage') . '&id=' . (int) $this->request->get('id') . '#headCom');
-                    exit();
-                }       
-            }else {
-                $error = 'Veuillez remplir tous les champs';
-                $episode = $this->episodeManager->findPostedEpisode((int) $this->request->get('id'));
-                $episodesTot = $this->episodeManager->countEpisodesPub();
-                $token = $this->noCsrf->createToken();
-                $totalpages = (int) $episodesTot[0];
-                $currentpage = 1;
-                if (($this->request->get('currentpage')) !== null && ($this->request->get('currentpage')) !== '0' &&is_numeric($this->request->get('currentpage'))) {
-                    $currentpage = (int) $this->request->get('currentpage');
-                    if ($currentpage > $totalpages) {
-                        $currentpage = $totalpages;
-                    } 
+                    $error = 'Veuillez remplir tous les champs';
+                    $episode = $this->episodeManager->findPostedEpisode((int) $this->request->get('id'));
+                    $episodesTot = $this->episodeManager->countEpisodesPub();
+                    $token = $this->noCsrf->createToken();
+                    $totalpages = (int) $episodesTot[0];
+                    $currentpage = 1;
+                    if (($this->request->get('currentpage')) !== null && ($this->request->get('currentpage')) !== '0' &&is_numeric($this->request->get('currentpage'))) {
+                        $currentpage = (int) $this->request->get('currentpage');
+                        if ($currentpage > $totalpages) {
+                            $currentpage = $totalpages;
+                        } 
+                    }
+                    $this->view->render('front/episode', 'front/layout', compact('pseudo', 'comment', 'episodesTot', 'currentpage', 'totalpages', 'episode', 'error', 'token'));
                 }
-                $this->view->render('front/episode', 'front/layout', compact('pseudo', 'comment', 'episodesTot', 'currentpage', 'totalpages', 'episode', 'error', 'token'));
+            }else {
+                header('Location: index.php?action=episodePage&currentpage=' . (int) $this->request->get('currentpage') . '&id=' . (int) $this->request->get('id') . '#headCom');
+                exit();
             }
         }else {
-            header('Location: index.php?action=episodePage&currentpage=' . (int) $this->request->get('currentpage') . '&id=' . (int) $this->request->get('id') . '#headCom');
-            exit();
+            $error = 'formulaire invalide';
+            $episode = $this->episodeManager->findPostedEpisode((int) $this->request->get('id'));
+            $episodesTot = $this->episodeManager->countEpisodesPub();
+            $token = $this->noCsrf->createToken();
+            $totalpages = (int) $episodesTot[0];
+            $currentpage = 1;
+            if (($this->request->get('currentpage')) !== null && ($this->request->get('currentpage')) !== '0' &&is_numeric($this->request->get('currentpage'))) {
+                $currentpage = (int) $this->request->get('currentpage');
+                if ($currentpage > $totalpages) {
+                    $currentpage = $totalpages;
+                } 
+            }
+            $this->view->render('front/episode', 'front/layout', compact('pseudo', 'comment', 'episodesTot', 'currentpage', 'totalpages', 'episode', 'error', 'token'));
         }
+        
         
     }
 

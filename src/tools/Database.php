@@ -13,7 +13,7 @@ class Database {
     private $dbHost;
     private $bdd;
 
-    public function __construct($dbName = 'dbs307088', $dbUser = 'dbu563302', $dbPass = 'Akira99!T3tsuo', $dbHost = 'db5000314632.hosting-data.io')
+    public function __construct($dbName = 'blogbdd', $dbUser = 'root', $dbPass = '', $dbHost = 'localhost')
     {
         $this->dbName = $dbName;
         $this->dbUser = $dbUser;
@@ -24,9 +24,10 @@ class Database {
     public function dbConnect():PDO
     {
         if($this->bdd === null){
-            $bdd = new PDO("mysql:host=$this->dbHost; dbname=$this->dbName;", $this->dbUser, $this->dbPass);
+            $bdd = new PDO("mysql:host=$this->dbHost; dbname=$this->dbName;charset=utf8", $this->dbUser, $this->dbPass);
             $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
             $this->bdd = $bdd;
+            //var_dump('database');
         }
         return $this->bdd;
     }
