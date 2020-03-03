@@ -13,8 +13,8 @@ class CommentManager
    
     public function __construct()
     {
-        $this->dataBase = new Database();
-        $this->bdd = $this->dataBase->dbConnect();
+        $this->dataBase = Database::getInstance();
+        $this->bdd = $this->dataBase->getConnection();
     }
 
     public function findAllComments(int $offset, int $nbByPage):array //requête pour paginer tous les commentaires par ordre décroissant de signalement

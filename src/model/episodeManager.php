@@ -13,8 +13,8 @@ class EpisodeManager
    
     public function __construct()
     {
-        $this->dataBase = new Database();
-        $this->bdd = $this->dataBase->dbConnect();
+        $this->dataBase = Database::getInstance();
+        $this->bdd = $this->dataBase->getConnection();
     }
 
 

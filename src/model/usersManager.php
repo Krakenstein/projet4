@@ -13,8 +13,8 @@ class UsersManager
    
     public function __construct()
     {
-        $this->dataBase = new Database();
-        $this->bdd = $this->dataBase->dbConnect();
+        $this->dataBase = Database::getInstance();
+        $this->bdd = $this->dataBase->getConnection();
     }
     
     public function resetInfos(string $pseudo, string $pass):bool//requête pour choisir son pseudo et son mot de passe en tant qu'admin
@@ -25,7 +25,7 @@ class UsersManager
         'newPass' => $pass));
     }
 
-    public function testInfos(string $pseudo):array//requête pour tester les infos lors d'une tentative de connection
+    public function testInfos(string $pseudo)//requête pour tester les infos lors d'une tentative de connection
     {
         $req = $this->bdd->prepare('SELECT id, pseudo, pass FROM users WHERE pseudo = :testPseudo');
         $req->execute([

@@ -7,30 +7,35 @@ use \PDO ;
 
 class Database {
 
-    private $dbName;
-    private $dbUser;
-    private $dbPass;
-    private $dbHost;
+    private static $instance = null;
+    
+    private $dbName = 'blogbdd';
+    private $dbUser = 'root';
+    private $dbPass = '';
+    private $dbHost = 'localhost';
+    
     private $bdd;
 
-    public function __construct($dbName = 'blogbdd', $dbUser = 'root', $dbPass = '', $dbHost = 'localhost')
+    public function __construct()
     {
-        $this->dbName = $dbName;
-        $this->dbUser = $dbUser;
-        $this->dbPass = $dbPass;
-        $this->dbHost = $dbHost;
+        $bdd = new PDO("mysql:host={$this->dbHost}; dbname={$this->dbName};charset=utf8", $this->dbUser, $this->dbPass);
+        $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+        $this->bdd = $bdd;
     }
 
-    public function dbConnect():PDO
+    public static function getInstance()
     {
-        if($this->bdd === null){
-            $bdd = new PDO("mysql:host=$this->dbHost; dbname=$this->dbName;charset=utf8", $this->dbUser, $this->dbPass);
-            $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-            $this->bdd = $bdd;
-            //var_dump('database');
+        if (self::$instance === null)
+        {
+        self::$instance = new Database();
         }
+    
+        return self::$instance;
+    }
+
+    public function getConnection()
+    {
         return $this->bdd;
     }
-
 
 }

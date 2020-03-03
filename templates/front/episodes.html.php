@@ -32,7 +32,7 @@
                 ?>
             
             </div>
-            <button class="read">Lire la suite</button>
+            <div class="read">Lire la suite</div>
         </a>
         <?php endforeach; ?>
         <div class="backNext<?php if($totalpages < 2) echo 'Hidden'?>">

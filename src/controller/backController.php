@@ -34,7 +34,7 @@ class BackController{
     function admConnect():void//méthode pour se connecter au back
     {       
         $error = 'Pseudo ou mot de passe oublié';
-        if ($this->request->post('csrf') !== null && $this->request->post('csrf') === $this->session->getSessionData("token")){
+        if ($this->request->post('csrf') !== null && $this->request->post('csrf') === $this->noCsrf->isTokenValid()){
             if ((($this->request->post('nom')) !== null && !empty($this->request->post('nom'))) && (($this->request->post('password')) !== null && !empty($this->request->post('password')))) {
                 $infos = $this->usersManager->testInfos($this->request->post('nom'));
                 if(!empty($infos) && password_verify(($this->request->post('password')), $infos[2]) === true){                
@@ -104,7 +104,23 @@ class BackController{
       
         $this->session->sessionVerify();
 
-        if ($this->request->post('csrf') !== null && $this->request->post('csrf') === $this->session->getSessionData("token")){
+        if ($this->request->post('csrf') !== null && $this->request->post('csrf') === $this->noCsrf->isTokenValid()){
+            if (!empty($this->request->post('title')) && strlen ($this->request->post('title')) > 50){
+                $sum = $this->commentManager->countReports();
+                $countcoms = $this->commentManager->countComs();
+                $token = $this->noCsrf->createToken();
+                $error = 'Le titre doit faire moins de 50 caractères';
+                $this->view->render('back/createEpisode', 'back/layout', compact('countcoms', 'sum', 'error', 'token', 'chapterNumber', 'titleEp', 'content'));
+                exit();
+            }
+            if (!empty($this->request->post('chapterNumber')) && strlen ($this->request->post('chapterNumber')) > 4){
+                $sum = $this->commentManager->countReports();
+                $countcoms = $this->commentManager->countComs();
+                $token = $this->noCsrf->createToken();
+                $error = 'Le numéro de chapitre doit être inférieur à 10 000';
+                $this->view->render('back/createEpisode', 'back/layout', compact('countcoms', 'sum', 'error', 'token', 'chapterNumber', 'titleEp', 'content'));
+                exit();
+            }
             if (($this->request->post('publish')) !== null && !empty($this->request->post('chapterNumber')) && !empty($this->request->post('title'))) {          
                 $message = 'Episode ' . $this->request->post('chapterNumber') . ' créé et publié';
                 $this->episodeManager->postEpisode((int) $this->request->post('chapterNumber'), $this->request->post('title'), $this->request->post('content'));
@@ -117,25 +133,46 @@ class BackController{
                 header('Location: index.php?action=episodes&ms=' . $message . '');
                 exit(); 
             }
-        }if(empty($this->request->post('chapterNumber')) && empty($this->request->post('title')) && empty($this->request->post('content'))){
-            $this->session->setSessionData('chapterNumber', null);
-            $chapterNumber = $this->session->getSessionData("chapterNumber");
-            $this->session->setSessionData('title', null);
-            $titleEp = $this->session->getSessionData("title");
-            $this->session->setSessionData('content', null);
-            $content = $this->session->getSessionData("content");
+            if(empty($this->request->post('chapterNumber')) && empty($this->request->post('title')) && empty($this->request->post('content'))){
+                $this->session->setSessionData('chapterNumber', null);
+                $chapterNumber = $this->session->getSessionData("chapterNumber");
+                $this->session->setSessionData('title', null);
+                $titleEp = $this->session->getSessionData("title");
+                $this->session->setSessionData('content', null);
+                $content = $this->session->getSessionData("content");
+                $sum = $this->commentManager->countReports();
+                $countcoms = $this->commentManager->countComs();
+                $token = $this->noCsrf->createToken();
+                $error = 'Vous devez spécifier le numéro et le titre de l\'épisode';
+                $this->view->render('back/createEpisode', 'back/layout', compact('countcoms', 'sum', 'error', 'token', 'chapterNumber', 'titleEp', 'content')); 
+                exit();
+            }
             $sum = $this->commentManager->countReports();
             $countcoms = $this->commentManager->countComs();
             $token = $this->noCsrf->createToken();
             $error = 'Vous devez spécifier le numéro et le titre de l\'épisode';
-            $this->view->render('back/createEpisode', 'back/layout', compact('countcoms', 'sum', 'error', 'token', 'chapterNumber', 'titleEp', 'content')); 
-            exit();
-        }
-        $sum = $this->commentManager->countReports();
-        $countcoms = $this->commentManager->countComs();
-        $token = $this->noCsrf->createToken();
-        $error = 'Vous devez spécifier le numéro et le titre de l\'épisode';
-        $this->view->render('back/createEpisode', 'back/layout', compact('countcoms', 'sum', 'error', 'token', 'chapterNumber', 'titleEp', 'content'));  
+            $this->view->render('back/createEpisode', 'back/layout', compact('countcoms', 'sum', 'error', 'token', 'chapterNumber', 'titleEp', 'content'));
+        }else{
+            if(empty($this->request->post('chapterNumber')) && empty($this->request->post('title')) && empty($this->request->post('content'))){
+                $this->session->setSessionData('chapterNumber', null);
+                $chapterNumber = $this->session->getSessionData("chapterNumber");
+                $this->session->setSessionData('title', null);
+                $titleEp = $this->session->getSessionData("title");
+                $this->session->setSessionData('content', null);
+                $content = $this->session->getSessionData("content");
+                $sum = $this->commentManager->countReports();
+                $countcoms = $this->commentManager->countComs();
+                $token = $this->noCsrf->createToken();
+                $error = 'formulaire invalide';
+                $this->view->render('back/createEpisode', 'back/layout', compact('countcoms', 'sum', 'error', 'token', 'chapterNumber', 'titleEp', 'content')); 
+                exit();
+            }
+            $sum = $this->commentManager->countReports();
+            $countcoms = $this->commentManager->countComs();
+            $token = $this->noCsrf->createToken();
+            $error = 'formulaire invalide';
+            $this->view->render('back/createEpisode', 'back/layout', compact('countcoms', 'sum', 'error', 'token', 'chapterNumber', 'titleEp', 'content'));
+        }  
     }
 
     function modifyEpisode():void//on affiche la page de modification d'un épisode dans le back avec ses commentaires
@@ -170,7 +207,26 @@ class BackController{
      
         $this->session->sessionVerify();
 
-        if ($this->request->post('csrf') !== null && $this->request->post('csrf') === $this->session->getSessionData("token")){
+        
+        if ($this->request->post('csrf') !== null && $this->request->post('csrf') === $this->noCsrf->isTokenValid()){
+            if (!empty($this->request->post('nvtitle')) && strlen ($this->request->post('nvtitle')) > 50){
+                $sum = $this->commentManager->countReports();
+                $countcoms = $this->commentManager->countComs();
+                $token = $this->noCsrf->createToken();
+                $episode = $this->episodeManager->findEpisode((int) $this->request->get('postId'));
+                $error = 'Le titre doit faire moins de 50 caractères';
+                $this->view->render('back/episodeBack', 'back/layout', compact('countcoms', 'sum', 'error', 'episode', 'token', 'chapterNumber', 'titleEp', 'content'));
+                exit();
+            }
+            if (!empty($this->request->post('nvchapter')) && strlen ($this->request->post('nvchapter')) > 4){
+                $sum = $this->commentManager->countReports();
+                $countcoms = $this->commentManager->countComs();
+                $token = $this->noCsrf->createToken();
+                $episode = $this->episodeManager->findEpisode((int) $this->request->get('postId'));
+                $error = 'Le numéro de chapitre doit être inférieur à 10 000';
+                $this->view->render('back/episodeBack', 'back/layout', compact('countcoms', 'sum', 'error', 'episode', 'token', 'chapterNumber', 'titleEp', 'content'));
+                exit();
+            }
             if (($this->request->post('publish')) !== null && !empty($this->request->post('nvchapter')) && !empty($this->request->post('nvtitle'))) {           
                 if(empty($this->request->get('dt'))){
                     $this->episodeManager->postModifiedEpisode((int) $this->request->get('postId'), (int) $this->request->post('nvchapter'), $this->request->post('nvtitle'), $this->request->post('nvcontent'));
@@ -195,18 +251,25 @@ class BackController{
                 $this->episodeManager->deleteEpisode((int) $this->request->get('postId'));
                 $message = 'Episode ' . $this->request->post('nvchapter') . ' Supprimé';
                 $isError = false;
-            }
-        }  
-        if($isError === false){
-            header('Location: index.php?action=episodes&ms=' . $message . '');
-            exit();
-        }  
-        $sum = $this->commentManager->countReports();
-        $countcoms = $this->commentManager->countComs();
-        $token = $this->noCsrf->createToken();
-        $episode = $this->episodeManager->findEpisode((int) $this->request->get('postId'));
-        $error = 'Vous devez spécifier le titre et le numéro de l\'épisode';
-        $this->view->render('back/episodeBack', 'back/layout', compact('countcoms', 'sum', 'error', 'episode', 'token', 'chapterNumber', 'titleEp', 'content'));      
+            }         
+            if($isError === false){
+                header('Location: index.php?action=episodes&ms=' . $message . '');
+                exit();
+            }  
+            $sum = $this->commentManager->countReports();
+            $countcoms = $this->commentManager->countComs();
+            $token = $this->noCsrf->createToken();
+            $episode = $this->episodeManager->findEpisode((int) $this->request->get('postId'));
+            $error = 'Vous devez spécifier le titre et le numéro de l\'épisode';
+            $this->view->render('back/episodeBack', 'back/layout', compact('countcoms', 'sum', 'error', 'episode', 'token', 'chapterNumber', 'titleEp', 'content')); 
+        }else{
+            $sum = $this->commentManager->countReports();
+            $countcoms = $this->commentManager->countComs();
+            $token = $this->noCsrf->createToken();
+            $episode = $this->episodeManager->findEpisode((int) $this->request->get('postId'));
+            $error = 'formulaire invalide';
+            $this->view->render('back/episodeBack', 'back/layout', compact('countcoms', 'sum', 'error', 'episode', 'token', 'chapterNumber', 'titleEp', 'content')); 
+        }     
     }
 
     function comPage():void//on affiche la page de gestion des commentaires
