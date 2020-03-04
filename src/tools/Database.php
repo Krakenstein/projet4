@@ -18,7 +18,7 @@ class Database {
 
     public function __construct()
     {
-        $bdd = new PDO("mysql:host={$this->dbHost}; dbname={$this->dbName};charset=utf8", $this->dbUser, $this->dbPass);
+        $bdd = new PDO("mysql:host=$this->dbHost; dbname=$this->dbName;charset=utf8", $this->dbUser, $this->dbPass);
         $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
         $this->bdd = $bdd;
     }
