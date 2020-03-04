@@ -20,16 +20,16 @@ class UsersManager
     public function resetInfos(string $pseudo, string $pass):bool//requête pour choisir son pseudo et son mot de passe en tant qu'admin
     {
         $req = $this->bdd->prepare('UPDATE users set pseudo = :newPseudo, pass = :newPass WHERE id = 1');
-        return $req->execute(array(
+        return $req->execute([
         'newPseudo' => $pseudo, 
-        'newPass' => $pass));
+        'newPass' => $pass]);
     }
 
-    public function testInfos(string $pseudo)//requête pour tester les infos lors d'une tentative de connection
+    public function testInfos(string $pseudo):array//requête pour tester les infos lors d'une tentative de connection
     {
         $req = $this->bdd->prepare('SELECT id, pseudo, pass FROM users WHERE pseudo = :testPseudo');
         $req->execute([
             'testPseudo' => $pseudo]);
-        return $req->fetch();
+            return $req->fetchALL(PDO::FETCH_OBJ);
     }
 }

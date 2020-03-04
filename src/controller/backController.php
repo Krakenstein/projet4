@@ -37,10 +37,14 @@ class BackController{
         if ($this->request->post('csrf') !== null && $this->request->post('csrf') === $this->noCsrf->isTokenValid()){
             if ((($this->request->post('nom')) !== null && !empty($this->request->post('nom'))) && (($this->request->post('password')) !== null && !empty($this->request->post('password')))) {
                 $infos = $this->usersManager->testInfos($this->request->post('nom'));
-                if(!empty($infos) && password_verify(($this->request->post('password')), $infos[2]) === true){                
-                    $this->session->setSessionData('admConnected', '1');
-                    header('Location: index.php?action=episodes');
-                    exit();                
+                if(!empty($infos)){
+                    if($infos[0]->pass !== null){
+                        if(password_verify(($this->request->post('password')), $infos[0]->pass )){
+                            $this->session->setSessionData('admConnected', '1');
+                            header('Location: index.php?action=episodes');
+                            exit();
+                        }                   
+                    }                                                 
                 }
             }
         }
@@ -367,7 +371,7 @@ class BackController{
             {
                 $infos = $this->usersManager->testInfos($this->request->post('pseudo'));
                 $error = 'Impossible de modifier les informations';
-                if (!empty($infos) && password_verify($this->request->post('passOld'), $infos[2]) === true)
+                if (!empty($infos) && password_verify($this->request->post('passOld'), $infos[0]->pass))
                 {   
                     $error = 'Le nouveau mot de passe choisi n\'est pas valide';
                     if ($this->request->post('pass') !== $this->request->post('pass2')) {// on teste les deux mots de passe
