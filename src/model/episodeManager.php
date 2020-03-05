@@ -34,10 +34,10 @@ class EpisodeManager
 
     public function pagineEpisodes(int $offset, int $nbByPage):array//requête pour récupérer les épisodes publiés en fonction de la pagination
     {
-        $this->bdd->setAttribute(PDO::ATTR_EMULATE_PREPARES, FALSE);
         $req = $this->bdd->prepare('SELECT post_id, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'Le %d/%m/%Y\') AS date FROM posts WHERE stat = 1 ORDER BY chapterNumber, publiDate  LIMIT :offset, :limitation  ');
-        $req->execute(['limitation' => (int) $nbByPage, 
-                        'offset' => (int) $offset ]);
+        $req->bindValue(':limitation', $nbByPage, \PDO::PARAM_INT);
+        $req->bindValue(':offset', $offset, \PDO::PARAM_INT);
+        $req->execute();
         return $req->fetchALL(PDO::FETCH_OBJ);
     }
 
@@ -76,9 +76,9 @@ class EpisodeManager
 
     public function previousNextEpisode(int $offset):array //requête pour naviguer entre les pages épisodes  
     {
-        $this->bdd->setAttribute(PDO::ATTR_EMULATE_PREPARES, FALSE);
         $req = $this->bdd->prepare('SELECT post_id FROM posts WHERE stat = 1 ORDER BY chapterNumber , publiDate  LIMIT :offset, 1  ');
-        $req->execute(['offset' => (int) $offset ]);
+        $req->bindValue(':offset', $offset, \PDO::PARAM_INT);
+        $req->execute();
         return $req->fetch();
     }
 
@@ -138,7 +138,6 @@ class EpisodeManager
     
     public function listBackEpisodes(int $offset, int $nbByPage):array//requête récupérer paginée la liste des épisodes avec des infos sur leurs commentaires associés
     {
-        $this->bdd->setAttribute(PDO::ATTR_EMULATE_PREPARES, FALSE);
         $req = $this->bdd->prepare('SELECT posts.post_id, report, chapterNumber, title, content, stat, DATE_FORMAT(publiDate, \'%d/%m/%Y\') AS date,
         COUNT(comments.post_id) AS commentsNb,
         SUM(comments.report) AS reportsNb
@@ -146,9 +145,10 @@ class EpisodeManager
         RIGHT JOIN posts ON posts.post_id = comments.post_id
         GROUP BY(posts.post_id)
         ORDER BY chapterNumber , publiDate 
-        LIMIT :value1, :value2 ');
-        $req->execute(['value1' => (int) $offset,
-                    'value2' => (int) $nbByPage ]);
+        LIMIT :offset, :limitation ');
+        $req->bindValue(':limitation', $nbByPage, \PDO::PARAM_INT);
+        $req->bindValue(':offset', $offset, \PDO::PARAM_INT);
+        $req->execute();
         return $req->fetchALL(PDO::FETCH_OBJ); 
     }
 }

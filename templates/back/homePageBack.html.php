@@ -1,8 +1,3 @@
-<?php
-use Projet4\Tools\Request;
-$request = new Request();
-?>
-
 <?php $title = 'Liste des épisodes'; ?>
 
     <section id="content">
@@ -31,7 +26,7 @@ $request = new Request();
             <a class="rows" href="index.php?action=modifyEpisode&amp;id=<?= $episode->post_id ?>">
                 <div class="cell"><?= $episode->chapterNumber ?></div>
                 <div class="cell"><?= $episode->title ?></div>
-                <div class="cell"><?php if(($episode->stat) === 1) echo 'publié le ' . ($episode->date)?><?php if(($episode->stat) === 0) echo 'Sauvegardé'?></div>
+                <div class="cell"><?php if(($episode->stat) == 1) echo 'publié le ' . ($episode->date)?><?php if(($episode->stat) == 0) echo 'Sauvegardé'?></div>
                 <div class="cell"><?= $episode->commentsNb ?></div>
                 <div class="cell"><?php if(($episode->reportsNb) === null) echo '0'?><?php if(($episode->reportsNb) !== 0) echo $episode->reportsNb ?></div>
         <?php endforeach; ?>

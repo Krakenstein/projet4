@@ -1,8 +1,3 @@
-<?php
-use Projet4\Tools\Request;
-$request = new Request();
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
