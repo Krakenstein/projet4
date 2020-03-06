@@ -139,7 +139,7 @@ class FrontController{
             $comment = $this->session->getSessionData("comment");
         }
         
-        if($this->request->post('csrf') !== null && $this->request->post('csrf') === $this->noCsrf->isTokenValid()){
+        if($this->request->post('csrf') !== null && $this->noCsrf->isTokenValid($this->request->post('csrf'))){
             if ($this->request->get('id') !== null && $this->request->get('id') > 0 ) {
                 if (!empty($this->request->post('author')) && !empty($this->request->post('comment'))) {
                     if (empty($episode)) {

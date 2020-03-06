@@ -34,7 +34,7 @@ class BackController{
     function admConnect():void//méthode pour se connecter au back
     {       
         $error = 'Pseudo ou mot de passe oublié';
-        if ($this->request->post('csrf') !== null && $this->request->post('csrf') === $this->noCsrf->isTokenValid()){
+        if ($this->request->post('csrf') !== null && $this->noCsrf->isTokenValid($this->request->post('csrf'))){
             if ((($this->request->post('nom')) !== null && !empty($this->request->post('nom'))) && (($this->request->post('password')) !== null && !empty($this->request->post('password')))) {
                 $infos = $this->usersManager->testInfos($this->request->post('nom'));
                 if(!empty($infos)){
@@ -111,7 +111,7 @@ class BackController{
       
         $this->session->sessionVerify();
 
-        if ($this->request->post('csrf') !== null && $this->request->post('csrf') === $this->noCsrf->isTokenValid()){
+        if ($this->request->post('csrf') !== null && $this->noCsrf->isTokenValid($this->request->post('csrf'))){
             if (!empty($this->request->post('title')) && strlen ($this->request->post('title')) > 50){
                 $sum = $this->commentManager->countReports();
                 $countcoms = $this->commentManager->countComs();
@@ -222,7 +222,7 @@ class BackController{
         $this->session->sessionVerify();
 
         
-        if ($this->request->post('csrf') !== null && $this->request->post('csrf') === $this->noCsrf->isTokenValid()){
+        if ($this->request->post('csrf') !== null && $this->noCsrf->isTokenValid($this->request->post('csrf'))){
             if (!empty($this->request->post('nvtitle')) && strlen ($this->request->post('nvtitle')) > 50){
                 $sum = $this->commentManager->countReports();
                 $countcoms = $this->commentManager->countComs();
@@ -377,7 +377,7 @@ class BackController{
         $this->session->sessionVerify();
 
         $error = 'Une erreure est survenue';
-        if ($this->request->post('csrf') !== null && $this->request->post('csrf') === $this->session->getSessionData("token"))
+        if ($this->request->post('csrf') !== null && $this->noCsrf->isTokenValid($this->request->post('csrf')))
         {
             $error = 'Au moins un des champs est vide';
             if ((($this->request->post('pseudo')) !== null && !empty($this->request->post('pseudo'))) 

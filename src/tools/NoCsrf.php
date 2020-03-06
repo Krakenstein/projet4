@@ -19,12 +19,12 @@ class NoCsrf
      
     public function createToken(): ?string
     {
-        $this->session->setSessionData("token", hash('sha256', strval(bin2hex(random_bytes(64)))));
+        $this->session->setSessionData("token", bin2hex(random_bytes(64)));
         return($this->session->getSessionData("token"));
     }
 
-    public function isTokenValid(): ?string
+    public function isTokenValid($param):bool
     {
-        return($this->session->getSessionData("token"));
+        return($this->session->getSessionData("token") === $param);
     }
 }
