@@ -26,11 +26,10 @@
                 if (strlen($episode->content) > 2000)
                 {
                     $espace = strpos($episode->content,' ', 2000); 
-                    $extr = substr($episode->content,0,$espace).'...';
-                    echo strip_tags(htmlspecialchars_decode($extr));
+                    $extr = substr($episode->content,0,$espace);
+                    echo strip_tags(htmlspecialchars_decode($extr)).'(...)';
                 }else{echo strip_tags(htmlspecialchars_decode($episode->content));}
-                ?>
-            
+                ?>        
             </div>
             <div class="read">Lire la suite</div>
         </a>

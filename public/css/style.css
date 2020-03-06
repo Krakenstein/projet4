@@ -252,7 +252,6 @@ label
     border-radius: 15px; 
     transition: 0.5s;
     box-shadow: 0px 1px 2px 2px #07204e;
-    transform: scale(1.005);
 }
 
 .onPage

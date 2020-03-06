@@ -17,8 +17,8 @@
                     if (strlen($lastEpisode[0]->content) > 2000)
                     {
                         $espace = strpos($lastEpisode[0]->content,' ', 2000); 
-                        $extr = substr($lastEpisode[0]->content,0,$espace).'...';
-                        echo strip_tags(htmlspecialchars_decode($extr));
+                        $extr = substr($lastEpisode[0]->content,0,$espace);
+                        echo strip_tags(htmlspecialchars_decode($extr)).'(...)';
                     }else{echo strip_tags(htmlspecialchars_decode($lastEpisode[0]->content));}
                     ?>        
                 </div>
